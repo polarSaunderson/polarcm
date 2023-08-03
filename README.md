@@ -15,4 +15,6 @@ The public version of this repo can be accessed at:
 
 ## To-Do
 ### 2023-08-03 
-- [ ]
+- [ ] get_extent uses %notIn%
+- [ ] think about projection order in get_coastlines()
+
