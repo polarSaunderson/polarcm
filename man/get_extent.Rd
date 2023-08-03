@@ -9,6 +9,7 @@ get_extent(
   rectangularExtent = FALSE,
   preferType = NULL,
   returnOnly = NULL,
+  imbieBasins = TRUE,
   crs = "racmo",
   crsIn = NULL
 )
@@ -38,12 +39,12 @@ SpatRaster or SpatVector will be returned.
 If extent is a SpatExtent, it is necessary to also set 'crsIn', and a
 SpatExtent will be returned.}
 
-\item{preferType}{Sometimes an ice shelf and a basin have the same name;
-usually they both refer to the same general area, and by default (i.e.
-preferType = NULL), the two extents are combined to form a new larger
-extent encompassing both. However, for some names (e.g. "Shackleton" and
-"Drygalski"), the name refers to a shelf far away from the basin with the
-same name.
+\item{preferType}{Sometimes an ice shelf and the MEaSURES basins have the
+same name; usually they both refer to the same general area, and by
+default (i.e. preferType = NULL), the two extents are combined to form a
+new larger extent encompassing both. However, for some names (e.g.
+"Shackleton" and "Drygalski"), the name refers to a shelf far away from
+the basin with the same name.
 
 This argument lets the user choose between the two types if the name is
 found in both the ice shelves and basins datasets: "shelf", "floating" or
@@ -55,6 +56,12 @@ datasets will be returned regardless of this option; see also returnOnly.}
 names, but only one or the other should be returned, use this argument.
 Ice shelves or basins are specified as outlined in the preferType
 argument.}
+
+\item{imbieBasins}{BINARY: Should the IMBIE basins (TRUE, the default) or
+the MEaSURES basins (FALSE) be returned? The IMBIE basins have codes
+(e.g. "A-Ap") and are larger regions; the MEaSURES basins have names
+(that can overlap with the ice shelf names), and are small "sub" regions.
+If NULL, both are returned.}
 
 \item{crs}{"string": Which crs should the extent be returned with? See
 \code{use_crs()} or \code{terra::crs()}.}
@@ -77,4 +84,56 @@ However, it can also handle other SpatRasters, SpatVectors, or
 SpatExtents, allowing it to be used in different contexts. The extent can
 be returned in different projections via the crs argument. The returned
 extent can be either exact shape outlines or a rectangular SpatExtent.
+}
+\examples{
+  # Full Antarctic extent
+  t1 <- get_extent()
+  terra::plot(t1)
+
+  # Single shelf
+  t2 <- get_extent("Amery")
+  terra::plot(t2)
+
+  # Single basin
+  t3 <- get_extent("Dry Valleys")
+  terra::plot(t3)
+
+  # Name appears in both the ice shelf and basins datasets
+  t4 <- get_extent("Shackleton")
+  terra::plot(t4)
+
+  # Extent covers both the ice shelf and basin
+  t5 <- get_extent("Shackleton", rectangularExtent = TRUE)
+  terra::plot(t5)
+
+  # Prefer the shelf
+  t6 <- get_extent("Shackleton", preferType = "shelf")
+  terra::plot(t6)
+
+  # Prefer the basin
+  t7 <- get_extent("Shackleton", preferType = "basin")
+  terra::plot(t7)
+
+  # Multiple shelves and basins
+  t8 <- get_extent(c("Amery", "Shackleton", "West", "Dry Valleys"),
+                   preferType = "NULL")
+  terra::plot(t8)
+
+  # Multiple shelves & basins, prefer the shelves: no Shackleton basin
+  t9 <- get_extent(c("Amery", "Shackleton", "West", "Dry Valleys"),
+                   preferType = "shelf")
+  terra::plot(t9)
+
+  # Multiple shelves & basins; returnOnly shelves
+  # no Shackleton & Dry Valleys basins
+  t10 <- get_extent(c("Amery", "Shackleton", "West", "Dry Valleys"),
+                    returnOnly = "shelf")
+  terra::plot(t10)
+
+  # Multiple shelves & basins; returnOnly basins
+  # no Shackleton, Amery & West shelves
+  t11 <- get_extent(c("Amery", "Shackleton", "West", "Dry Valleys"),
+                    returnOnly = "basins")
+  terra::plot(t11)
+
 }

@@ -43,10 +43,10 @@ get_shelf_outline <- function(extent = "",
 
   # Code -----------------------------------------------------------------------
   shelves <- define_racmo_globals()$measures$shelves
-  extents   <- get_extent(extent,
-                          rectangularExtent = !exactExtents,
-                          returnOnly = "shelves",
-                          crs = use_crs("stereo"), crsIn = crsIn)
+  extents <- get_extent(extent,
+                        rectangularExtent = !exactExtents,
+                        returnOnly = "shelves",
+                        crs = use_crs("stereo"), crsIn = crsIn)
 
   shelves   <- terra::intersect(shelves, extents)
   shelves   <- terra::project(shelves, use_crs(crs))

@@ -7,28 +7,27 @@
 get_basin_outline(
   extent = "",
   exactExtents = TRUE,
-  subBasins = FALSE,
+  imbieBasins = NULL,
   crs = "racmo",
   crsIn = NULL
 )
 }
 \arguments{
 \item{extent}{Define the area within which to get the basin outlines. Exact
-shelf names can be used, as can SpatRasters, SpatVectors, or SpatExtents,
+basin names can be used, as can SpatRasters, SpatVectors, or SpatExtents,
 or it can be left empty, and all basins are returned. For exactExtents =
 TRUE to work, this argument must be a string with the MEaSURES names of
-the required shelves. Fed into \code{get_extent()}; see there for details.}
+the required basins. Fed into \code{get_extent()}; see there for details.}
 
-\item{exactExtents}{BINARY: Should only the defined shelf/shelves be
-included (TRUE), or can the outlines of all shelves within the bounding
-box be included too (FALSE)?}
+\item{exactExtents}{BINARY: Should only the defined basin/s be included
+(TRUE), or can the outlines of all basins within the bounding box be
+included too (FALSE)?}
 
-\item{subBasins}{BINARY: Should the MEaSURES subregion basins be returned?
-Default is FALSE, which means that the IMBIE basins are returned. If
-exactExtents is TRUE, make sure that the extent argument uses the correct
-name for the correct dataset: IMBIE basins (subBasins = FALSE) have codes
-(e.g. "A-Ap"), whereas MEaSURES basins (subBasins = TRUE) have names,
-such as "Vincennes_Bay".}
+\item{imbieBasins}{BINARY: Should the IMBIE basins (TRUE, the default) or
+the MEaSURES basins (FALSE) be returned? The IMBIE basins have codes
+(e.g. "A-Ap") and are larger regions; the MEaSURES basins have names
+(that can overlap with the ice shelf names), and are small "sub" regions.
+If NULL, both are returned.}
 
 \item{crs}{"string": Which projection should the grounding line be returned
 in?}

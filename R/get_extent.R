@@ -2,6 +2,7 @@ get_extent <- function(extent = "",
                        rectangularExtent = FALSE,
                        preferType = NULL,
                        returnOnly = NULL,
+                       imbieBasins = TRUE,
                        crs = "racmo",
                        crsIn = NULL) {
   #' Return the extent of different Antarctic boundaries
@@ -44,12 +45,18 @@ get_extent <- function(extent = "",
   #'   encompassing the area is returned (TRUE). If multiple ice shelves and/or
   #'   basins are included, the extent box will extend over all of them at once.
   #'
-  #' @param preferType Sometimes an ice shelf and a basin have the same name;
-  #'   usually they both refer to the same general area, and by default (i.e.
-  #'   preferType = NULL), the two extents are combined to form a new larger
-  #'   extent encompassing both. However, for some names (e.g. "Shackleton" and
-  #'   "Drygalski"), the name refers to a shelf far away from the basin with the
-  #'   same name.
+  #' @param imbieBasins BINARY: Should the IMBIE basins (TRUE, the default) or
+  #'   the MEaSURES basins (FALSE) be returned? The IMBIE basins have codes
+  #'   (e.g. "A-Ap") and are larger regions; the MEaSURES basins have names
+  #'   (that can overlap with the ice shelf names), and are small "sub" regions.
+  #'   If NULL, both are returned.
+  #'
+  #' @param preferType Sometimes an ice shelf and the MEaSURES basins have the
+  #'   same name; usually they both refer to the same general area, and by
+  #'   default (i.e. preferType = NULL), the two extents are combined to form a
+  #'   new larger extent encompassing both. However, for some names (e.g.
+  #'   "Shackleton" and "Drygalski"), the name refers to a shelf far away from
+  #'   the basin with the same name.
   #'
   #'   This argument lets the user choose between the two types if the name is
   #'   found in both the ice shelves and basins datasets: "shelf", "floating" or
@@ -71,7 +78,7 @@ get_extent <- function(extent = "",
   #'
   #' @examples
   #'   # Full Antarctic extent
-  #'   t1 <- get_extent("")
+  #'   t1 <- get_extent()
   #'   terra::plot(t1)
   #'
   #'   # Single shelf
@@ -119,7 +126,6 @@ get_extent <- function(extent = "",
   #'   t11 <- get_extent(c("Amery", "Shackleton", "West", "Dry Valleys"),
   #'                     returnOnly = "basins")
   #'   terra::plot(t11)
-  #' }
   #'
   #' @export
 
@@ -149,9 +155,19 @@ get_extent <- function(extent = "",
     basinSynonyms <- c("basin", "Basin", "basins", "Basins",
                        "GR", "grounded", "grounded ice", "land ice", "land")
 
-    # Find extent name/s in the MEaSURES datasets
+    # Find name/s of the extent's ice shelves name/s in the MEaSURES datasets
     xShelves <- racmoInfo$measures$shelves[racmoInfo$measures$shelves$NAME %in% extent]
-    xBasins  <- racmoInfo$measures$basins[racmoInfo$measures$basins$NAME %in% extent]
+
+    # Find name/s of the extent's basins name/s in the MEaSURES datasets
+    if (isTRUE(imbieBasins)) {
+      xBasins  <- racmoInfo$imbie$basins[racmoInfo$imbie$basins$NAME %in% extent]
+    } else if (isFALSE(imbieBasins)) {
+      xBasins  <- racmoInfo$measures$basins[racmoInfo$measures$basins$NAME %in% extent]
+    } else if (is.null(imbieBasins)) {
+      immB <- racmoInfo$imbie$basins[racmoInfo$imbie$basins$NAME %in% extent]
+      meas <- racmoInfo$measures$basins[racmoInfo$measures$basins$NAME %in% extent]
+      xBasins <- rbind(immB, meas)
+    }
 
     # returnOnly shelves or returnOnly basins from the input list?
     if (!is.null(returnOnly)) {

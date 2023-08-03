@@ -17,4 +17,4 @@ The public version of this repo can be accessed at:
 ### 2023-08-03 
 - [ ] get_extent uses %notIn%
 - [ ] think about projection order in get_coastlines()
-
+- [ ] updated examples for get_extent based on imbieBasins argument
