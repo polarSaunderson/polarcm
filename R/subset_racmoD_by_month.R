@@ -1,16 +1,16 @@
 ##
-subset_racmoM_by_month <- function(racmoData,
+subset_racmoD_by_month <- function(racmoData,
                                    months,
                                    removeIncomplete = 3) {
-  #' Subset monthly RACMO data based on the month
+  #' Subset daily RACMO data based on the month
   #'
-  #' @description Subset monthly RACMO data based on month. This function is
+  #' @description Subset daily RACMO data based on the month. This function is
   #'   essentially a RACMO-specific wrapper around
   #'   `terrapin::subset_by_month()`.
   #'
-  #' @param racmoData: The monthly RACMO data to subset. Can be either a
-  #'   variable name, in which case raw monthly RACMO data is read in; or an
-  #'   existing spatRaster of monthly RACMO data.
+  #' @param racmoData: The daily RACMO data to subset. Can be either a variable
+  #'   name, in which case raw daily RACMO data is read in; or an existing
+  #'   SpatRaster of daily RACMO data.
   #' @param months vector: Which month/s to return? Input can be the month
   #'   number (e.g. 12) or the month name, either in full ("December",
   #'   "december") or abbreviated ("Dec", "dec"). Multiple months can be input
@@ -28,9 +28,9 @@ subset_racmoM_by_month <- function(racmoData,
   #' @export
 
   # Code -----------------------------------------------------------------------
-  racmoData   <- read_racmoM_data(racmoData)
+  racmoData   <- read_racmoD_data(racmoData)
   racmoSubset <- terrapin::subset_by_month(x = racmoData, months = months,
                                            removeIncomplete = removeIncomplete,
-                                           dailyResolution  = FALSE)
+                                           dailyResolution = TRUE)
   return(racmoSubset)
 }
