@@ -15,8 +15,8 @@ The public version of this repo can be accessed at:
 
 ## To-Do
 ### 2023-08-05
-- [ ] Could calculate_racmo_in_space be a closure?
- - [ ] Need to do sum_in_space at least, but sd / median / percentiles / summary
+- [X] Could calculate_racmo_in_space be a closure? No, just use a functional!
+ - [X] Need to do sum_in_space at least, but sd / median / percentiles / summary
 
 ### 2023-08-04
 - [X] improve the crop_racmo functions
