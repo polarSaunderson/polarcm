@@ -13,8 +13,8 @@ get_grounding_line <- function(extent = "",
   #'   argument is fed into `get_extent()`; see there for details.
   #' @param crs "string": Which projection should the grounding line be returned
   #'   in?
-  #' @param preferType "string": Use ice shelves or basins if there is a clash?
-  #'   See `get_extent()` for a full explanation.
+  #' @param preferType "string": Use ice shelves or basins if there is a clash
+  #'   in the extent definition? See `get_extent()` for a full explanation.
   #' @param crsIn "string": Which projection is the extent given in? Needs
   #'   defining if the extent is a SpatExtent, as they do not have crs value
   #'   attached.
@@ -45,19 +45,23 @@ get_grounding_line <- function(extent = "",
   #' @export
 
   # Code -----------------------------------------------------------------------
+  # Prepare full grounding line data
   groundingLine <- define_racmo_globals()$measures$groundingLine
   groundingLine <- terra::vect(terra::geom(groundingLine), type = "lines")
-  terra::crs(groundingLine) <- use_crs("stereo")  # MEaSURES is EPSG:3031
+  terra::crs(groundingLine) <- use_crs("stereo")   # MEaSURES is EPSG:3031
 
-  # Crop the full grounding line to the required extent
+  # Define the required extent
   extent     <- get_extent(extent = extent,
                            rectangularExtent = TRUE,
                            preferType = preferType,
                            crsIn = crsIn,
-                           crs = use_crs("stereo"))
-  groundingLine <- terra::intersect(x = groundingLine, y = extent)
+                           crs = use_crs("stereo")) # return in 3031 to match GL
 
-  # Reproject
+  # Crop the full grounding line to the required extent
+  groundingLine <- terra::intersect(x = groundingLine,
+                                    y = extent)
+
+  # Reproject after intersect cropping
   groundingLine <- terra::project(groundingLine, use_crs(crs))
 
   return(groundingLine)
