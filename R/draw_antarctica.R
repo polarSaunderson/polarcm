@@ -1,6 +1,6 @@
 draw_antarctica <- function(extent = "",
                             sbcg = "cg",
-                            exactExtents = TRUE,
+                            rectangularExtent = FALSE,
                             simplify = 0,
                             crs = "racmo",
                             extentArgs = list(),
@@ -19,7 +19,7 @@ draw_antarctica <- function(extent = "",
   #'    * basins           "b"  # uses IMBIE; use "bb" for MEaSURES
   #'    * coasts           "c"
   #'    * grounding line   "g"
-  #' @param exactExtents BINARY: Should only the defined shelf/shelves be
+  #' @param rectangularExtent BINARY: Should only the defined shelf/shelves be
   #'   included (TRUE), or can the outlines of all shelves within the bounding
   #'   box be included too (FALSE)?
   #' @param simplify numeric: Should the outline be simplified? Uses the
@@ -65,7 +65,7 @@ draw_antarctica <- function(extent = "",
   }
 
   # shelves/basins can be explicitly defined by name
-  extentArgs$exactExtents <- exactExtents
+  extentArgs$rectangularExtent <- rectangularExtent
 
   # Add shelf outlines
   if ("s" %in% sbcg) {

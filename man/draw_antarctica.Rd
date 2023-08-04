@@ -7,7 +7,7 @@
 draw_antarctica(
   extent = "",
   sbcg = "cg",
-  exactExtents = TRUE,
+  rectangularExtent = FALSE,
   simplify = 0,
   crs = "racmo",
   extentArgs = list(),
@@ -27,7 +27,7 @@ are:
 \item grounding line   "g"
 }}
 
-\item{exactExtents}{BINARY: Should only the defined shelf/shelves be
+\item{rectangularExtent}{BINARY: Should only the defined shelf/shelves be
 included (TRUE), or can the outlines of all shelves within the bounding
 box be included too (FALSE)?}
 

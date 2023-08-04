@@ -56,21 +56,20 @@ get_basin_outline <- function(extent = "",
   #' @export
 
   # Code -----------------------------------------------------------------------
-  # Prepare all possible basin combinations
-  meas   <- define_racmo_globals()$measures$basins
-  immB   <- define_racmo_globals()$imbie$basins
-  basins <- rbind(meas, immB)                      # MEaSURES is EPSG:3031
+  # Prepare all possible basin combinations; basins are stored as EPSG:3031
+  if (isTRUE(returnImbie)) {
+    basins <- define_racmo_globals()$imbie$basins
+  } else if (isFALSE(returnImbie)) {
+    basins <- define_racmo_globals()$measures$basins
+  } else if (is.null(returnImbie)) {
+    basins <- rbind(define_racmo_globals()$imbie$basins,
+                    define_racmo_globals()$measures$basins)
+  }
 
-  # Search for exact basin names to return
+  # Search for exact basin names
   if (isFALSE(rectangularExtent)) {
     if (extent[[1]] != "") {
-      if (isTRUE(returnImbie)) {
-        basins <- immB[immB$NAME %in% extent]
-      } else if (isFALSE(returnImbie)) {
-        basins <- meas[meas$NAME %in% extent]
-      } else if (is.null(returnImbie)) {
-        basins <- basins[basins$NAME %in% extent]
-      }
+      basins <- basins[basins$NAME %in% extent]
     }
   } else {
   # Define the required extent to search for basins within
@@ -83,13 +82,7 @@ get_basin_outline <- function(extent = "",
                          crsIn = crsIn)
 
     # Establish which basins intersect with the extent
-    if (isTRUE(returnImbie)) {
-      basins   <- terra::intersect(immB, extent)
-    } else if (isFALSE(returnImbie)) {
-      basins   <- terra::intersect(meas, extent)
-    } else if (is.null(returnImbie)) {
-      basins   <- terra::intersect(basins, extent)
-    }
+    basins <- terra::intersect(basins, extent)
   }
 
   # Reproject
