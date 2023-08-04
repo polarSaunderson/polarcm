@@ -14,10 +14,16 @@ The public version of this repo can be accessed at:
   https://github.com/polarSaunderson/racmoR
 
 ## To-Do
+### 2023-08-04
+- [ ] The logic of get_shelf_outline and get_basin_outline need correcting
+ - [ ] They look only in their own dataset; need to look through all extents, then reduce to shelves
+ - [ ] Will impact draw_antarctica(), and crop_racmo() functions;
+ - [ ] check get_extent is not doing something wrong with this
+
 ### 2023-08-03 
 - [ ] get_extent uses %notIn%
 - [ ] think about projection order in get_coastlines()
-- [ ] updated examples for get_extent based on imbieBasins argument
+- [ ] update examples for get_extent based on imbieBasins argument
 - [X] create crop_racmo functions
 - [ ] draw_antarctica and draw_racmo_axes functions
 - [ ] calculate_racmoX functions
