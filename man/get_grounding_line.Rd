@@ -13,8 +13,8 @@ argument is fed into \code{get_extent()}; see there for details.}
 \item{crs}{"string": Which projection should the grounding line be returned
 in?}
 
-\item{preferType}{"string": Use ice shelves or basins if there is a clash?
-See \code{get_extent()} for a full explanation.}
+\item{preferType}{"string": Use ice shelves or basins if there is a clash
+in the extent definition? See \code{get_extent()} for a full explanation.}
 
 \item{crsIn}{"string": Which projection is the extent given in? Needs
 defining if the extent is a SpatExtent, as they do not have crs value

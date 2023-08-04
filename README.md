@@ -15,10 +15,13 @@ The public version of this repo can be accessed at:
 
 ## To-Do
 ### 2023-08-04
-- [ ] The logic of get_shelf_outline and get_basin_outline need correcting
- - [ ] They look only in their own dataset; need to look through all extents, then reduce to shelves
+- [X] The logic of get_shelf_outline and get_basin_outline need correcting
+ - [X] They look only in their own dataset; need to look through all extents, then reduce to shelves
  - [ ] Will impact draw_antarctica(), and crop_racmo() functions;
- - [ ] check get_extent is not doing something wrong with this
+ - [X] check get_extent is not doing something wrong with this
+- [ ] Double check returnImbie in get_basin_outline; think about name and defaults too
+- [ ] Are separate exactExtents and rectangularExtents arguments necessary?
+ - [ ] get_extent, but also draw_antarctica and get_shelf_outline etc.
 
 ### 2023-08-03 
 - [ ] get_extent uses %notIn%
@@ -28,3 +31,4 @@ The public version of this repo can be accessed at:
 - [ ] draw_antarctica and draw_racmo_axes functions
 - [ ] calculate_racmoX functions
 - [ ] create_racmoX_NetCDFs
+

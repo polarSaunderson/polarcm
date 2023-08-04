@@ -3,7 +3,7 @@ draw_antarctica <- function(extent = "",
                             exactExtents = TRUE,
                             simplify = 0,
                             crs = "racmo",
-                            crsIn = NULL,
+                            extentArgs = list(),
                             ...) {
   #' Draw MEaSURES Antarctic outlines on maps
   #'
@@ -28,6 +28,8 @@ draw_antarctica <- function(extent = "",
   #'   numbers are coarser; 0 (default) is no simplifying.
   #' @param crs "string": Which crs should the lines be drawn in? See the
   #'   `set_crs()` function
+  #' @param extentArgs A list of arguments to feed into `get_extent()`. Only
+  #'   necessary if
   #' @param ... Any arguments that can be used in `terra::lines()`
   #'
   #' @export
@@ -36,39 +38,60 @@ draw_antarctica <- function(extent = "",
   sbcg   <- strsplit(sbcg, "")[[1]] # separate out what we want
   crs    <- use_crs(crs)
 
+  # Handle necessary arguments for the inner get_extent() function calls
+  extentArgs$crs    <- crs
+  extentArgs$extent <- extent
+
   # Add grounding lines
   if ("g" %in% sbcg) {
-    ground <- get_grounding_line(extent, crs)
-    if (simplify != 0) ground <- terra::simplifyGeom(ground, simplify)
-    terra::lines(ground, ...)
+    ground <- do.call(get_grounding_line, extentArgs)
+
+    # Only plot if there is a grounding line to plot!
+    if (nrow(ground) > 0) {
+      if (simplify != 0) ground <- terra::simplifyGeom(ground, simplify)
+      terra::lines(ground, ...)
+    }
   }
 
   # Add coastlines
   if ("c" %in% sbcg) {
-    coast <- get_coastline(extent, crs)
-    if (simplify != 0) coast <- terra::simplifyGeom(coast, simplify)
-    terra::lines(coast, ...)
+    coast <- do.call(get_coastline, extentArgs)
+
+    # Only plot if there is a coastline to plot!
+    if (nrow(coast) > 0) {
+      if (simplify != 0) coast <- terra::simplifyGeom(coast, simplify)
+      terra::lines(coast, ...)
+    }
   }
+
+  # shelves/basins can be explicitly defined by name
+  extentArgs$exactExtents <- exactExtents
 
   # Add shelf outlines
   if ("s" %in% sbcg) {
-    shelves <- get_shelf_outline(extent, exactExtents, crs)
-    # shelves <- get_extent(extent = extent,
-                          # rectangularExtent = !exactExtents,
-                          # returnOnly = "shelves", crs = crs)
+    shelves <- do.call(get_shelf_outline, extentArgs)
 
-    if (simplify != 0) shelves <- terra::simplifyGeom(shelves, simplify)
-    terra::lines(shelves, ...)
+    # Only plot if there is a shelf to plot!
+    if (nrow(shelves) > 0) {
+      if (simplify != 0) shelves <- terra::simplifyGeom(shelves, simplify)
+        terra::lines(shelves, ...)
+    }
   }
 
   # Add basin outlines
   if ("b" %in% sbcg) {
     if (sum(sbcg == "b") > 1) {
-      basins <- get_basin_outline(extent, exactExtents, imbieBasins = FALSE, crs)
+      extentArgs$returnImbie <- FALSE
+      basins <- do.call(get_basin_outline, extentArgs)
     } else {
-      basins <- get_basin_outline(extent, exactExtents, imbieBasins = TRUE, crs)
+      extentArgs$returnImbie <- TRUE
+      basins <- do.call(get_basin_outline, extentArgs)
     }
-    if (simplify != 0) basins <- terra::simplifyGeom(basins, simplify)
-    terra::lines(basins, ...)
+
+    # Only plot if there is a basin to plot!
+    if (nrow(basins) > 0) {
+      if (simplify != 0) basins <- terra::simplifyGeom(basins, simplify)
+      terra::lines(basins, ...)
+    }
   }
 }

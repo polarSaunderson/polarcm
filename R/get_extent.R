@@ -2,7 +2,7 @@ get_extent <- function(extent = "",
                        rectangularExtent = FALSE,
                        preferType = NULL,
                        returnOnly = NULL,
-                       imbieBasins = TRUE,
+                       imbieBasins = NULL,
                        crs = "racmo",
                        crsIn = NULL) {
   #' Return the extent of different Antarctic boundaries
@@ -45,24 +45,25 @@ get_extent <- function(extent = "",
   #'   encompassing the area is returned (TRUE). If multiple ice shelves and/or
   #'   basins are included, the extent box will extend over all of them at once.
   #'
-  #' @param imbieBasins BINARY: Should the IMBIE basins (TRUE, the default) or
-  #'   the MEaSURES basins (FALSE) be returned? The IMBIE basins have codes
-  #'   (e.g. "A-Ap") and are larger regions; the MEaSURES basins have names
-  #'   (that can overlap with the ice shelf names), and are small "sub" regions.
-  #'   If NULL, both are returned.
+  #' @param imbieBasins BINARY: Should the IMBIE basins (TRUE) or the MEaSURES
+  #'   basins (FALSE) be returned? The IMBIE basins have codes (e.g. "A-Ap") and
+  #'   are larger regions; the MEaSURES basins have names (that can overlap with
+  #'   the ice shelf names), and are small "sub" regions. If NULL (the default),
+  #'   both are returned.
   #'
   #' @param preferType Sometimes an ice shelf and the MEaSURES basins have the
   #'   same name; usually they both refer to the same general area, and by
-  #'   default (i.e. preferType = NULL), the two extents are combined to form a
-  #'   new larger extent encompassing both. However, for some names (e.g.
-  #'   "Shackleton" and "Drygalski"), the name refers to a shelf far away from
-  #'   the basin with the same name.
+  #'   default (i.e. preferType = NULL), both are combined to form a new larger
+  #'   extent encompassing both. However, for some names (e.g. "Shackleton" and
+  #'   "Drygalski"), the name refers to an ice shelf far away from the basin
+  #'   with the same name, returning an unexpected extent.
   #'
   #'   This argument lets the user choose between the two types if the name is
-  #'   found in both the ice shelves and basins datasets: "shelf", "floating" or
-  #'   "FL" to return the ice shelves; "basin", "grounded" or "GR" to return the
-  #'   basins. All other names that aren't in both the ice shelves and basins
-  #'   datasets will be returned regardless of this option; see also returnOnly.
+  #'   found in both the ice shelves and basins datasets: "shelf", "shelves",
+  #'   "floating" or "FL" to return the ice shelves; "basin", "basins",
+  #'   "grounded" or "GR" to return the basins. All other names that aren't in
+  #'   both the ice shelves and basins datasets will be returned regardless of
+  #'   this option; see also 'returnOnly'.
   #'
   #' @param returnOnly If there is a list containing both ice shelf and basin
   #'   names, but only one or the other should be returned, use this argument.
@@ -206,6 +207,8 @@ get_extent <- function(extent = "",
       stop("Nothing matched your search criteria!")
     }
 
+    # reproject then bounding box, as the other way around doesn't work
+
     # Reproject
     xBounds <- terra::project(xBounds, use_crs(crs))
 
@@ -214,5 +217,55 @@ get_extent <- function(extent = "",
       xBounds <- terra::ext(xBounds)
     }
   }
+
   return(xBounds)
 }
+
+
+
+# EXAMPLES TO BUILD IN & DOCUMENT PROPERLY
+# # All of Antarctica
+# terra::plot(get_extent(""), main = "t1")
+# terra::lines(get_extent("", rectangularExtent = TRUE), col = "red", lwd = 2)
+#
+# # Single shelf
+# terra::plot(get_extent("Amery"), main = "t2")
+# terra::lines(get_extent("Amery", rectangularExtent = TRUE), col = "red", lwd = 2)
+#
+# # Single basin - IMBIE Basin Names
+# terra::plot(get_extent("A-Ap"), main = "t3")
+# terra::lines(get_extent("A-Ap", rectangularExtent = TRUE), col = "red", lwd = 2)
+#
+# # Single basin - MEaSURES Basin Names
+# terra::plot(get_extent("Vincennes_Bay"), main = "t4")
+# terra::lines(get_extent("Vincennes_Bay", rectangularExtent = TRUE), col = "red", lwd = 2)
+#
+# # Some names appear as both a basin and a shelf
+# terra::plot(get_extent("Shackleton"), main = "t5")
+# terra::lines(get_extent("Shackleton", rectangularExtent = TRUE), col = "red", lwd = 2)
+#
+# # Use preferType for a shelf or basin preference if name is duplicated
+# terra::plot(get_extent("Shackleton"), main = "t6")
+# terra::lines(get_extent("Shackleton", preferType = "shelves"), col = "red", lwd = 2)
+# terra::lines(get_extent("Shackleton", preferType = "basins"), col = "blue", lwd = 2)
+#
+# # Define extent using multiple shelves
+# terra::plot(get_extent(c("Amery", "West")), main = "t7")
+# terra::lines(get_extent(c("Amery", "West"), rectangularExtent = TRUE), col = "red", lwd = 2)
+#
+# # Define extent using multiple shelves and basins together
+# terra::plot(get_extent(c("Amery", "West", "Publications")), main = "t8")
+# terra::lines(get_extent(c("Amery", "West", "Publications"), rectangularExtent = TRUE), col = "red", lwd = 2)
+#
+# # Use only shelves or basins if both are in the vector
+# terra::plot(get_extent(c("Amery", "West", "Publications")), main = "t9")
+# terra::lines(get_extent(c("Amery", "West", "Publications"), returnOnly = "shelves"), col = "red")
+# terra::lines(get_extent(c("Amery", "West", "Publications"), returnOnly = "basins"), col = "blue")
+#
+# # Basins names are defined according to IMBIE or MEaSURES by default
+# terra::plot(get_extent(c("A-Ap", "Vincennes_Bay", "Dry Valleys")), main = "t10")
+#
+# # Use only IMBIE or MEaSURES basins if both are in the vector
+# terra::plot(get_extent(c("A-Ap", "Vincennes_Bay", "Dry Valleys")), main = "t11")
+# terra::lines(get_extent(c("A-Ap", "Vincennes_Bay", "Dry Valleys"), imbieBasins = TRUE), col = "red")
+# terra::lines(get_extent(c("A-Ap", "Vincennes_Bay", "Dry Valleys"), imbieBasins = FALSE), col = "blue")

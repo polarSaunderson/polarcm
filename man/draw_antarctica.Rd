@@ -10,6 +10,7 @@ draw_antarctica(
   exactExtents = TRUE,
   simplify = 0,
   crs = "racmo",
+  crsIn = NULL,
   ...
 )
 }

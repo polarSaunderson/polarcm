@@ -4,20 +4,52 @@
 \alias{get_coastline}
 \title{Return the MEaSURES coastline for a given extent}
 \usage{
-get_coastline(extent = "", crs = "racmo", preferType = NULL, crsIn = NULL)
+get_coastline(
+  extent = "",
+  rectangularExtent = TRUE,
+  preferType = NULL,
+  returnOnly = NULL,
+  imbieBasins = NULL,
+  crs = "racmo",
+  crsIn = NULL
+)
 }
 \arguments{
 \item{extent}{Define the area within which to get the coastline. This
 argument is fed into \code{get_extent()}; see there for details.}
 
-\item{crs}{"string": Which projection should the coastline be returned in?}
+\item{preferType}{Sometimes an ice shelf and the MEaSURES basins have the
+same name; usually they both refer to the same general area, and by
+default (i.e. preferType = NULL), both are combined to form a new larger
+extent encompassing both. However, for some names (e.g. "Shackleton" and
+"Drygalski"), the name refers to an ice shelf far away from the basin
+with the same name, returning an unexpected extent.
 
-\item{preferType}{"string": Use ice shelves or basins if there is a clash?
-See \code{get_extent()} for a full explanation.}
+This argument lets the user choose between the two types if the name is
+found in both the ice shelves and basins datasets: "shelf", "shelves",
+"floating" or "FL" to return the ice shelves; "basin", "basins",
+"grounded" or "GR" to return the basins. All other names that aren't in
+both the ice shelves and basins datasets will be returned regardless of
+this option; see also 'returnOnly'.}
+
+\item{returnOnly}{If there is a list containing both ice shelf and basin
+names, but only one or the other should be returned, use this argument.
+Ice shelves or basins are specified as outlined in the preferType
+argument.}
+
+\item{imbieBasins}{BINARY: Should the IMBIE basins (TRUE) or the MEaSURES
+basins (FALSE) be returned? The IMBIE basins have codes (e.g. "A-Ap") and
+are larger regions; the MEaSURES basins have names (that can overlap with
+the ice shelf names), and are small "sub" regions. If NULL (the default),
+both are returned.}
+
+\item{crs}{"string": Which projection should the coastline be returned in?}
 
 \item{crsIn}{"string": Which projection is the extent given in? Needs
 defining if the extent is a SpatExtent, as they do not have crs value
 attached.}
+
+\item{...}{Any arguments that can be passed to \code{get_extent()}.}
 }
 \description{
 This function is useful for plotting the Antarctic coastline
@@ -31,13 +63,17 @@ The coastlines can be reprojected using the "crs" argument, defaulting to
   t1 <- get_coastline()
   terra::plot(t1)
 
-  # Single shelf
+  # Coastline of a single shelf
   t2 <- get_coastline("Amery")
   terra::plot(t2)
 
-  # Multiple shelves
-  t3 <- get_coastline(c("Amery", "West"))
+  # Coastline of separate shelves
+  t3 <- get_coastline(c("Amery", "West"), rectangularExtent = FALSE)
   terra::plot(t3)
+
+  # All coastlines in the bounding box around multiple shelves
+  t4 <- get_coastline(c("Amery", "West"), rectangularExtent = TRUE)
+  terra::plot(t4)
 
   # Compare preferType options
   t4 <- get_coastline("Drygalski", preferType = NULL)

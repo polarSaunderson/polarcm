@@ -9,7 +9,7 @@ get_extent(
   rectangularExtent = FALSE,
   preferType = NULL,
   returnOnly = NULL,
-  imbieBasins = TRUE,
+  imbieBasins = NULL,
   crs = "racmo",
   crsIn = NULL
 )
@@ -41,27 +41,28 @@ SpatExtent will be returned.}
 
 \item{preferType}{Sometimes an ice shelf and the MEaSURES basins have the
 same name; usually they both refer to the same general area, and by
-default (i.e. preferType = NULL), the two extents are combined to form a
-new larger extent encompassing both. However, for some names (e.g.
-"Shackleton" and "Drygalski"), the name refers to a shelf far away from
-the basin with the same name.
+default (i.e. preferType = NULL), both are combined to form a new larger
+extent encompassing both. However, for some names (e.g. "Shackleton" and
+"Drygalski"), the name refers to an ice shelf far away from the basin
+with the same name, returning an unexpected extent.
 
 This argument lets the user choose between the two types if the name is
-found in both the ice shelves and basins datasets: "shelf", "floating" or
-"FL" to return the ice shelves; "basin", "grounded" or "GR" to return the
-basins. All other names that aren't in both the ice shelves and basins
-datasets will be returned regardless of this option; see also returnOnly.}
+found in both the ice shelves and basins datasets: "shelf", "shelves",
+"floating" or "FL" to return the ice shelves; "basin", "basins",
+"grounded" or "GR" to return the basins. All other names that aren't in
+both the ice shelves and basins datasets will be returned regardless of
+this option; see also 'returnOnly'.}
 
 \item{returnOnly}{If there is a list containing both ice shelf and basin
 names, but only one or the other should be returned, use this argument.
 Ice shelves or basins are specified as outlined in the preferType
 argument.}
 
-\item{imbieBasins}{BINARY: Should the IMBIE basins (TRUE, the default) or
-the MEaSURES basins (FALSE) be returned? The IMBIE basins have codes
-(e.g. "A-Ap") and are larger regions; the MEaSURES basins have names
-(that can overlap with the ice shelf names), and are small "sub" regions.
-If NULL, both are returned.}
+\item{imbieBasins}{BINARY: Should the IMBIE basins (TRUE) or the MEaSURES
+basins (FALSE) be returned? The IMBIE basins have codes (e.g. "A-Ap") and
+are larger regions; the MEaSURES basins have names (that can overlap with
+the ice shelf names), and are small "sub" regions. If NULL (the default),
+both are returned.}
 
 \item{crs}{"string": Which crs should the extent be returned with? See
 \code{use_crs()} or \code{terra::crs()}.}

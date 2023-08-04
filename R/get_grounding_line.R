@@ -1,23 +1,23 @@
 get_grounding_line <- function(extent = "",
-                               crs = "racmo",
+                               rectangularExtent = TRUE,
                                preferType = NULL,
+                               returnOnly = NULL,
+                               imbieBasins = NULL,
+                               crs = "racmo",
                                crsIn = NULL) {
   #' Return the MEaSURES grounding line for a given extent
   #'
-  #' @description This function is useful for plotting the grounding line (GL)
-  #'   of Antarctica. It is mainly used in the `draw_antarctica()` function, but
-  #'   works separately as well. The GL can be reprojected using the "crs"
-  #'   argument, defaulting to "racmo".
+  #' @description This function is useful for plotting the Antarctic grounding
+  #'   line (i.e. where ice shelves become afloat). An extent is defined
+  #'   according to `get_extent()`, and the grounding line that intersects with
+  #'   the extent is returned. This function is mainly for use in the
+  #'   `draw_antarctica()` function.
   #'
-  #' @param extent Define the area within which to get the grounding line. This
+  #' @param extent Define the extent used to crop the grounding line. This
   #'   argument is fed into `get_extent()`; see there for details.
   #' @param crs "string": Which projection should the grounding line be returned
   #'   in?
-  #' @param preferType "string": Use ice shelves or basins if there is a clash
-  #'   in the extent definition? See `get_extent()` for a full explanation.
-  #' @param crsIn "string": Which projection is the extent given in? Needs
-  #'   defining if the extent is a SpatExtent, as they do not have crs value
-  #'   attached.
+  #' @inheritParams get_extent
   #'
   #' @examples
   #'   # Full grounding line
@@ -48,14 +48,16 @@ get_grounding_line <- function(extent = "",
   # Prepare full grounding line data
   groundingLine <- define_racmo_globals()$measures$groundingLine
   groundingLine <- terra::vect(terra::geom(groundingLine), type = "lines")
-  terra::crs(groundingLine) <- use_crs("stereo")   # MEaSURES is EPSG:3031
+  terra::crs(groundingLine) <- use_crs("stereo")    # MEaSURES is EPSG:3031
 
   # Define the required extent
-  extent     <- get_extent(extent = extent,
-                           rectangularExtent = TRUE,
-                           preferType = preferType,
-                           crsIn = crsIn,
-                           crs = use_crs("stereo")) # return in 3031 to match GL
+  extent <- get_extent(extent = extent,
+                       rectangularExtent = rectangularExtent,
+                       preferType = preferType,
+                       returnOnly = returnOnly,
+                       imbieBasins = imbieBasins,
+                       crs = use_crs("stereo"),     # return in 3031 to match GL
+                       crsIn = crsIn)
 
   # Crop the full grounding line to the required extent
   groundingLine <- terra::intersect(x = groundingLine,
