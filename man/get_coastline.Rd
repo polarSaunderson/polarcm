@@ -8,19 +8,19 @@ get_coastline(
   extent = "",
   rectangularExtent = TRUE,
   preferType = NULL,
-  returnOnly = NULL,
+  useOnly = NULL,
   imbieBasins = NULL,
   crs = "racmo",
   crsIn = NULL
 )
 }
 \arguments{
-\item{extent}{Define the area within which to get the coastline. This
-argument is fed into \code{get_extent()}; see there for details.}
+\item{extent}{Define the extent used to crop the coastline. This argument
+is fed into \code{get_extent()}; see there for details of valid input.}
 
 \item{preferType}{Sometimes an ice shelf and the MEaSURES basins have the
 same name; usually they both refer to the same general area, and by
-default (i.e. preferType = NULL), both are combined to form a new larger
+default (i.e. 'preferType' = NULL), both are combined to form a new larger
 extent encompassing both. However, for some names (e.g. "Shackleton" and
 "Drygalski"), the name refers to an ice shelf far away from the basin
 with the same name, returning an unexpected extent.
@@ -30,35 +30,37 @@ found in both the ice shelves and basins datasets: "shelf", "shelves",
 "floating" or "FL" to return the ice shelves; "basin", "basins",
 "grounded" or "GR" to return the basins. All other names that aren't in
 both the ice shelves and basins datasets will be returned regardless of
-this option; see also 'returnOnly'.}
+this option. See also 'useOnly'.}
 
-\item{returnOnly}{If there is a list containing both ice shelf and basin
-names, but only one or the other should be returned, use this argument.
-Ice shelves or basins are specified as outlined in the preferType
+\item{useOnly}{If there is a vector containing both ice shelf and basin
+names, but only one or the other should be included, use this argument.
+Ice shelves or basins are specified as outlined in the 'preferType'
 argument.}
 
 \item{imbieBasins}{BINARY: Should the IMBIE basins (TRUE) or the MEaSURES
-basins (FALSE) be returned? The IMBIE basins have codes (e.g. "A-Ap") and
-are larger regions; the MEaSURES basins have names (that can overlap with
-the ice shelf names), and are small "sub" regions. If NULL (the default),
-both are returned.}
+basins (FALSE) be used to define the extent? The IMBIE basins have codes
+(e.g. "A-Ap") and are larger regions; the MEaSURES basins have names
+(that can overlap with the ice shelf names), and are smaller "sub" regions.
+If NULL (the default), both are returned. This is mainly useful if there
+is a vector containing both, but only one should be used. See also
+'useOnly'. Distinct from the 'returnImbie' argument used in similar
+functions such as \code{get_shelf_outline()} and \code{get_basin_outline()}.}
 
 \item{crs}{"string": Which projection should the coastline be returned in?}
 
 \item{crsIn}{"string": Which projection is the extent given in? Needs
-defining if the extent is a SpatExtent, as they do not have crs value
+defining if the extent is a SpatExtent, as they do not have a crs value
 attached.}
-
-\item{...}{Any arguments that can be passed to \code{get_extent()}.}
 }
 \description{
 This function is useful for plotting the Antarctic coastline
-(i.e. the most seaward part of the ice, grounded or shelf). It is mainly
-used in the \code{draw_antarctica()} function, but works separately as well.
-The coastlines can be reprojected using the "crs" argument, defaulting to
-"racmo".
+(i.e. the most seaward part of the ice, either grounded or ice shelf). An
+extent is defined according to \code{get_extent()}, and the coastline that
+intersects with the extent is returned. This function is mainly for use
+in the \code{draw_antarctica()} function.
 }
 \examples{
+-----------------------------------------------------------------
   # Full coastline
   t1 <- get_coastline()
   terra::plot(t1)

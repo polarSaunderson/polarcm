@@ -4,29 +4,64 @@
 \alias{get_grounding_line}
 \title{Return the MEaSURES grounding line for a given extent}
 \usage{
-get_grounding_line(extent = "", crs = "racmo", preferType = NULL, crsIn = NULL)
+get_grounding_line(
+  extent = "",
+  rectangularExtent = TRUE,
+  preferType = NULL,
+  useOnly = NULL,
+  imbieBasins = NULL,
+  crs = "racmo",
+  crsIn = NULL
+)
 }
 \arguments{
-\item{extent}{Define the area within which to get the grounding line. This
-argument is fed into \code{get_extent()}; see there for details.}
+\item{extent}{Define the extent used to crop the grounding line. This
+argument is fed into \code{get_extent()}; see there for details of valid input.}
+
+\item{preferType}{Sometimes an ice shelf and the MEaSURES basins have the
+same name; usually they both refer to the same general area, and by
+default (i.e. 'preferType' = NULL), both are combined to form a new larger
+extent encompassing both. However, for some names (e.g. "Shackleton" and
+"Drygalski"), the name refers to an ice shelf far away from the basin
+with the same name, returning an unexpected extent.
+
+This argument lets the user choose between the two types if the name is
+found in both the ice shelves and basins datasets: "shelf", "shelves",
+"floating" or "FL" to return the ice shelves; "basin", "basins",
+"grounded" or "GR" to return the basins. All other names that aren't in
+both the ice shelves and basins datasets will be returned regardless of
+this option. See also 'useOnly'.}
+
+\item{useOnly}{If there is a vector containing both ice shelf and basin
+names, but only one or the other should be included, use this argument.
+Ice shelves or basins are specified as outlined in the 'preferType'
+argument.}
+
+\item{imbieBasins}{BINARY: Should the IMBIE basins (TRUE) or the MEaSURES
+basins (FALSE) be used to define the extent? The IMBIE basins have codes
+(e.g. "A-Ap") and are larger regions; the MEaSURES basins have names
+(that can overlap with the ice shelf names), and are smaller "sub" regions.
+If NULL (the default), both are returned. This is mainly useful if there
+is a vector containing both, but only one should be used. See also
+'useOnly'. Distinct from the 'returnImbie' argument used in similar
+functions such as \code{get_shelf_outline()} and \code{get_basin_outline()}.}
 
 \item{crs}{"string": Which projection should the grounding line be returned
 in?}
 
-\item{preferType}{"string": Use ice shelves or basins if there is a clash
-in the extent definition? See \code{get_extent()} for a full explanation.}
-
 \item{crsIn}{"string": Which projection is the extent given in? Needs
-defining if the extent is a SpatExtent, as they do not have crs value
+defining if the extent is a SpatExtent, as they do not have a crs value
 attached.}
 }
 \description{
-This function is useful for plotting the grounding line (GL)
-of Antarctica. It is mainly used in the \code{draw_antarctica()} function, but
-works separately as well. The GL can be reprojected using the "crs"
-argument, defaulting to "racmo".
+This function is useful for plotting the Antarctic grounding
+line (i.e. where ice shelves become afloat). An extent is defined
+according to \code{get_extent()}, and the grounding line that intersects with
+the extent is returned. This function is mainly for use in the
+\code{draw_antarctica()} function.
 }
 \examples{
+-----------------------------------------------------------------
   # Full grounding line
   t1 <- get_grounding_line()
   terra::plot(t1)

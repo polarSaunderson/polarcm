@@ -1,7 +1,7 @@
 get_coastline <- function(extent = "",
                           rectangularExtent = TRUE,
                           preferType = NULL,
-                          returnOnly = NULL,
+                          useOnly = NULL,
                           imbieBasins = NULL,
                           crs = "racmo",
                           crsIn = NULL) {
@@ -14,11 +14,11 @@ get_coastline <- function(extent = "",
   #'   in the `draw_antarctica()` function.
   #'
   #' @param extent Define the extent used to crop the coastline. This argument
-  #'   is fed into `get_extent()`; see there for details.
+  #'   is fed into `get_extent()`; see there for details of valid input.
   #' @param crs "string": Which projection should the coastline be returned in?
   #' @inheritParams get_extent
   #'
-  #' @examples
+  #' @examples -----------------------------------------------------------------
   #'   # Full coastline
   #'   t1 <- get_coastline()
   #'   terra::plot(t1)
@@ -57,7 +57,7 @@ get_coastline <- function(extent = "",
   extent <- get_extent(extent = extent,
                        rectangularExtent = rectangularExtent,
                        preferType = preferType,
-                       returnOnly = returnOnly,
+                       useOnly = useOnly,
                        imbieBasins = imbieBasins,
                        crs = use_crs("stereo"),  # return in 3031 to match coast
                        crsIn = crsIn)

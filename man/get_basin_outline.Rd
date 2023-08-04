@@ -2,43 +2,96 @@
 % Please edit documentation in R/get_basin_outline.R
 \name{get_basin_outline}
 \alias{get_basin_outline}
-\title{Return the MEaSURES basin outlines for a given extent}
+\title{Return basin outlines for a given extent}
 \usage{
 get_basin_outline(
   extent = "",
-  exactExtents = TRUE,
-  imbieBasins = NULL,
+  rectangularExtent = FALSE,
+  returnImbie = NULL,
   crs = "racmo",
+  preferType = NULL,
+  useOnly = NULL,
+  imbieBasins = NULL,
   crsIn = NULL
 )
 }
 \arguments{
-\item{extent}{Define the area within which to get the basin outlines. Exact
-basin names can be used, as can SpatRasters, SpatVectors, or SpatExtents,
-or it can be left empty, and all basins are returned. For exactExtents =
-TRUE to work, this argument must be a string with the MEaSURES names of
-the required basins. Fed into \code{get_extent()}; see there for details.}
+\item{extent}{Define the extent used to select basins.
 
-\item{exactExtents}{BINARY: Should only the defined basin/s be included
-(TRUE), or can the outlines of all basins within the bounding box be
-included too (FALSE)?}
+To return only specific basins, enter their names as a vector, and set
+'rectangularExtents' as FALSE (the default).
 
-\item{imbieBasins}{BINARY: Should the IMBIE basins (TRUE, the default) or
-the MEaSURES basins (FALSE) be returned? The IMBIE basins have codes
+To return any basins that fall within a geographical extent, set
+'rectangularExtents' as TRUE, and follow the logic of \code{get_extents()} to
+define the geographical extent. The most obvious reason to do this would
+be to include the outline of basins within the bounding box of the named
+basins, but that aren't named themselves. See examples.}
+
+\item{returnImbie}{BINARY: By default (NULL), both "IMBIE" and "MEaSURES"
+basins within the extent are returned. Set this to return only the
+"IMBIE" (TRUE) or "MEaSURES" (FALSE) basins. This argument is distinct to
+the 'useOnly' and 'imbieBasins', which are used by \code{get_extent()} to
+define the initial extent to search for basins in.}
+
+\item{crs}{"string": Which projection should the basins be returned in?}
+
+\item{preferType}{Sometimes an ice shelf and the MEaSURES basins have the
+same name; usually they both refer to the same general area, and by
+default (i.e. 'preferType' = NULL), both are combined to form a new larger
+extent encompassing both. However, for some names (e.g. "Shackleton" and
+"Drygalski"), the name refers to an ice shelf far away from the basin
+with the same name, returning an unexpected extent.
+
+This argument lets the user choose between the two types if the name is
+found in both the ice shelves and basins datasets: "shelf", "shelves",
+"floating" or "FL" to return the ice shelves; "basin", "basins",
+"grounded" or "GR" to return the basins. All other names that aren't in
+both the ice shelves and basins datasets will be returned regardless of
+this option. See also 'useOnly'.}
+
+\item{useOnly}{If there is a vector containing both ice shelf and basin
+names, but only one or the other should be included, use this argument.
+Ice shelves or basins are specified as outlined in the 'preferType'
+argument.}
+
+\item{imbieBasins}{BINARY: Should the IMBIE basins (TRUE) or the MEaSURES
+basins (FALSE) be used to define the extent? The IMBIE basins have codes
 (e.g. "A-Ap") and are larger regions; the MEaSURES basins have names
-(that can overlap with the ice shelf names), and are small "sub" regions.
-If NULL, both are returned.}
-
-\item{crs}{"string": Which projection should the grounding line be returned
-in?}
+(that can overlap with the ice shelf names), and are smaller "sub" regions.
+If NULL (the default), both are returned. This is mainly useful if there
+is a vector containing both, but only one should be used. See also
+'useOnly'. Distinct from the 'returnImbie' argument used in similar
+functions such as \code{get_shelf_outline()} and \code{get_basin_outline()}.}
 
 \item{crsIn}{"string": Which projection is the extent given in? Needs
-defining if the extent is a SpatExtent, as they do not have crs value
+defining if the extent is a SpatExtent, as they do not have a crs value
 attached.}
 }
 \description{
 This function is useful for plotting basins in Antarctica. It
 is mainly used in the \code{draw_antarctica()} function, but works separately
-as well. The basins can be reprojected using the "crs" argument,
-defaulting to "racmo".
+as well. It is possible to return only IMBIE basins (e.g. "A-AP"), only
+MEaSURES basins (e.g. "Vincennes_Bay"), or both; see 'returnImbie'.
+
+The function works in two ways.
+\enumerate{
+\item a vector of basin names can be entered as the 'extent', and these
+basins are simply returned from the relevant MEaSURES/IMBIE dataset. The
+names must match the dataset exactly.
+\item an extent can be defined according to \code{get_extent()}. Any basins which
+intersect with this extent (and match the 'returnImbie' argument) are
+then returned. This occurs if 'rectangularExtent' is TRUE, and most of
+the remaining arguments are fed directly into \code{get_extent()}.
+}
+
+Finally, the basins can be reprojected (set via 'crs').
+}
+\examples{
+-----------------------------------------------------------------
+  # Compare returnImbie argument
+  t1 <- "A-Ap"
+  get_basin_outline(t1) |> terra::plot(col = "black")
+  get_basin_outline(t1, FALSE, returnImbie = NULL) |>
+  terra::lines(col = "red", lwd = 2)
+
 }

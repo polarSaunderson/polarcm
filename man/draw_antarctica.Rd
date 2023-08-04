@@ -10,7 +10,7 @@ draw_antarctica(
   exactExtents = TRUE,
   simplify = 0,
   crs = "racmo",
-  crsIn = NULL,
+  extentArgs = list(),
   ...
 )
 }
@@ -38,6 +38,9 @@ numbers are coarser; 0 (default) is no simplifying.}
 
 \item{crs}{"string": Which crs should the lines be drawn in? See the
 \code{set_crs()} function}
+
+\item{extentArgs}{A list of arguments to feed into \code{get_extent()}. Only
+necessary if}
 
 \item{...}{Any arguments that can be used in \code{terra::lines()}}
 }

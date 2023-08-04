@@ -1,7 +1,7 @@
 get_grounding_line <- function(extent = "",
                                rectangularExtent = TRUE,
                                preferType = NULL,
-                               returnOnly = NULL,
+                               useOnly = NULL,
                                imbieBasins = NULL,
                                crs = "racmo",
                                crsIn = NULL) {
@@ -14,12 +14,12 @@ get_grounding_line <- function(extent = "",
   #'   `draw_antarctica()` function.
   #'
   #' @param extent Define the extent used to crop the grounding line. This
-  #'   argument is fed into `get_extent()`; see there for details.
+  #'   argument is fed into `get_extent()`; see there for details of valid input.
   #' @param crs "string": Which projection should the grounding line be returned
   #'   in?
   #' @inheritParams get_extent
   #'
-  #' @examples
+  #' @examples -----------------------------------------------------------------
   #'   # Full grounding line
   #'   t1 <- get_grounding_line()
   #'   terra::plot(t1)
@@ -54,7 +54,7 @@ get_grounding_line <- function(extent = "",
   extent <- get_extent(extent = extent,
                        rectangularExtent = rectangularExtent,
                        preferType = preferType,
-                       returnOnly = returnOnly,
+                       useOnly = useOnly,
                        imbieBasins = imbieBasins,
                        crs = use_crs("stereo"),     # return in 3031 to match GL
                        crsIn = crsIn)

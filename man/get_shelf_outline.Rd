@@ -2,40 +2,84 @@
 % Please edit documentation in R/get_shelf_outline.R
 \name{get_shelf_outline}
 \alias{get_shelf_outline}
-\title{Return the MEaSURES shelf outlines for a given extent}
+\title{Return ice shelf outlines for a given extent}
 \usage{
 get_shelf_outline(
   extent = "",
-  exactExtents = TRUE,
+  rectangularExtent = FALSE,
   crs = "racmo",
+  preferType = NULL,
+  useOnly = NULL,
+  imbieBasins = NULL,
   crsIn = NULL
 )
 }
 \arguments{
-\item{extent}{Define the area within which to get the shelf outlines. Exact
-shelf names can be used, as can SpatRasters, SpatVectors, or SpatExtents,
-or it can be left empty, and all shelves are returned. For exactExtents =
-TRUE to work, this argument must be a string with the MEaSURES names of
-the required shelves. Fed into \code{get_extent()}; see there for details.}
+\item{extent}{Define the extent used to select ice shelves.
 
-\item{exactExtents}{BINARY: Should only the defined shelf/shelves be
-included (TRUE), or can the outlines of all shelves within the bounding
-box be included too (FALSE)?}
+To return only specific ice shelves, enter their names as a vector, and
+set 'rectangularExtents' as FALSE (the default).
 
-\item{crs}{"string": Which projection should the grounding line be returned
-in?}
+To return any ice shelves that fall within a geographical extent, set
+'rectangularExtents' as TRUE, and follow the logic of \code{get_extents()} to
+define the geographical extent. The most obvious reason to do this would
+be to include the outline of ice shelves within the bounding box of the
+named ice shelves, but that aren't named themselves. See examples.}
+
+\item{crs}{"string": Which projection should the shelves be returned in?}
+
+\item{preferType}{Sometimes an ice shelf and the MEaSURES basins have the
+same name; usually they both refer to the same general area, and by
+default (i.e. 'preferType' = NULL), both are combined to form a new larger
+extent encompassing both. However, for some names (e.g. "Shackleton" and
+"Drygalski"), the name refers to an ice shelf far away from the basin
+with the same name, returning an unexpected extent.
+
+This argument lets the user choose between the two types if the name is
+found in both the ice shelves and basins datasets: "shelf", "shelves",
+"floating" or "FL" to return the ice shelves; "basin", "basins",
+"grounded" or "GR" to return the basins. All other names that aren't in
+both the ice shelves and basins datasets will be returned regardless of
+this option. See also 'useOnly'.}
+
+\item{useOnly}{If there is a vector containing both ice shelf and basin
+names, but only one or the other should be included, use this argument.
+Ice shelves or basins are specified as outlined in the 'preferType'
+argument.}
+
+\item{imbieBasins}{BINARY: Should the IMBIE basins (TRUE) or the MEaSURES
+basins (FALSE) be used to define the extent? The IMBIE basins have codes
+(e.g. "A-Ap") and are larger regions; the MEaSURES basins have names
+(that can overlap with the ice shelf names), and are smaller "sub" regions.
+If NULL (the default), both are returned. This is mainly useful if there
+is a vector containing both, but only one should be used. See also
+'useOnly'. Distinct from the 'returnImbie' argument used in similar
+functions such as \code{get_shelf_outline()} and \code{get_basin_outline()}.}
 
 \item{crsIn}{"string": Which projection is the extent given in? Needs
-defining if the extent is a SpatExtent, as they do not have crs value
+defining if the extent is a SpatExtent, as they do not have a crs value
 attached.}
 }
 \description{
 This function is useful for plotting ice shelves in
-Antarctica. It is mainly used in the \code{draw_antarctica()} function, but
-works separately as well. The ice shelves can be reprojected using the
-"crs" argument, defaulting to "racmo".
+Antarctica. It is mainly used in the \code{crop_racmo...()} and
+\code{draw_antarctica()} functions.
+
+The function works in two ways.
+\enumerate{
+\item a vector of shelf names can be entered as the 'extent', and these
+shelves are simply returned from the MEaSURES ice shelf dataset. The
+names must match the dataset exactly.
+\item an extent can be defined according to \code{get_extent()}. Any shelves
+which intersect with this extent are then returned. This occurs if
+'rectangularExtent' is TRUE, and most of the remaining arguments are fed
+directly into \code{get_extent()}.
+}
+
+Finally, the shelves can be reprojected (set via 'crs').
 }
 \examples{
+-----------------------------------------------------------------
   # All ice shelves in Antarctica
   t1 <- get_shelf_outline()
   terra::plot(t1)
@@ -44,11 +88,11 @@ works separately as well. The ice shelves can be reprojected using the
   terra::plot(t2)
 
   # Multiple shelves; only the named shelves
-  t3 <- get_shelf_outline(c("Amery", "West"), exactExtents = TRUE)
+  t3 <- get_shelf_outline(c("Amery", "West"), rectangularExtent = FALSE)
   terra::plot(t3)
 
   # Multiple shelves; includes intermediary shelves
-  t4 <- get_shelf_outline(c("Amery", "West"), exactExtents = FALSE)
+  t4 <- get_shelf_outline(c("Amery", "West"), rectangularExtent = TRUE)
   terra::plot(t4)
 
 }
