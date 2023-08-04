@@ -141,7 +141,9 @@ get_extent <- function(extent = "",
   if (length(intersect(extentType, c("SpatRaster", "SpatVector"))) > 0) {
   # Extent of the SpatRaster or SpatVector
     xBounds <- terra::project(extent, use_crs(crs))
-    xBounds <- terra::ext(xBounds)
+    if (isTRUE(rectangularExtent)) {
+      xBounds <- terra::ext(xBounds)
+    }
   } else if ("SpatExtent" %in% extentType) {
   # Extent of the SpatExtent
     xBounds <- terra::rast(extent, crs = use_crs(crsIn)) |> # rast to reproject

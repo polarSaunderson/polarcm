@@ -14,6 +14,10 @@ The public version of this repo can be accessed at:
   https://github.com/polarSaunderson/racmoR
 
 ## To-Do
+### 2023-08-05
+- [ ] Could calculate_racmo_in_space be a closure?
+ - [ ] Need to do sum_in_space at least, but sd / median / percentiles / summary
+
 ### 2023-08-04
 - [X] improve the crop_racmo functions
  - [X] simplify - not too many options!
@@ -33,6 +37,6 @@ The public version of this repo can be accessed at:
 - [X] create crop_racmo functions
 - [X] draw_antarctica function
 - [ ] draw_racmo_axes functions
-- [ ] calculate_racmoX functions
+- [/] calculate_racmoX functions
 - [ ] create_racmoX_NetCDFs
 
