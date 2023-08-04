@@ -18,3 +18,7 @@ The public version of this repo can be accessed at:
 - [ ] get_extent uses %notIn%
 - [ ] think about projection order in get_coastlines()
 - [ ] updated examples for get_extent based on imbieBasins argument
+- [X] create crop_racmo functions
+- [ ] draw_antarctica and draw_racmo_axes functions
+- [ ] calculate_racmoX functions
+- [ ] create_racmoX_NetCDFs
