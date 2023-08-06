@@ -1,6 +1,7 @@
 calc_racmo_in_space <- function(racmoData,
                                 extent,
                                 FUN,
+                                ...,
                                 minArea = 0,
                                 weight = FALSE,
                                 extentArgs = list()) {
@@ -25,11 +26,12 @@ calc_racmo_in_space <- function(racmoData,
   #' @param extent Define the spatial extent used to apply 'FUN' over. Fed
   #'   directly into `get_extent()`; see there for details. See also
   #'   'extentArgs'.
-  #' @param FUN Which function should be applied? e.g. "mean", "sd", "median".
-  #'   It is applied across all of the pixels in each single layer. For example,
-  #'   "mean" gives the average pixel value across a shelf for each date of
-  #'   'racmoData'; using "sd" would calculate the standard deviation across
-  #'   those pixels.
+  #' @param FUN Which function should be applied? Examples include "mean", "sd",
+  #'   and "median". It is applied across all of the pixels in each single
+  #'   layer. For example, "mean" gives the average pixel value across a shelf
+  #'   for each date of 'racmoData'; using "sd" would calculate the standard
+  #'  deviation across those pixels.
+  #' @param ... Any arguments that should be passed to the 'FUN' function.
   #' @param minArea numeric: Threshold value to determine the minimum fraction
   #'   of a pixel that must be covered by the 'extent' to be included in the
   #'   calculation. Pixels with a lower fraction are simply excluded from the
@@ -63,7 +65,7 @@ calc_racmo_in_space <- function(racmoData,
   # Code -----------------------------------------------------------------------
   # Extract data
   extentArgs$extent <- extent
-  extent <- do.call(get_extent, extentArgs)
+  extent      <- do.call(get_extent, extentArgs)
   pixelValues <- terra::extract(racmoData, extent, exact = TRUE)
   pixelValues <- pixelValues[pixelValues$fraction > minArea, ]
 
@@ -74,7 +76,7 @@ calc_racmo_in_space <- function(racmoData,
 
   # Apply the FUN function on each layer (each column / each date)
   funName     <- as.character(substitute(FUN))
-  racmoValues <- apply(pixelValues, 2, FUN)
+  racmoValues <- apply(pixelValues, 2, FUN, ...)
   racmoValues <- racmoValues[-c(1, length(racmoValues))] # remove fraction & ID
 
   # Create as a data frame

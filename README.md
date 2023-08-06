@@ -15,7 +15,8 @@ The public version of this repo can be accessed at:
 
 ## To-Do
 ### 2023-08-05
-- [X] Could calculate_racmo_in_space be a closure? No, just use a functional!
+- [ ] create_multiMonth_data_each_X; use functionals there too!
+- [X] Could calculate_racmo_in_space be a closure? No, just use a functional.
  - [X] Need to do sum_in_space at least, but sd / median / percentiles / summary
 
 ### 2023-08-04

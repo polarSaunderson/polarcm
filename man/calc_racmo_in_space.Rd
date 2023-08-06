@@ -8,6 +8,7 @@ calc_racmo_in_space(
   racmoData,
   extent,
   FUN,
+  ...,
   minArea = 0,
   weight = FALSE,
   extentArgs = list()
@@ -21,11 +22,13 @@ an existing SpatRaster.}
 directly into \code{get_extent()}; see there for details. See also
 'extentArgs'.}
 
-\item{FUN}{Which function should be applied? e.g. "mean", "sd", "median".
-It is applied across all of the pixels in each single layer. For example,
-"mean" gives the average pixel value across a shelf for each date of
-'racmoData'; using "sd" would calculate the standard deviation across
-those pixels.}
+\item{FUN}{Which function should be applied? Examples include "mean", "sd",
+and "median". It is applied across all of the pixels in each single
+layer. For example, "mean" gives the average pixel value across a shelf
+for each date of 'racmoData'; using "sd" would calculate the standard
+deviation across those pixels.}
+
+\item{...}{Any arguments that should be passed to the 'FUN' function.}
 
 \item{minArea}{numeric: Threshold value to determine the minimum fraction
 of a pixel that must be covered by the 'extent' to be included in the
