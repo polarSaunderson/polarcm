@@ -4,7 +4,7 @@
 \alias{subset_racmoM_by_month}
 \title{Subset monthly RACMO data based on the month}
 \usage{
-subset_racmoM_by_month(racmoData, months, removeIncomplete = 3)
+subset_racmoM_by_month(racmoData, months, excludeIncomplete = 3)
 }
 \arguments{
 \item{months}{vector: Which month/s to return? Input can be the month
@@ -13,18 +13,18 @@ number (e.g. 12) or the month name, either in full ("December",
 at once (e.g. c(12, 1, 2)), but do not try to mix strings and numbers in
 the vector.}
 
-\item{removeIncomplete}{If the value is "years", the data is run through
-\code{terrapin::remove_incomplete_years()}, and only months in years with all
-requested months in are returned. If the value is numeric (between 1 and
-12), the data is fed into the
-\code{terrapin::remove_incomplete_austral_summers()} and the value is used as
-the "australSplit" argument to return only months in austral summers that
-contain all requested months. If any other value, all layers matching the
-months argument are returned, regardless of the summer or year.}
-
 \item{racmoData:}{The monthly RACMO data to subset. Can be either a
 variable name, in which case raw monthly RACMO data is read in; or an
 existing spatRaster of monthly RACMO data.}
+
+\item{removeIncomplete}{If the value is "years", the data is run through
+\code{terrapin::exclude_incomplete_years()}, and only months in years with all
+requested months in are returned. If the value is numeric (between 1 and
+12), the data is fed into the
+\code{terrapin::exclude_incomplete_summers()} and the value is used as
+the 'australSplit' argument to return only months in austral summers that
+contain all requested months. If any other value, all layers matching the
+months argument are returned, regardless of the summer or year.}
 }
 \description{
 Subset monthly RACMO data based on month. This function is

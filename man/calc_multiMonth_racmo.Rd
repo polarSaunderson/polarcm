@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_multimonth_racmo.R
 \name{calc_multiMonth_racmo}
 \alias{calc_multiMonth_racmo}
-\title{Calculate RACMO values over a multiple month period each year summer}
+\title{Calculate RACMO values over multiple months each year / austral summer}
 \usage{
 calc_multiMonth_racmo(racmoData, months, annual, FUN, ...)
 }
@@ -46,16 +46,16 @@ The following examples further illustrates this function.
 each year from 1979--2018 (i.e. 12 months * 40 years = 480 layers). Set
 'months' as c(6, 7, 8) (i.e. JJA), and FUN as "sum". The returned
 SpatRaster will contain 40 layers, with each one being that year's total
-JJA precipitation. The date of each returned layer is the median value of
-the constituent layers that it was computed from. Only layers with the
-same units are processed together, and only years when all requested
-months are available are returned.
+JJA precipitation. The date of each returned layer is the date of the
+first of the constituent layers that it was computed from. Only layers
+with the same units are processed together, and only years when all
+requested months are available are returned.
 \item Take a monthly RACMO dataset of average monthly wind speeds, including
 all months each year from 1979--2018 (i.e. 12 months * 40 years = 480
 layers). Set 'months' as c(12, 1, 2) (i.e. DJF), and FUN as "mean". The
 returned SpatRaster will contain 40 layers, with each one being that
 summers's average DJF wind speed. The date of each returned layer is the
-median value of the constituent layers that it was computed from. Only
+date of the first of constituent layers that it was computed from. Only
 layers with the same units are processed together, and only austral years
 when all requested months are available are returned.
 }

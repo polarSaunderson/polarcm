@@ -14,8 +14,14 @@ The public version of this repo can be accessed at:
   https://github.com/polarSaunderson/racmoR
 
 ## To-Do
+### 2023-08-07
+- [ ] Sort out terrapin's remove_incomplete_x functions
+
+### 2023-08-06
+- [ ] Check wording re:years in documentation of calc_x_racmo
+
 ### 2023-08-05
-- [ ] create_multiMonth_data_each_X; use functionals there too!
+- [X] create_multiMonth_data_each_X; use functionals there too!
 - [X] Could calculate_racmo_in_space be a closure? No, just use a functional.
  - [X] Need to do sum_in_space at least, but sd / median / percentiles / summary
 

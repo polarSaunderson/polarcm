@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_multimonth_racmo.R
 \name{calc_annual_racmo}
 \alias{calc_annual_racmo}
-\title{Calculate RACMO values over a multiple month period each year}
+\title{Calculate RACMO values over multiple months each year}
 \usage{
 calc_annual_racmo(racmoData, months, FUN, ...)
 }
@@ -36,10 +36,10 @@ RACMO dataset of precipitation, including all months each year from
 1979--2018 (i.e. 12 months * 40 years = 480 layers). Set 'months' as c(6,
 7, 8) (i.e. JJA), and FUN as "sum". The returned SpatRaster will contain
 40 layers, with each one being that year's total JJA precipitation. The
-date of each returned layer is the median value of the constituent layers
-that it was computed from. Only layers with the same units are processed
-together, and only years when all requested months are available are
-returned.
+date of each returned layer is date of the first of the constituent
+layers that it was computed from. Only layers with the same units are
+processed together, and only years when all requested months are
+available are returned.
 }
 \seealso{
 calc_austral_racmo

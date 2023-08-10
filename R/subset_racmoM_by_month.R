@@ -1,7 +1,7 @@
 ##
 subset_racmoM_by_month <- function(racmoData,
                                    months,
-                                   removeIncomplete = 3) {
+                                   excludeIncomplete = 3) {
   #' Subset monthly RACMO data based on the month
   #'
   #' @description Subset monthly RACMO data based on month. This function is
@@ -17,11 +17,11 @@ subset_racmoM_by_month <- function(racmoData,
   #'   at once (e.g. c(12, 1, 2)), but do not try to mix strings and numbers in
   #'   the vector.
   #' @param removeIncomplete If the value is "years", the data is run through
-  #'   `terrapin::remove_incomplete_years()`, and only months in years with all
+  #'   `terrapin::exclude_incomplete_years()`, and only months in years with all
   #'   requested months in are returned. If the value is numeric (between 1 and
   #'   12), the data is fed into the
-  #'   `terrapin::remove_incomplete_austral_summers()` and the value is used as
-  #'   the "australSplit" argument to return only months in austral summers that
+  #'   `terrapin::exclude_incomplete_summers()` and the value is used as
+  #'   the 'australSplit' argument to return only months in austral summers that
   #'   contain all requested months. If any other value, all layers matching the
   #'   months argument are returned, regardless of the summer or year.
   #'
@@ -30,7 +30,7 @@ subset_racmoM_by_month <- function(racmoData,
   # Code -----------------------------------------------------------------------
   racmoData   <- read_racmoM_data(racmoData)
   racmoSubset <- terrapin::subset_by_month(x = racmoData, months = months,
-                                           removeIncomplete = removeIncomplete,
+                                           excludeIncomplete = excludeIncomplete,
                                            dailyResolution  = FALSE)
   return(racmoSubset)
 }
