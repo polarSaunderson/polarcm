@@ -4,7 +4,7 @@
 \alias{subset_racmoD_by_month}
 \title{Subset daily RACMO data based on the month}
 \usage{
-subset_racmoD_by_month(racmoData, months, excludeIncomplete = 3)
+subset_racmoD_by_month(racmoData, months, excludeIncomplete = FALSE)
 }
 \arguments{
 \item{months}{vector: Which month/s to return? Input can be the month
@@ -16,11 +16,11 @@ the vector.}
 \item{excludeIncomplete}{If the value is "years", the data is run through
 \code{terrapin::exclude_incomplete_years()}, and only months in years with all
 requested months in are returned. If the value is numeric (between 1 and
-12), the data is fed into the
-\code{terrapin::exclude_incomplete_summers()} and the value is used as
-the "australSplit" argument to return only months in austral summers that
-contain all requested months. If any other value, all layers matching the
-months argument are returned, regardless of the summer or year.}
+12), the data is fed into the \code{terrapin::exclude_incomplete_summers()}
+and the value is used as the "australSplit" argument to return only
+months in austral summers that contain all requested months. If any other
+value (including the default, FALSE), all layers matching the months
+argument are returned, regardless of the summer or year.}
 
 \item{racmoData:}{The daily RACMO data to subset. Can be either a variable
 name, in which case raw daily RACMO data is read in; or an existing
