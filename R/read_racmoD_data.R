@@ -68,7 +68,6 @@ get_racmoD_file_path <- function(variable, year) {
                      "2010" = 2011)
 
   # Create file path
-  racmoInfo$dirPaths
   path     <- define_racmo_globals()$dirPaths$racmoD
   filePath <- list.files(path,
                          paste0(variable, "_daily-", fileYear),

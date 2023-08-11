@@ -14,6 +14,11 @@ The public version of this repo can be accessed at:
   https://github.com/polarSaunderson/racmoR
 
 ## To-Do
+### 2023-08-10
+- [ ] Test racmoD_climatology
+- [ ] Verify australSplit and removeIncomplete arguments
+- [ ] should some of these be in terrapin?
+
 ### 2023-08-07
 - [ ] Sort out terrapin's remove_incomplete_x functions
 

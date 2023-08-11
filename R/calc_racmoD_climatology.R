@@ -1,7 +1,7 @@
-create_racmoD_climatology <- function(racmoData,
-                                      FUN,
-                                      excludeIncomplete = FALSE,
-                                      ...) {
+calc_racmoD_climatology <- function(racmoData,
+                                    FUN,
+                                    excludeIncomplete = FALSE,
+                                    ...) {
   #' Apply a function to daily RACMO data across multiple years
   #'
   #' @description What is the mean air temperature on the 1st December each
