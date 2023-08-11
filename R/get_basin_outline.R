@@ -66,30 +66,105 @@ get_basin_outline <- function(extent = "",
                     define_racmo_globals()$measures$basins)
   }
 
-  # Search for exact basin names
-  if (isFALSE(rectangularExtent)) {
-    if (extent[[1]] != "") {
-      basins <- basins[basins$NAME %in% extent]
-    }
-  } else {
-  # Define the required extent to search for basins within
+  # Must be rectangles, as there isn't enough extra information
+  if ("SpatRaster" %in% is(extent)) {
+     # print("SpatRaster")
+    rectangularExtent <- TRUE
+  } else if ("SpatExtent" %in% is(extent)) {
+     # print("SpatExtent")
+    rectangularExtent <- TRUE
+  } else if ("SpatVector" %in% is(extent)) {
+     # print("SpatVector")  # necessary so the next one is skipped
+  } else if (extent[[1]] == "") {
+     # print("blank")
+    rectangularExtent <- TRUE
+  }
+
+  if (isTRUE(rectangularExtent)) {
+     # print("rectangular requested")
     extent <- get_extent(extent = extent,
-                         rectangularExtent = rectangularExtent,
+                         rectangularExtent = TRUE,
                          preferType = preferType,
                          useOnly = useOnly,
                          imbieBasins = imbieBasins,
-                         crs = use_crs("stereo"), # return 3031 to match shelves
+                         crs = use_crs("stereo"),# return 3031 to match basins
                          crsIn = crsIn)
 
-    # Establish which basins intersect with the extent
-    basins <- terra::intersect(basins, extent)
+    # Establish which basins fall within the given extent
+    basins   <- terra::crop(basins, extent)
+  } else {
+     # print("exact requested")
+    if ("SpatVector" %in% is(extent)) {
+       # print("SpatVector")
+      basins <- extent
+    } else {
+       # print("named")
+      basins <- basins[basins$NAME %in% extent]
+    }
+    # Reproject
+    basins   <- terra::project(basins, use_crs(crs))
   }
-
-  # Reproject
-  basins   <- terra::project(basins, use_crs(crs))
-
+  # print(basins)
   return(basins)
 }
+
+
+# TESTING - uncomment a "tst" and the print + plot lines
+
+# # Blank = All of Antarctica
+# tst <- get_basin_outline("")
+#
+# # Named
+# tst <- get_basin_outline("A-Ap", rectangularExtent = TRUE)
+# tst <- get_basin_outline("A-Ap", rectangularExtent = FALSE)
+# tst <- get_basin_outline(c("A-Ap", "Vincennes_Bay"), rectangularExtent = TRUE)
+# tst <- get_basin_outline(c("A-Ap", "Vincennes_Bay"), rectangularExtent = FALSE)
+#
+# # SpatVector (run another one first)
+# tst <- get_basin_outline(tst, rectangularExtent = TRUE)
+# tst <- get_basin_outline(tst, rectangularExtent = FALSE)
+#
+# # SpatExtent
+# tst <- get_basin_outline(terra::ext(-10, 10, 8, 18),
+#                          crsIn = use_crs("racmo"),
+#                          rectangularExtent = FALSE)
+#
+# # SpatRaster
+#
+#
+#
+# print(tst)
+# terra::plot(tst)
+
+# =============================================================================!
+# SCRAP CODE
+
+
+#
+#   # Search for exact basin names
+#   if (isFALSE(rectangularExtent)) {
+#     if (extent[[1]] != "") {
+#       basins <- basins[basins$NAME %in% extent]
+#     }
+#   } else {
+#   # Define the required extent to search for basins within
+#     extent <- get_extent(extent = extent,
+#                          rectangularExtent = rectangularExtent,
+#                          preferType = preferType,
+#                          useOnly = useOnly,
+#                          imbieBasins = imbieBasins,
+#                          crs = use_crs("stereo"), # return 3031 to match basins
+#                          crsIn = crsIn)
+#
+#     # Establish which basins intersect with the extent
+#     basins <- terra::intersect(basins, extent)
+#   }
+#
+#   # Reproject
+#   basins   <- terra::project(basins, use_crs(crs))
+#
+#   return(basins)
+# }
 
 
 # EXAMPLES : THESE NEED TO BE BUILT INTO THE DOCUMENTATION

@@ -14,6 +14,9 @@ The public version of this repo can be accessed at:
   https://github.com/polarSaunderson/racmoR
 
 ## To-Do
+### 2023-08-11
+- [ ] get_extent and related need to reproject an extent, not only SpatVectors or SpatRasters
+
 ### 2023-08-10
 - [ ] Test racmoD_climatology
 - [ ] Verify australSplit and removeIncomplete arguments

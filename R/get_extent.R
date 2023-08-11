@@ -146,6 +146,7 @@ get_extent <- function(extent = "",
     }
   } else if ("SpatExtent" %in% extentType) {
   # Extent of the SpatExtent
+    if (is.null(crsIn)) stop("Provide a crs for the input SpatExt!")
     xBounds <- terra::rast(extent, crs = use_crs(crsIn)) |> # rast to reproject
       terra::project(use_crs(crs)) |>                       # do reproject
       terra::ext()                                          # reprojected extent

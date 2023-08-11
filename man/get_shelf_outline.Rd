@@ -74,6 +74,7 @@ names must match the dataset exactly.
 which intersect with this extent are then returned. This occurs if
 'rectangularExtent' is TRUE, and most of the remaining arguments are fed
 directly into \code{get_extent()}.
+\item an existing shelf SpatVector will be returned.
 }
 
 Finally, the shelves can be reprojected (set via 'crs').
@@ -84,7 +85,8 @@ Finally, the shelves can be reprojected (set via 'crs').
   t1 <- get_shelf_outline()
   terra::plot(t1)
 
-  # Just on shelf  t2 <- get_shelf_outline("Amery")
+  # Just a single shelf
+  t2 <- get_shelf_outline("Amery")
   terra::plot(t2)
 
   # Multiple shelves; only the named shelves

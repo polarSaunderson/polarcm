@@ -22,6 +22,8 @@ get_shelf_outline <- function(extent = "",
   #'   'rectangularExtent' is TRUE, and most of the remaining arguments are fed
   #'   directly into `get_extent()`.
   #'
+  #'   3) an existing shelf SpatVector will be returned.
+  #'
   #'   Finally, the shelves can be reprojected (set via 'crs').
   #'
   #' @param extent Define the extent used to select ice shelves.
@@ -43,7 +45,8 @@ get_shelf_outline <- function(extent = "",
   #'   t1 <- get_shelf_outline()
   #'   terra::plot(t1)
   #'
-  #'   # Just on shelf  t2 <- get_shelf_outline("Amery")
+  #'   # Just a single shelf
+  #'   t2 <- get_shelf_outline("Amery")
   #'   terra::plot(t2)
   #'
   #'   # Multiple shelves; only the named shelves
@@ -60,30 +63,148 @@ get_shelf_outline <- function(extent = "",
   # Prepare all possible ice shelves
   shelves <- define_racmo_globals()$measures$shelves   # MEaSURES is EPSG:3031
 
-  # Search for the exact shelf names to return
-  if (isFALSE(rectangularExtent)) {
-    if (extent[[1]] != "") {
-      shelves <- shelves[shelves$NAME %in% extent]
-    }
-  } else {
-  # Define the required extent to search for shelves within
+  # Must be rectangles, as there isn't enough extra information
+  if ("SpatRaster" %in% is(extent)) {
+     # print("SpatRaster")
+    rectangularExtent <- TRUE
+  } else if ("SpatExtent" %in% is(extent)) {
+     # print("SpatExtent")
+    rectangularExtent <- TRUE
+  } else if ("SpatVector" %in% is(extent)) {
+     # print("SpatVector")  # necessary so the next one is skipped
+  } else if (extent[[1]] == "") {
+     # print("blank")
+    rectangularExtent <- TRUE
+  }
+
+  if (isTRUE(rectangularExtent)) {
+     # print("rectangular requested")
     extent <- get_extent(extent = extent,
-                         rectangularExtent = rectangularExtent,
+                         rectangularExtent = TRUE,
                          preferType = preferType,
                          useOnly = useOnly,
                          imbieBasins = imbieBasins,
-                         crs = use_crs("stereo"), # return 3031 to match shelves
+                         crs = use_crs("stereo"),# return 3031 to match shelves
                          crsIn = crsIn)
 
-    # Establish which shelves intersect with the extent
-    shelves   <- terra::intersect(shelves, extent)
+    # Establish which shelves fall within the given extent
+    shelves   <- terra::crop(shelves, extent)
+  } else {
+     # print("exact requested")
+    if ("SpatVector" %in% is(extent)) {
+       # print("SpatVector")
+      shelves <- extent
+    } else {
+       # print("named")
+      shelves <- shelves[shelves$NAME %in% extent]
+    }
+    # Reproject
+    shelves   <- terra::project(shelves, use_crs(crs))
   }
-
-  # Reproject
-  shelves   <- terra::project(shelves, use_crs(crs))
-
+  # print(shelves)
   return(shelves)
 }
+
+
+# TESTING  - uncomment a "tst" and the print + plot lines
+
+# Blank = All of Antarctica
+# tst <- get_shelf_outline("")
+#
+# SpatExtent
+# tst <- get_shelf_outline(terra::ext(c(14, 24, 6, 11)),
+#                          crsIn = use_crs("racmo"),
+#                          rectangularExtent = FALSE)  # is overwritten to TRUE
+#
+# SpatVector
+# tst <- get_shelf_outline(shelf, rectangularExtent = TRUE)
+# tst <- get_shelf_outline(shelf, rectangularExtent = FALSE)
+#
+# SpatRaster
+# sRaster <- terra::crop(ss, terra::ext(c(15, 20, 8, 12)))
+# tst <- get_shelf_outline(sRaster, rectangularExtent = FALSE) # overwritten?
+#
+# # named
+# tst <- get_shelf_outline("Shackleton", rectangularExtent = FALSE)
+# tst <- get_shelf_outline("Shackleton", rectangularExtent = TRUE)
+# tst <- get_shelf_outline(c("Amery", "West"), rectangularExtent = TRUE)
+# tst <- get_shelf_outline(c("Amery", "West"), rectangularExtent = FALSE)
+#
+# print(tst)
+# terra::plot(tst)
+
+
+# =============================================================================!
+# SCRAP CODE
+
+
+
+
+
+  # # Must be rectangles, as there isn't enough extra information
+  # if ("SpatRaster" %in% is(extent) | extent[[1]] == "") {
+  #   print("SpatRaster")
+  #   rectangularExtent <- TRUE
+  # }
+  #
+  # # The extent is already a shelf, so just return it
+  # if ("SpatVector" %in% is(extent)) {
+  #   print("SpatVector")
+  #   shelves <- extent
+  # } else if (isFALSE(rectangularExtent)) {
+  # # use specific shelf names for exact matches
+  #   print("rectangular is FALSE")
+  #   shelves <- shelves[shelves$NAME %in% extent]
+  # }
+  #
+  # if (isTRUE(rectangularExtent)) {
+  #   print("rectangular is TRUE")
+  #   extent <- get_extent(extent = extent,
+  #                        rectangularExtent = rectangularExtent, # will be TRUE
+  #                        preferType = preferType,
+  #                        useOnly = useOnly,
+  #                        imbieBasins = imbieBasins,
+  #                        crs = use_crs("stereo"), # return 3031 to match shelves
+  #                        crsIn = crsIn)
+  #
+  #   # Establish which shelves intersect with the extent
+  #   shelves   <- terra::intersect(shelves, extent)
+  # } else {
+  #   # use specific shelf names for exact matches
+  #   print("rectangular is FALSE")
+  #   shelves <- shelves[shelves$NAME %in% extent]
+  # }
+
+
+
+  # # Search for the exact shelf names to return
+  # if (isFALSE(rectangularExtent)) {
+  #   print("not rectangular")
+  #   # print("here"); return(shelves)
+  #   if (extent[[1]] != "") {
+  #       print("not empty")
+  #     if ("SpatVector" %in% is(extent)) {
+  #       print("SpatVector")
+  #       shelves <- extent
+  #     } else {
+  #       print("named")
+  #       shelves <- shelves[shelves$NAME %in% extent]
+  #     }
+  #   }
+  # } else {
+  # # Define the required extent to search for shelves within
+  #   extent <- get_extent(extent = extent,
+  #                        rectangularExtent = rectangularExtent,
+  #                        preferType = preferType,
+  #                        useOnly = useOnly,
+  #                        imbieBasins = imbieBasins,
+  #                        crs = use_crs("stereo"), # return 3031 to match shelves
+  #                        crsIn = crsIn)
+  #
+  #   # Establish which shelves intersect with the extent
+  #   shelves   <- terra::intersect(shelves, extent)
+  # }
+
 
 
 
