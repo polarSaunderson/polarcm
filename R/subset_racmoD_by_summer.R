@@ -9,7 +9,7 @@ subset_racmoD_by_summer <- function(racmoData,
   #'   `terrapin::subset_by_summer()`. An austral summer is defined using the
   #'   australSplit argument.
   #'
-  #' @param racmoData: The daily RACMO data to subset. Can be either a variable
+  #' @param racmoData The daily RACMO data to subset. Can be either a variable
   #'   name, in which case raw daily RACMO data is read in; or an existing
   #'   SpatRaster of daily RACMO data.
   #' @param summers numeric: Which summer/s to return?

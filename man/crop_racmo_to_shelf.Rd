@@ -23,7 +23,7 @@ outline.
 }
 \examples{
 -----------------------------------------------------------------
-  dontrun{
+  \dontrun{
     x <- subset_racmoM_by_summer("precip", 1991) |>
       subset_racmoM_by_month(12)
 

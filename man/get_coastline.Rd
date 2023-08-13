@@ -18,6 +18,12 @@ get_coastline(
 \item{extent}{Define the extent used to crop the coastline. This argument
 is fed into \code{get_extent()}; see there for details of valid input.}
 
+\item{rectangularExtent}{If 'extent' is a defined string (e.g. "Amery"), the
+'rectangularExtent' argument determines whether the actual outline is
+returned (FALSE; the default), or if a rectangular extent box
+encompassing the area is returned (TRUE). If multiple ice shelves and/or
+basins are included, the extent box will extend over all of them at once.}
+
 \item{preferType}{Sometimes an ice shelf and the MEaSURES basins have the
 same name; usually they both refer to the same general area, and by
 default (i.e. 'preferType' = NULL), both are combined to form a new larger

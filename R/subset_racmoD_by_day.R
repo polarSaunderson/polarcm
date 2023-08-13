@@ -8,7 +8,7 @@ subset_racmoD_by_day <- function(racmoData, days) {
   #'   return the data for multiple months (i.e. if 10 months are input as
   #'   "racmoData", setting "days = 1" will return the first day of each month).
   #'
-  #' @param racmoData: The daily RACMO data to subset. Can be either a variable
+  #' @param racmoData The daily RACMO data to subset. Can be either a variable
   #'   name, in which case raw daily RACMO data is read in; or an existing
   #'   SpatRaster of daily RACMO data.
   #' @param days vector: Which day/s to return?

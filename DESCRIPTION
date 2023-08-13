@@ -3,8 +3,9 @@ Type: Package
 Title: Interact and Manipulate Data from the RACMO Regional Climate Model
 Version: 0.0.0.5
 Authors@R: 
-    person("Dominic" "Saunderson", "dominicsaunderson@gmail.com",
+    person("Dominic", "Saunderson",
            role = c("aut", "cre"),
+           email = "dominicsaunderson@gmail.com",
            comment = c(ORCID = "0000-0001-7440-0101"))
 Description: racmoR is a personal package for interacting with and manipulating 
     output from the RACMO regional climate model. The package is an ongoing work 
@@ -15,6 +16,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports:
-  terra
+  terra,
+  methods
 Suggests:
   terrapin

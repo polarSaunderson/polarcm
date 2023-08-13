@@ -7,11 +7,11 @@
 subset_racmoD_by_day(racmoData, days)
 }
 \arguments{
-\item{days}{vector: Which day/s to return?}
-
-\item{racmoData:}{The daily RACMO data to subset. Can be either a variable
+\item{racmoData}{The daily RACMO data to subset. Can be either a variable
 name, in which case raw daily RACMO data is read in; or an existing
 SpatRaster of daily RACMO data.}
+
+\item{days}{vector: Which day/s to return?}
 }
 \description{
 Subset the daily RACMO data based on the day of the month. It

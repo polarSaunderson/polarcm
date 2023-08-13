@@ -64,13 +64,13 @@ get_shelf_outline <- function(extent = "",
   shelves <- define_racmo_globals()$measures$shelves   # MEaSURES is EPSG:3031
 
   # Must be rectangles, as there isn't enough extra information
-  if ("SpatRaster" %in% is(extent)) {
+  if ("SpatRaster" %in% methods::is(extent)) {
      # print("SpatRaster")
     rectangularExtent <- TRUE
-  } else if ("SpatExtent" %in% is(extent)) {
+  } else if ("SpatExtent" %in% methods::is(extent)) {
      # print("SpatExtent")
     rectangularExtent <- TRUE
-  } else if ("SpatVector" %in% is(extent)) {
+  } else if ("SpatVector" %in% methods::is(extent)) {
      # print("SpatVector")  # necessary so the next one is skipped
   } else if (extent[[1]] == "") {
      # print("blank")
@@ -91,7 +91,7 @@ get_shelf_outline <- function(extent = "",
     shelves   <- terra::crop(shelves, extent)
   } else {
      # print("exact requested")
-    if ("SpatVector" %in% is(extent)) {
+    if ("SpatVector" %in% methods::is(extent)) {
        # print("SpatVector")
       shelves <- extent
     } else {
@@ -142,13 +142,13 @@ get_shelf_outline <- function(extent = "",
 
 
   # # Must be rectangles, as there isn't enough extra information
-  # if ("SpatRaster" %in% is(extent) | extent[[1]] == "") {
+  # if ("SpatRaster" %in% methods::is(extent) | extent[[1]] == "") {
   #   print("SpatRaster")
   #   rectangularExtent <- TRUE
   # }
   #
   # # The extent is already a shelf, so just return it
-  # if ("SpatVector" %in% is(extent)) {
+  # if ("SpatVector" %in% methods::is(extent)) {
   #   print("SpatVector")
   #   shelves <- extent
   # } else if (isFALSE(rectangularExtent)) {
@@ -183,7 +183,7 @@ get_shelf_outline <- function(extent = "",
   #   # print("here"); return(shelves)
   #   if (extent[[1]] != "") {
   #       print("not empty")
-  #     if ("SpatVector" %in% is(extent)) {
+  #     if ("SpatVector" %in% methods::is(extent)) {
   #       print("SpatVector")
   #       shelves <- extent
   #     } else {

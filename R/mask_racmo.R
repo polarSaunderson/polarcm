@@ -16,7 +16,7 @@ mask_racmo_to_shelf <- function(racmoData, shelf) {
   #' @seealso mask_racmo_to_basin()
   #'
   #' @examples -----------------------------------------------------------------
-  #'   dontrun{
+  #'   \dontrun{
   #'     x <- subset_racmoM_by_summer("precip", 1991) |>
   #'       subset_racmoM_by_month(12)
   #'
@@ -69,7 +69,7 @@ mask_racmo_to_basin <- function(racmoData, basin) {
   #' @seealso mask_racmo_to_shelf()
   #'
   #' @examples -----------------------------------------------------------------
-  #'   dontrun{
+  #'   \dontrun{
   #'     x <- subset_racmoM_by_summer("precip", 1991) |>
   #'       subset_racmoM_by_month(12)
   #'

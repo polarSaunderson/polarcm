@@ -39,8 +39,8 @@ get_extent <- function(extent = "",
   #'   If 'extent' is a SpatExtent, it is necessary to also set 'crsIn', and a
   #'   SpatExtent will be returned.
   #'
-  #' @param rectangulerExtent If 'extent' is a defined string (e.g. "Amery"), the
-  #'   'rectangulerExtent' argument determines whether the actual outline is
+  #' @param rectangularExtent If 'extent' is a defined string (e.g. "Amery"), the
+  #'   'rectangularExtent' argument determines whether the actual outline is
   #'   returned (FALSE; the default), or if a rectangular extent box
   #'   encompassing the area is returned (TRUE). If multiple ice shelves and/or
   #'   basins are included, the extent box will extend over all of them at once.
@@ -135,7 +135,7 @@ get_extent <- function(extent = "",
 
   # Code -----------------------------------------------------------------------
   racmoInfo  <- define_racmo_globals()
-  extentType <- is(extent)
+  extentType <- methods::is(extent)
 
   # Output depends on extent type
   if (length(intersect(extentType, c("SpatRaster", "SpatVector"))) > 0) {

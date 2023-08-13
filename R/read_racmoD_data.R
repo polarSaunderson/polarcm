@@ -9,9 +9,9 @@ read_racmoD_data <- function(racmoData) {
   #'   underneath because it assumes that the daily data has been separated into
   #'   decadal NetCDFs.
   #'
-  #' @param variable "string": If a valid string is input (i.e. it must match an
-  #'   option returned by `list_racmoD_variables()`), the daily RACMO data for
-  #'   that variable is read from the corresponding NetCDF files. If a
+  #' @param racmoData "string": If a valid string is input (i.e. it must match
+  #'   an option returned by `list_racmoD_variables()`), the daily RACMO data
+  #'   for that variable is read from the corresponding NetCDF files. If a
   #'   SpatRaster is entered, it is simply returned, allowing this function to
   #'   be used flexibly.
   #'
@@ -19,7 +19,7 @@ read_racmoD_data <- function(racmoData) {
 
   # Code --------------------------------------------------------------------
   # If not a SpatRaster, read in RACMO data from the NetCDFs
-  if (class(racmoData) != "SpatRaster") {
+  if ("SpatRaster" %notIn% methods::is(racmoData)) {
     # Read in raw nc files (suppress warnings as we add the crs & extent below)
     racmo79  <- terra::rast(get_racmoD_file_path(racmoData, 1979),
                             subds = racmoData) |> suppressWarnings()

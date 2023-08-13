@@ -7,11 +7,11 @@
 subset_racmoM_by_year(racmoData, years)
 }
 \arguments{
-\item{years}{vector: Which year/s to return?}
-
-\item{racmoData:}{The monthly RACMO data to subset. Can be either a
+\item{racmoData}{The monthly RACMO data to subset. Can be either a
 variable name, in which case raw monthly RACMO data is read in; or an
 existing SpatRaster of monthly RACMO data.}
+
+\item{years}{vector: Which year/s to return?}
 }
 \description{
 Subset monthly RACMO data using based on year. This function

@@ -17,7 +17,7 @@ crop_racmo_to_shelf <- function(racmoData, shelf) {
   #' @seealso crop_racmo_to_basin()
   #'
   #' @examples -----------------------------------------------------------------
-  #'   dontrun{
+  #'   \dontrun{
   #'     x <- subset_racmoM_by_summer("precip", 1991) |>
   #'       subset_racmoM_by_month(12)
   #'

@@ -27,6 +27,12 @@ define the geographical extent. The most obvious reason to do this would
 be to include the outline of basins within the bounding box of the named
 basins, but that aren't named themselves. See examples.}
 
+\item{rectangularExtent}{If 'extent' is a defined string (e.g. "Amery"), the
+'rectangularExtent' argument determines whether the actual outline is
+returned (FALSE; the default), or if a rectangular extent box
+encompassing the area is returned (TRUE). If multiple ice shelves and/or
+basins are included, the extent box will extend over all of them at once.}
+
 \item{returnImbie}{BINARY: By default (NULL), both "IMBIE" and "MEaSURES"
 basins within the extent are returned. Set this to return only the
 "IMBIE" (TRUE) or "MEaSURES" (FALSE) basins. This argument is distinct to

@@ -7,15 +7,15 @@
 subset_racmoD_by_date(racmoData, dates = NULL, dateList = NULL)
 }
 \arguments{
+\item{racmoData}{The daily RACMO data to subset. Can be either a variable
+name, in which case raw daily RACMO data is read in; or an existing
+SpatRaster of daily RACMO data.}
+
 \item{dates}{A vector of specific dates to return. Must be in the format
 "YYYY-MM-DD".}
 
 \item{dateList}{A list of vectors, with the first value in each vector
 indicating when the period begins, and the second when the period ends.}
-
-\item{racmoData:}{The daily RACMO data to subset. Can be either a variable
-name, in which case raw daily RACMO data is read in; or an existing
-SpatRaster of daily RACMO data.}
 }
 \description{
 Subset daily RACMO data based on specific dates. This function

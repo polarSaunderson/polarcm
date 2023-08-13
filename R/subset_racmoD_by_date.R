@@ -11,7 +11,7 @@ subset_racmoD_by_date <- function(racmoData,
   #'   containing the start and end dates for longer extended periods. All dates
   #'   need to be entered in YYYY-MM-DD format (e.g. "2019-12-31").
   #'
-  #' @param racmoData: The daily RACMO data to subset. Can be either a variable
+  #' @param racmoData The daily RACMO data to subset. Can be either a variable
   #'   name, in which case raw daily RACMO data is read in; or an existing
   #'   SpatRaster of daily RACMO data.
   #' @param dates A vector of specific dates to return. Must be in the format

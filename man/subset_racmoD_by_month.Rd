@@ -7,6 +7,10 @@
 subset_racmoD_by_month(racmoData, months, excludeIncomplete = FALSE)
 }
 \arguments{
+\item{racmoData}{The daily RACMO data to subset. Can be either a variable
+name, in which case raw daily RACMO data is read in; or an existing
+SpatRaster of daily RACMO data.}
+
 \item{months}{vector: Which month/s to return? Input can be the month
 number (e.g. 12) or the month name, either in full ("December",
 "december") or abbreviated ("Dec", "dec"). Multiple months can be input
@@ -21,10 +25,6 @@ and the value is used as the "australSplit" argument to return only
 months in austral summers that contain all requested months. If any other
 value (including the default, FALSE), all layers matching the months
 argument are returned, regardless of the summer or year.}
-
-\item{racmoData:}{The daily RACMO data to subset. Can be either a variable
-name, in which case raw daily RACMO data is read in; or an existing
-SpatRaster of daily RACMO data.}
 }
 \description{
 Subset daily RACMO data based on the month. This function is

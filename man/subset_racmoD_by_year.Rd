@@ -7,11 +7,11 @@
 subset_racmoD_by_year(racmoData, years)
 }
 \arguments{
-\item{years}{numeric: Which year/s to return?}
-
-\item{racmoData:}{The daily RACMO data to subset. Can be either a variable
+\item{racmoData}{The daily RACMO data to subset. Can be either a variable
 name, in which case raw daily RACMO data is read in; or an existing
 SpatRaster of daily RACMO data.}
+
+\item{years}{numeric: Which year/s to return?}
 }
 \description{
 Subset daily RACMO data based on the year. This function is

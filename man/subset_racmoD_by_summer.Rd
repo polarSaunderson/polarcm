@@ -7,6 +7,10 @@
 subset_racmoD_by_summer(racmoData, summers, australSplit = 3)
 }
 \arguments{
+\item{racmoData}{The daily RACMO data to subset. Can be either a variable
+name, in which case raw daily RACMO data is read in; or an existing
+SpatRaster of daily RACMO data.}
+
 \item{summers}{numeric: Which summer/s to return?}
 
 \item{australSplit}{numeric: Which is the last month included in an austral
@@ -15,10 +19,6 @@ means that all months \emph{AFTER} March are considered as part of the
 following summer (i.e. April 1991 -- March 1992 are all in 1992). Swap
 this value according: setting it as 4 means May 1991 -- April 1992 are
 all 1992.}
-
-\item{racmoData:}{The daily RACMO data to subset. Can be either a variable
-name, in which case raw daily RACMO data is read in; or an existing
-SpatRaster of daily RACMO data.}
 }
 \description{
 Subset monthly RACMO data based on the austral summer. This

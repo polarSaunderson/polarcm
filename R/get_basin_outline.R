@@ -67,13 +67,13 @@ get_basin_outline <- function(extent = "",
   }
 
   # Must be rectangles, as there isn't enough extra information
-  if ("SpatRaster" %in% is(extent)) {
+  if ("SpatRaster" %in% methods::is(extent)) {
      # print("SpatRaster")
     rectangularExtent <- TRUE
-  } else if ("SpatExtent" %in% is(extent)) {
+  } else if ("SpatExtent" %in% methods::is(extent)) {
      # print("SpatExtent")
     rectangularExtent <- TRUE
-  } else if ("SpatVector" %in% is(extent)) {
+  } else if ("SpatVector" %in% methods::is(extent)) {
      # print("SpatVector")  # necessary so the next one is skipped
   } else if (extent[[1]] == "") {
      # print("blank")
@@ -94,7 +94,7 @@ get_basin_outline <- function(extent = "",
     basins   <- terra::crop(basins, extent)
   } else {
      # print("exact requested")
-    if ("SpatVector" %in% is(extent)) {
+    if ("SpatVector" %in% methods::is(extent)) {
        # print("SpatVector")
       basins <- extent
     } else {

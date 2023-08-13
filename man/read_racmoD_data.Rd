@@ -7,9 +7,9 @@
 read_racmoD_data(racmoData)
 }
 \arguments{
-\item{variable}{"string": If a valid string is input (i.e. it must match an
-option returned by \code{list_racmoD_variables()}), the daily RACMO data for
-that variable is read from the corresponding NetCDF files. If a
+\item{racmoData}{"string": If a valid string is input (i.e. it must match
+an option returned by \code{list_racmoD_variables()}), the daily RACMO data
+for that variable is read from the corresponding NetCDF files. If a
 SpatRaster is entered, it is simply returned, allowing this function to
 be used flexibly.}
 }

@@ -21,7 +21,7 @@ read_racmoM_data <- function(variable) {
 
   # Code -----------------------------------------------------------------------
   # If not a SpatRaster, read in RACMO data from the NetCDFs
-  if (class(variable) != "SpatRaster") {
+  if ("SpatRaster" %notIn% methods::is(variable)) {
     token   <- define_racmo_globals()        # get access to the raw data paths
     racmoM  <- terra::rast(token$varPaths$racmoM[[variable]],
                            subds = variable) |>

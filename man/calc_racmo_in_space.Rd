@@ -62,7 +62,7 @@ Pixels can also be weighted by their area within the 'extent'.
 }
 \examples{
 -----------------------------------------------------------------
-  dontrun{
+  \dontrun{
     # racmoData
     x <- subset_racmoM_by_summer("precip", 1991:1994) |>
       subset_racmoM_by_month(c(11, 12, 1, 2))

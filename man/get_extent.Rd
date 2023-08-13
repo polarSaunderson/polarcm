@@ -39,6 +39,12 @@ SpatRaster or SpatVector will be returned.
 If 'extent' is a SpatExtent, it is necessary to also set 'crsIn', and a
 SpatExtent will be returned.}
 
+\item{rectangularExtent}{If 'extent' is a defined string (e.g. "Amery"), the
+'rectangularExtent' argument determines whether the actual outline is
+returned (FALSE; the default), or if a rectangular extent box
+encompassing the area is returned (TRUE). If multiple ice shelves and/or
+basins are included, the extent box will extend over all of them at once.}
+
 \item{preferType}{Sometimes an ice shelf and the MEaSURES basins have the
 same name; usually they both refer to the same general area, and by
 default (i.e. 'preferType' = NULL), both are combined to form a new larger
@@ -73,12 +79,6 @@ functions such as \code{get_shelf_outline()} and \code{get_basin_outline()}.}
 \item{crsIn}{"string": Which projection is the extent given in? Needs
 defining if the extent is a SpatExtent, as they do not have a crs value
 attached.}
-
-\item{rectangulerExtent}{If 'extent' is a defined string (e.g. "Amery"), the
-'rectangulerExtent' argument determines whether the actual outline is
-returned (FALSE; the default), or if a rectangular extent box
-encompassing the area is returned (TRUE). If multiple ice shelves and/or
-basins are included, the extent box will extend over all of them at once.}
 }
 \description{
 This function helps us to very easily crop and/or plot data
