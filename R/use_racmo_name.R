@@ -143,8 +143,8 @@ use_racmo_name <- function(racmoVars,
                        "refreeze" = "Surface Refreezing",
                        "runoff"   = "Surface Runoff",
                        "subl"     = "Sublimation",
-                       "snowmelt" = "Snowmelt",
-                       "t2m"      = "Surface Air Temperatures",
+                       "snowmelt" = "Melt Flux",
+                       "t2m"      = "Surface (2m) Air Temperatures",
                        "albedo"   = "Surface Albedo",
                        "swsn"     = "Net Shortwave Radiation",
                        "swsd"     = "Incoming Shortwave Radiation",
@@ -169,7 +169,7 @@ use_racmo_name <- function(racmoVars,
                         "refreeze" = "Refreezing",
                         "runoff"   = "Runoff",
                         "subl"     = "Subl.",
-                        "snowmelt" = "Snowmelt",
+                        "snowmelt" = "Melt",
                         "t2m"      = bquote(~T["2m"]),
                         "albedo"   = "Albedo",
                         "swsn"     = bquote(~SW["NET"]),
@@ -185,8 +185,8 @@ use_racmo_name <- function(racmoVars,
                         "seb"      = "SEB",
                         "wind"     = "Wind Speed",
                         "w10m"     = "Wind Speed",
-                        "v10m"     = "S. Wind Speed",
-                        "u10m"     = "W. Wind Speed")
+                        "v10m"     = "Southerlies",
+                        "u10m"     = "Westerlies")
 
     if (isTRUE(shortName)) {
       nameBit <- shortened
@@ -201,9 +201,9 @@ use_racmo_name <- function(racmoVars,
     nameList[[iiVar]] <- racmoName
   }
 
-  # if (length(nameList) == 1) {
-    # nameList <- nameList[[iiVar]]
-  # }
+  if (length(nameList) == 1) {
+    nameList <- nameList[[iiVar]]
+  }
 
   return(as.expression(nameList))
 }
