@@ -61,7 +61,7 @@ get_shelf_outline <- function(extent = "",
 
   # Code -----------------------------------------------------------------------
   # Prepare all possible ice shelves
-  shelves <- define_racmo_globals()$measures$shelves   # MEaSURES is EPSG:3031
+  shelves <- configure_racmoR()$measures$shelves   # MEaSURES is EPSG:3031
 
   # Must be rectangles, as there isn't enough extra information
   if ("SpatRaster" %in% methods::is(extent)) {

@@ -58,12 +58,12 @@ get_basin_outline <- function(extent = "",
   # Code -----------------------------------------------------------------------
   # Prepare all possible basin combinations; basins are stored as EPSG:3031
   if (isTRUE(returnImbie)) {
-    basins <- define_racmo_globals()$imbie$basins
+    basins <- configure_racmoR()$imbie$basins
   } else if (isFALSE(returnImbie)) {
-    basins <- define_racmo_globals()$measures$basins
+    basins <- configure_racmoR()$measures$basins
   } else if (is.null(returnImbie)) {
-    basins <- rbind(define_racmo_globals()$imbie$basins,
-                    define_racmo_globals()$measures$basins)
+    basins <- rbind(configure_racmoR()$imbie$basins,
+                    configure_racmoR()$measures$basins)
   }
 
   # Must be rectangles, as there isn't enough extra information

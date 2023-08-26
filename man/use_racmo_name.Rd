@@ -5,14 +5,16 @@
 \title{Help with labelling of RACMO variables and units}
 \usage{
 use_racmo_name(
-  racmoVar,
+  racmoVars,
   originalUnits = TRUE,
   monthlyData = FALSE,
   shortName = TRUE
 )
 }
 \arguments{
-\item{racmoVar}{Which RACMO variable to use? Use the short name code.}
+\item{racmoVars}{Which RACMO variable to use? Use the short name code. If a
+vector with multiple racmoVars is provided, a list of expressions is
+returned.}
 
 \item{originalUnits}{Should the same units as the dataset be used (TRUE;
 default)? Often this makes the most sense, but some of the variables are
@@ -22,14 +24,15 @@ Wm-2 rather than total joules, and to think of melt or precipitation as
 daily totals rather than fluxes per second. Be \emph{VERY VERY VERY} careful
 if setting this as FALSE - it just assumes that the changes are the
 common ones that I have previously done, there is nothing clever about
-it!}
+it! Set this or 'monthlyData' as NULL to suppress the unit output and
+just return the variable name.}
 
 \item{monthlyData}{Is the RACMO data monthly resolution (i.e. racmoM; TRUE)
 or daily (i.e. racmoD; FALSE, the default)? For some variables, this
 makes a difference (e.g. all radiative fluxes are in Joules in monthly
 data, but W m-2 in monthly data); for others (e.g. "t2m", "u10m") it
-makes no difference. Set as NULL to suppress the unit output, and just
-return the variable name.}
+makes no difference. Set this or 'originalUnits' as NULL to suppress the
+unit output, and just return the variable name.}
 
 \item{shortName}{Should shortened names ("Precip.") or acronyms ("SMB") be
 used over the full name (e.g. "Precipitation", "Surface Mass Balance")?

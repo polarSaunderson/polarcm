@@ -2,7 +2,7 @@ list_racmoM_variables <- function(print = TRUE) {
   #' Return the available monthly RACMO variables
   #'
   #' @description Which monthly RACMO variables are available? It simply reads
-  #'   the names of the files as created by `define_racmo_globals()` (and thus
+  #'   the names of the files as created by [configure_racmoR()] (and thus
   #'   only accounts for the files present when that function was initially
   #'   called).
   #'
@@ -13,7 +13,7 @@ list_racmoM_variables <- function(print = TRUE) {
 
   # Code -----------------------------------------------------------------------
   # Use available names
-  racmoVars <- define_racmo_globals()$racmoVars$racmoM |>
+  racmoVars <- configure_racmoR()$racmoVars$racmoM |>
     as.data.frame() |>
     `colnames<-`("Monthly Variables")
   if (isTRUE(print)) print(racmoVars)
@@ -24,7 +24,7 @@ list_racmoD_variables <- function(print = TRUE) {
   #' Return the available daily RACMO variables
   #'
   #' @description Which daily RACMO variables are available? It simply reads the
-  #'   names of the files as created by `define_racmo_globals()` (and thus only
+  #'   names of the files as created by [configure_racmoR()] (and thus only
   #'   accounts for the files present when that function was initially called).
   #'
   #' @param print BINARY: Should the variables be printed out? Can be suppressed
@@ -34,7 +34,7 @@ list_racmoD_variables <- function(print = TRUE) {
 
   # Code -----------------------------------------------------------------------
   # Use available names
-  racmoVars <- define_racmo_globals()$racmoVars$racmoD |>
+  racmoVars <- configure_racmoR()$racmoVars$racmoD |>
     as.data.frame() |>
     `colnames<-`("Daily Variables")
   if (isTRUE(print)) print(racmoVars)

@@ -46,7 +46,7 @@ get_grounding_line <- function(extent = "",
 
   # Code -----------------------------------------------------------------------
   # Prepare full grounding line data
-  groundingLine <- define_racmo_globals()$measures$groundingLine
+  groundingLine <- configure_racmoR()$measures$groundingLine
   groundingLine <- terra::vect(terra::geom(groundingLine), type = "lines")
   terra::crs(groundingLine) <- use_crs("stereo")    # MEaSURES is EPSG:3031
 

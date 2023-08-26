@@ -6,13 +6,13 @@ read_racmoM_data <- function(variable) {
   #'   NetCDF file, or by simply returning the SpatRaster it is given.
   #'
   #'   The RACMO data must already be stored on the machine, and the path to
-  #'   defined using `define_racmo_globals()`. The SpatRaster's crs and extent
+  #'   defined using [configure_racmoR()]. The SpatRaster's crs and extent
   #'   are explicitly hardcoded as `terra` fails to read them from the file
   #'   correctly. They are based on RACMO2.3p3; adjust if the RACMO version data
   #'   differs.
   #'
   #' @param variable "string": If a valid string is input (i.e. it must match an
-  #'   option returned by `list_racmoM_variables()`), the monthly RACMO data for
+  #'   option returned by [list_racmoM_variables()]), the monthly RACMO data for
   #'   that variable is read from the corresponding NetCDF file. If a SpatRaster
   #'   is entered, it is simply returned, allowing this function to be used
   #'   flexibly.
@@ -22,7 +22,7 @@ read_racmoM_data <- function(variable) {
   # Code -----------------------------------------------------------------------
   # If not a SpatRaster, read in RACMO data from the NetCDFs
   if ("SpatRaster" %notIn% methods::is(variable)) {
-    token   <- define_racmo_globals()        # get access to the raw data paths
+    token   <- configure_racmoR()        # get access to the raw data paths
     racmoM  <- terra::rast(token$varPaths$racmoM[[variable]],
                            subds = variable) |>
       suppressWarnings() # suppress the warning; will add crs and extent below

@@ -8,7 +8,7 @@ read_racmoM_data(variable)
 }
 \arguments{
 \item{variable}{"string": If a valid string is input (i.e. it must match an
-option returned by \code{list_racmoM_variables()}), the monthly RACMO data for
+option returned by \code{\link[=list_racmoM_variables]{list_racmoM_variables()}}), the monthly RACMO data for
 that variable is read from the corresponding NetCDF file. If a SpatRaster
 is entered, it is simply returned, allowing this function to be used
 flexibly.}
@@ -19,7 +19,7 @@ RACMO data. It will return a SpatRaster, either by reading the necessary
 NetCDF file, or by simply returning the SpatRaster it is given.
 
 The RACMO data must already be stored on the machine, and the path to
-defined using \code{define_racmo_globals()}. The SpatRaster's crs and extent
+defined using \code{\link[=configure_racmoR]{configure_racmoR()}}. The SpatRaster's crs and extent
 are explicitly hardcoded as \code{terra} fails to read them from the file
 correctly. They are based on RACMO2.3p3; adjust if the RACMO version data
 differs.

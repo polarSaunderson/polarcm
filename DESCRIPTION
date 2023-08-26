@@ -1,7 +1,7 @@
 Package: racmoR
 Type: Package
 Title: Interact and Manipulate Data from the RACMO Regional Climate Model
-Version: 0.0.0.5
+Version: 0.0.0.6
 Authors@R: 
     person("Dominic", "Saunderson",
            role = c("aut", "cre"),

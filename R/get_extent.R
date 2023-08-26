@@ -134,7 +134,7 @@ get_extent <- function(extent = "",
   #' @export
 
   # Code -----------------------------------------------------------------------
-  racmoInfo  <- define_racmo_globals()
+  racmoInfo  <- configure_racmoR()
   extentType <- methods::is(extent)
 
   # Output depends on extent type
