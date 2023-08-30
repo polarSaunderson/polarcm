@@ -56,7 +56,7 @@ get_basin_outline <- function(extent = "",
   #' @export
 
   # Code -----------------------------------------------------------------------
-  # Prepare all possible basin combinations; basins are stored as EPSG:3031
+  # Prepare possible basin combinations; basins are stored as EPSG:3031
   if (isTRUE(returnImbie)) {
     basins <- configure_racmoR()$imbie$basins
   } else if (isFALSE(returnImbie)) {
@@ -66,22 +66,28 @@ get_basin_outline <- function(extent = "",
                     configure_racmoR()$measures$basins)
   }
 
-  # Must be rectangles, as there isn't enough extra information
+  # The following extents must be rectangles, as there's not enough information
   if ("SpatRaster" %in% methods::is(extent)) {
-     # print("SpatRaster")
+    # print("input is a SpatRaster")
     rectangularExtent <- TRUE
   } else if ("SpatExtent" %in% methods::is(extent)) {
-     # print("SpatExtent")
-    rectangularExtent <- TRUE
+    if (extent[1] < extent[2] & extent[3] < extent[4]) {
+      # print("input is a SpatExtent")
+      rectangularExtent <- TRUE
+    } else {
+      stop("An extent needs to be c(xmin, xmax, ymin, ymax).")
+    }
   } else if ("SpatVector" %in% methods::is(extent)) {
-     # print("SpatVector")  # necessary so the next one is skipped
+    # print("input is a SpatVector")
+    next       # don't do anything yet
   } else if (extent[[1]] == "") {
-     # print("blank")
+    # print("input is empty")
     rectangularExtent <- TRUE
-  }
+  } # else extent should be the name/s as a string
 
+  # Are we creating a rectangular extent, or using exact basin outlines?
   if (isTRUE(rectangularExtent)) {
-     # print("rectangular requested")
+    # print("A rectangular extent is requested")
     extent <- get_extent(extent = extent,
                          rectangularExtent = TRUE,
                          preferType = preferType,
@@ -93,18 +99,18 @@ get_basin_outline <- function(extent = "",
     # Establish which basins fall within the given extent
     basins   <- terra::crop(basins, extent)
   } else {
-     # print("exact requested")
+    # print("The exact outlines are requested")
     if ("SpatVector" %in% methods::is(extent)) {
-       # print("SpatVector")
+      # Print("input is a SpatVector; basically do nothing")
       basins <- extent
     } else {
-       # print("named")
+      # print("input is name/s; using exact basins")
       basins <- basins[basins$NAME %in% extent]
     }
-    # Reproject
-    basins   <- terra::project(basins, use_crs(crs))
   }
-  # print(basins)
+
+  # Reproject
+  basins   <- terra::project(basins, use_crs(crs))
   return(basins)
 }
 

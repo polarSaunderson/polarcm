@@ -19,6 +19,7 @@ draw_antarctica <- function(extent = "",
   #'    * basins           "b"  # uses IMBIE; use "bb" for MEaSURES
   #'    * coasts           "c"
   #'    * grounding line   "g"
+  #'
   #' @param rectangularExtent BINARY: Should only the defined shelf/shelves be
   #'   included (TRUE), or can the outlines of all shelves within the bounding
   #'   box be included too (FALSE)?
@@ -46,7 +47,7 @@ draw_antarctica <- function(extent = "",
   if ("g" %in% sbcg) {
     ground <- do.call(get_grounding_line, extentArgs)
 
-    # Only plot if there is a grounding line to plot!
+    # Only try to plot if there is a grounding line to plot!
     if (nrow(ground) > 0) {
       if (simplify != 0) ground <- terra::simplifyGeom(ground, simplify)
       terra::lines(ground, ...)
@@ -57,7 +58,7 @@ draw_antarctica <- function(extent = "",
   if ("c" %in% sbcg) {
     coast <- do.call(get_coastline, extentArgs)
 
-    # Only plot if there is a coastline to plot!
+    # Only try to plot if there is a coastline to plot!
     if (nrow(coast) > 0) {
       if (simplify != 0) coast <- terra::simplifyGeom(coast, simplify)
       terra::lines(coast, ...)
@@ -71,7 +72,7 @@ draw_antarctica <- function(extent = "",
   if ("s" %in% sbcg) {
     shelves <- do.call(get_shelf_outline, extentArgs)
 
-    # Only plot if there is a shelf to plot!
+    # Only try to plot if there is a shelf to plot!
     if (nrow(shelves) > 0) {
       if (simplify != 0) shelves <- terra::simplifyGeom(shelves, simplify)
         terra::lines(shelves, ...)
@@ -88,7 +89,7 @@ draw_antarctica <- function(extent = "",
       basins <- do.call(get_basin_outline, extentArgs)
     }
 
-    # Only plot if there is a basin to plot!
+    # Only try to plot if there is a basin to plot!
     if (nrow(basins) > 0) {
       if (simplify != 0) basins <- terra::simplifyGeom(basins, simplify)
       terra::lines(basins, ...)
