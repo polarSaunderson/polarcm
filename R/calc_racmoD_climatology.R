@@ -12,30 +12,31 @@ calc_racmoD_climatology <- function(racmoData,
   #'
   #' @param racmoData SpatRaster: The RACMO data. It needs to be an existing
   #'   SpatRaster.
-  #' @param FUN Which function should be applied across the years? For example,
-  #'   if set as "mean", this function will return the mean value of the
-  #'   racmoData variable on the 1st Dec each year. Can be a vector of
-  #'   functions, but be wary of speed and there is no elegant solution to
-  #'   supplying ... for different functions; it is probably easier to run this
-  #'   separately for each required function and then combine them as a
-  #'   SpatRasterDataset.
-  #' @param excludeIncomplete Should data be excluded if it is not found in
-  #'   throughout the racmoData dataset? TRUE removes dates that not found in
-  #'   every calendar year (i.e. Jan--Dec); a numeric value between 1 and 12 is
-  #'   used as the australSplit (i.e. if 3, all months AFTER March, are
-  #'   considered part of the following summer). If FALSE, all data is used when
-  #'   calculating the function.
+  #' @param FUN Which function/s should be applied across the dataset? For
+  #'   example, if set as "mean", this function will return the mean value of
+  #'   the racmoData variable on the 1st Dec each year. Can be a vector of
+  #'   functions, but be wary of speed as there is no elegant solution to
+  #'   supplying '...' for different functions; it is probably easier to run
+  #'   this function separately for each required 'FUN' function and then
+  #'   combine them as a SpatRasterDataset.
+  #' @param excludeIncomplete Should data be excluded from the function if the
+  #'   day is not found throughout the dataset? TRUE removes dates not found in
+  #'   every calendar year (i.e. Jan--Dec); a numeric value between 1 and 12
+  #'   does the same but based on an austral year, and this argument defines the
+  #'   'australSplit' (e.g. if 3, all months AFTER March, are considered part of
+  #'   the following austral year / summer). If FALSE (the default), all data is
+  #'   used when calculating the function.
   #'
   #'   Can be useful so the function is applied to the same years/summers for
-  #'   each day, but be careful! Worst case scenario: if there were 5 years of
-  #'   complete data (e.g. January 1 2000 - December 31 2005), and a single day
-  #'   outside this (e.g. January 1 2006), the function would only be applied to
-  #'   the January 1st data as the other dates are not found in 2006. See
-  #'   `exclude_unmatched_days`. It is possibly much easier and clearer to
-  #'   establish which dates are in the dataset first, and then run this
-  #'   function with 'excludeIncomplete' set as FALSE.
-  #' @param ... Any arguments that need to be fed to FUN. If there are multiple
-  #'   values in a FUN vector, these arguments will be fed to all of the
+  #'   each day, but be careful! Worst case scenario: if a dataset ran from 2nd
+  #'   January 2000 to 1st January 2001, no data would be used because none of
+  #'   the dates occur in both 2000 and 2001. See [exclude_unmatched_days()]. It
+  #'   is likely much easier and clearer to establish which dates are in the
+  #'   dataset first, and then run this function with 'excludeIncomplete' set as
+  #'   FALSE.
+  #' @param ... Any arguments that need to be fed to the 'FUN' functions. If
+  #'   there are multiple values in the 'FUN' vector (i.e. multiple functions
+  #'   will be applied), the "..." arguments will be fed to all of the
   #'   functions.
   #'
   #' @export
