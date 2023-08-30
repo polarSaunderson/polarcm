@@ -8,13 +8,19 @@ use_crs(crs = "racmo")
 }
 \arguments{
 \item{crs}{"string": Which crs to return? Defaults to "racmo", but other
-options are: "lambert", "ortho", "stereographic" (EPSG:3031), and "era5"
-/ "WGS84" (EPSG:4326).}
+options are: "mar", "lambert", "ortho", "stereographic" (EPSG:3031), and
+"era5" / "WGS84" (EPSG:4326).}
 }
 \description{
 The RACMO projection does not have a standard EPSG code. This
 function returns the crs definition for RACMO in Antarctica. A couple of
 other common projection options for Antarctica are also available. The
 projection for RACMO is taken directly from the RACMO2.3p3 NetCDFs; use
-ncdf4::ncatt_get(nc, "rotated_pole") to view it.
+\code{ncdf4::ncatt_get(nc, "rotated_pole")} to view.  The MAR crs is based on
+EPSG:3031 (taken from the description of this Zenodo dataset
+\url{https://doi.org/10.5281/zenodo.2547638}, but it appears that it is in
+kilometres, not metres as a standard EPSG:3031 would be.
+
+For more information on RCM projections, see here:
+\link{https://gitlab.tudelft.nl/slhermitte/manuals/blob/master/RACMO_reproject.md}
 }
