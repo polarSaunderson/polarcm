@@ -13,7 +13,7 @@ Please read the Instructions below!
 to work - the \code{configure_racmoR()} function helps functions access these
 datasets by creating the necessary paths and adding them to a hidden
 ".racmoR" environment. This function therefore needs to be called before
-any racmoR functions are used (which is automatically done as part of
+any \code{racmoR} functions are used (which is automatically done as part of
 most \code{racmoR} functions). The datasets must already be saved and
 accessible on your system.
 }
@@ -34,10 +34,10 @@ your current working directory.
 
 \if{html}{\out{<div class="sourceCode R">}}\preformatted{  # Prepare data paths for racmoR
   .racmoR = new.env() # hidden racmoR environment
-  .racmoR$rawDataPath <- "../../Data/
+  .racmoR$rawDataPath <- "../../Data/"
+  .racmoR$MEaSURES    <- "MEaSURES Boundaries/"
   .racmoR$racmoM      <- "RACMO/RACMO2.3p3_CON_ANT27_monthly/"
   .racmoR$racmoD      <- "RACMO/RACMO2.3p3_CON_ANT27_daily/"
-  .racmoR$MEaSURES    <- "MEaSURES Boundaries/"
   attach(.racmoR)
 }\if{html}{\out{</div>}}
 
@@ -45,12 +45,36 @@ This function assumes that all raw data is stored in a "Data" directory
 (i.e. 'rawDataPath'), with separate subdirectories for RACMO data at
 monthly ('racmoM') and daily ('racmoD') resolution, and for the
 'MEaSURES' data. The necessary data must already be downloaded before
-using \code{racmoR} - the package \emph{does not} try to find and download data for
-you. If any datasets are not available, set their path as \code{NULL}. NULLs
-will restrict the capabilities of the racmoR package in expected ways -
-for example, if no daily RACMO data is available, the racmoD functions
-will fail. However, that may not be an issue. The MEaSURES data is used
-for any location-based calculations or subsetting, and for drawing
-borders.
+trying to use \code{racmoR} - the package \emph{does not} try to find and download
+data for you. If any datasets are not available, set their path as
+\code{NULL}. NULLs will restrict the capabilities of the racmoR package in
+expected ways - for example, if no daily RACMO data is available, the
+racmoD functions will fail. However, that may not be an issue. The
+MEaSURES data is used for any location-based calculations or subsetting,
+and for drawing borders.
+}
+
+\section{Data Access}{
+Access monthly RACMO2.3p3 data here (van Dalum et al., 2021):
+\url{https://doi.org/10.5281/zenodo.5512076.}.
+
+Access MEaSURES data here (Mouginot et al., 2017):
+\url{https://nsidc.org/data/nsidc-0709/versions/2}.
+
+Read more about MEaSURES data here:
+\url{https://nsidc.org/sites/default/files/nsidc-0709-v002-userguide.pdf}.
+}
+
+\section{References}{
+Mouginot, J, B Scheuchl & E Rignot (\strong{2017}) MEaSUREs Antarctic
+Boundaries for IPY 2007-2009 from Satellite Radar, Version 2. Boulder,
+Colorado USA. NASA National Snow and Ice Data Center Distributed Active
+Archive Center. \url{https://doi.org/10.5067/AXE4121732AD}.
+Last access: 08-28-2023.
+
+van Dalum, CT, WJ van de Berg & MR van den Broeke (\strong{2021}) RACMO2.3p3
+monthly SMB, SEB and t2m data for Antarctica (1979-2018). [CON Data,
+Version 2]. Zenodo. \url{https://doi.org/10.5281/zenodo.7639053}.
+Last access: 08-28-2023.
 }
 

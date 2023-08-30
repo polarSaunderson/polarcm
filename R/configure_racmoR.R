@@ -8,7 +8,7 @@ configure_racmoR <- function() {
   #'   to work - the `configure_racmoR()` function helps functions access these
   #'   datasets by creating the necessary paths and adding them to a hidden
   #'   ".racmoR" environment. This function therefore needs to be called before
-  #'   any racmoR functions are used (which is automatically done as part of
+  #'   any `racmoR` functions are used (which is automatically done as part of
   #'   most `racmoR` functions). The datasets must already be saved and
   #'   accessible on your system.
   #'
@@ -31,10 +31,10 @@ configure_racmoR <- function() {
   #' ```R
   #'   # Prepare data paths for racmoR
   #'   .racmoR = new.env() # hidden racmoR environment
-  #'   .racmoR$rawDataPath <- "../../Data/
+  #'   .racmoR$rawDataPath <- "../../Data/"
+  #'   .racmoR$MEaSURES    <- "MEaSURES Boundaries/"
   #'   .racmoR$racmoM      <- "RACMO/RACMO2.3p3_CON_ANT27_monthly/"
   #'   .racmoR$racmoD      <- "RACMO/RACMO2.3p3_CON_ANT27_daily/"
-  #'   .racmoR$MEaSURES    <- "MEaSURES Boundaries/"
   #'   attach(.racmoR)
   #' ```
   #'
@@ -42,13 +42,36 @@ configure_racmoR <- function() {
   #'   (i.e. 'rawDataPath'), with separate subdirectories for RACMO data at
   #'   monthly ('racmoM') and daily ('racmoD') resolution, and for the
   #'   'MEaSURES' data. The necessary data must already be downloaded before
-  #'   using `racmoR` - the package *does not* try to find and download data for
-  #'   you. If any datasets are not available, set their path as `NULL`. NULLs
-  #'   will restrict the capabilities of the racmoR package in expected ways -
-  #'   for example, if no daily RACMO data is available, the racmoD functions
-  #'   will fail. However, that may not be an issue. The MEaSURES data is used
-  #'   for any location-based calculations or subsetting, and for drawing
-  #'   borders.
+  #'   trying to use `racmoR` - the package *does not* try to find and download
+  #'   data for you. If any datasets are not available, set their path as
+  #'   `NULL`. NULLs will restrict the capabilities of the racmoR package in
+  #'   expected ways - for example, if no daily RACMO data is available, the
+  #'   racmoD functions will fail. However, that may not be an issue. The
+  #'   MEaSURES data is used for any location-based calculations or subsetting,
+  #'   and for drawing borders.
+  #'
+  #' # Data Access
+  #'   Access monthly RACMO2.3p3 data here (van Dalum et al., 2021):
+  #'    [https://doi.org/10.5281/zenodo.5512076.]().
+  #'
+  #'   Access MEaSURES data here (Mouginot et al., 2017):
+  #'    [https://nsidc.org/data/nsidc-0709/versions/2]().
+  #'
+  #'   Read more about MEaSURES data here:
+  #'    [https://nsidc.org/sites/default/files/nsidc-0709-v002-userguide.pdf]().
+  #'
+  #' # References
+  #'
+  #' Mouginot, J, B Scheuchl & E Rignot (**2017**) MEaSUREs Antarctic
+  #' Boundaries for IPY 2007-2009 from Satellite Radar, Version 2. Boulder,
+  #' Colorado USA. NASA National Snow and Ice Data Center Distributed Active
+  #' Archive Center. [https://doi.org/10.5067/AXE4121732AD]().
+  #' Last access: 08-28-2023.
+  #'
+  #' van Dalum, CT, WJ van de Berg & MR van den Broeke (**2021**) RACMO2.3p3
+  #' monthly SMB, SEB and t2m data for Antarctica (1979-2018). \[CON Data,
+  #' Version 2\]. Zenodo. [https://doi.org/10.5281/zenodo.7639053]().
+  #' Last access: 08-28-2023.
   #'
   #' @export
 
@@ -59,6 +82,7 @@ configure_racmoR <- function() {
   }
 
   # Check if the function has already been called.
+  # crs_racmo is created last - if it exists, everything went okay
   if (exists("crs_racmo", envir = .racmoR)) {
     token <- as.list(.racmoR)
     return(invisible(token))
@@ -72,11 +96,10 @@ configure_racmoR <- function() {
   racmoD      <- .racmoR$racmoD
   MEaSURES    <- .racmoR$MEaSURES
   rm(list = c("racmoD", "racmoM", "rawDataPath", "MEaSURES"), envir = .racmoR)
-  detach(.racmoR)
 
   # Create a token to hold all the info
-  token <- list()
-  token$dirFolders <- data.frame("rawData"  = "Data")      # preallocate
+  token <- list()   # preallocate
+  token$dirFolders <- data.frame("rawData"  = basename(rawDataPath))
   token$dirPaths   <- data.frame("rawData"  = rawDataPath)
 
   # Daily Data
@@ -119,32 +142,43 @@ configure_racmoR <- function() {
 
   # MEaSURES Data
   if (!is.null(MEaSURES)) {
-    rawDir <- paste0(rawDataPath, MEaSURES)    # path to MEaSURES directory
+    # MEaSURES paths & directory
+    rawDir <- paste0(rawDataPath, MEaSURES)
     token$dirPaths$measures   <- rawDir
     token$dirFolders$measures <- MEaSURES
 
-    token$measures$shelves       <- terra::vect(paste0(rawDir,
-                                                       "shelves/IceShelf",
-                                                       "_Antarctica_v02.shp"))
-    token$measures$basins        <- terra::vect(paste0(rawDir,
-                                                       "basinsAA/Basins",
-                                                       "_Antarctica_v02.shp"))
-    token$imbie$basins           <- terra::vect(paste0(rawDir,
-                                                       "basinsIMBIE/Basins_IMBIE",
-                                                       "_Antarctica_v02.shp"))
-    token$measures$coasts        <- terra::vect(paste0(rawDir,
-                                                       "coastline/Coastline",
-                                                       "_Antarctica_v02.shp"))
-    token$measures$groundingLine <- terra::vect(paste0(rawDir,
-                                                  "groundingLine/GroundingLine",
-                                                       "_Antarctica_v02.shp"))
+    # IMBIE Basins (e.g. A-Ap)
+    imbie <- paste0(rawDir,
+                    "Basins_IMBIE_Antarctica/Basins_IMBIE_Antarctica_v02.shp")
+    token$imbie$basins <- terra::vect(imbie)
+
+    # Refined Basins (e.g. Vincennes_Bay)
+    basins <- paste0(rawDir,
+                     "Basins_Antarctica/Basins_Antarctica_v02.shp")
+    token$measures$basins <- terra::vect(basins)
+
+    # Antarctic Coastline
+    coast <- paste0(rawDir,
+                    "Coastline_Antarctica/Coastline_Antarctica_v02.shp")
+    token$measures$coastline <- terra::vect(coast)
+
+    # Antarctic Grounding Line
+    GL <- paste0(rawDir,
+                 "GroundingLine_Antarctica/GroundingLine_Antarctica_v02.shp")
+    token$measures$groundingLine <- terra::vect(GL)
+
+    # Antarctic Ice Shelves
+    shelves <- paste0(rawDir,
+                      "IceShelf_Antarctica/IceShelf_Antarctica_v02.shp")
+    token$measures$shelves <- terra::vect(shelves)
   }
 
   # Define RACMO crs
   token$crs_racmo <- use_crs("racmo")# maybe this should be the other way around
 
   # Store in the hidden racmoR environment & return
-  list2env(x = token, envir = .racmoR)
-  attach(.racmoR)
-  return(invisible(token))
+  detach(.racmoR)                        # remove existing
+  list2env(x = token, envir = .racmoR)   # create new
+  attach(.racmoR)                        # attach new
+  return(invisible(token))               # also return as a list
 }

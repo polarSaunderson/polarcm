@@ -152,7 +152,7 @@ get_extent <- function(extent = "",
       terra::ext()                                          # reprojected extent
   } else if (extent[[1]] == "") {
   # Extent for all of Antarctica
-    xBounds <- terra::project(racmoInfo$measures$coasts,
+    xBounds <- terra::project(racmoInfo$measures$coastline,
                               use_crs(crs))
     xBounds <- terra::ext(xBounds)
   } else {
