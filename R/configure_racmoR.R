@@ -182,3 +182,141 @@ configure_racmoR <- function() {
   attach(.racmoR)                        # attach new
   return(invisible(token))               # also return as a list
 }
+
+
+
+# # NEW THOUGHTS #################################################################
+#
+# Read from .Rprofile
+# ```{r}
+# # Check if the .Rprofile necessary for configuration has been prepared
+# if (!exists(".racmoR")) {
+#   stop("\nType ?configure_racmoR and read the Instructions section.")
+# }
+#
+# # Check if the function has already been called.
+# # crs_racmo is created last - if it exists, everything went okay
+# if (exists("crs_racmo", envir = .racmoR)) {
+#   token <- as.list(.racmoR)
+#   return(invisible(token))
+# }
+#
+#
+# # Define Defaults
+# .racmoR$defaults$marD   <- domR::set_if_null(.racmoR$defaults$marD,
+#                                              names(.racmoR$marD)[[1]])
+# .racmoR$defaults$marM   <- domR::set_if_null(.racmoR$defaults$marM,
+#                                              names(.racmoR$marM)[[1]])
+# .racmoR$defaults$racmoM <- domR::set_if_null(.racmoR$defaults$racmoD,
+#                                              names(.racmoR$racmoD)[[1]])
+# .racmoR$defaults$racmoD <- domR::set_if_null(.racmoR$defaults$racmoD,
+#                                              names(.racmoR$racmoD)[[1]])
+# ```
+#
+# # Basics
+# ```{r}
+# # Parent directory of all data is really important here!
+# rawDataPath <- .racmoR$rawDataPath
+#
+# # Create token to hold all the information
+# token <- list()
+#
+# # Add basic raw data path and file
+# token$dirPaths   <- list("rawData" = rawDataPath)
+# token$dirFolders <- list("rawData" = basename(rawDataPath))
+#
+# # Add a list of all data we have     ############ move down when MEaSURES exists
+# token$datasets <- list("MEaSURES" = NULL,
+#                        "racmoM"   = names(.racmoR$racmoM),
+#                        "racmoD"   = names(.racmoR$racmoD),
+#                        "marD"     = names(.racmoR$marD),
+#                        "marM"     = names(.racmoR$marM))
+#
+# # Data Paths ===================================================================
+#
+# ```
+#
+# # MEaSURES
+# ```{r}
+# if (!is.null(.racmoR$MEaSURES)) {
+#   # Basic path & directory
+#   rawDir <- paste0(rawDataPath, .racmoR$MEaSURES)
+#   token$dirPaths$MEaSURES   <- rawDir
+#   token$dirFolders$MEaSURES <- basename(rawDir)
+#
+#   # Antarctic Coastline
+#   coast <- paste0(rawDir,
+#                   "Coastline_Antarctica/Coastline_Antarctica_v02.shp")
+#   if (file.exists(coast)) {
+#     token$measures$coastline <- terra::vect(coast)
+#   } else {warning("Cannot access the coastline in the MEaSURES dataset! ",
+#                   "Expected filename:\n  ", coast, "\n\n")}
+#
+#   # Antarctic Grounding Line
+#   GL <- paste0(rawDir,
+#                "GroundingLine_Antarctica/GroundingLine_Antarctica_v02.shp")
+#   if (file.exists(GL)) {
+#     token$measures$groundingLine <- terra::vect(GL)
+#   } else {warning("Cannot access the grounding line in the MEaSURES dataset! ",
+#                   "Expected filename:\n  ", GL, "\n\n")}
+#
+#   # Antarctic Ice Shelves
+#   shelves <- paste0(rawDir,
+#                     "IceShelf_Antarctica/IceShelf_Antarctica_v02.shp")
+#   if (file.exists(shelves)) {
+#     token$measures$iceShelves <- terra::vect(shelves)
+#   } else {warning("Cannot access ice shelves in the MEaSURES dataset! ",
+#                   "Expected filename:\n  ", shelves, "\n\n")}
+#
+#   # IMBIE Basins (e.g. A-Ap)
+#   imbie <- paste0(rawDir,
+#                   "Basins_IMBIE_Antarctica/Basins_IMBIE_Antarctica_v02.shp")
+#   if (file.exists(imbie)) {
+#     token$measures$imbieBasins <- terra::vect(imbie)
+#   } else {warning("Cannot access IMBIE Basins in the MEaSURES dataset! ",
+#                   "Expected filename:\n  ", imbie, "\n\n")}
+#
+#   # Refined Basins (e.g. Vincennes_Bay)
+#   basins <- paste0(rawDir,
+#                    "Basins_Antarctica/Basins_Antarctica_v02.shp")
+#   if (file.exists(basins)) {
+#     token$measures$refinedBasins <- terra::vect(basins)
+#   } else {warning("Cannot access Basins in the MEaSURES dataset! ",
+#                   "Expected filename:\n  ", basins, "\n\n")}
+#
+#   # Keep vector of MEaSURES data
+#   token$datasets$MEaSURES <- names(token$measures)
+# }
+# ```
+#
+# # racmoM
+# ```{r}
+# if (!is.null(.racmoR$racmoM)) {
+#   for (ii in names(.racmoR$racmoM)) {
+#     # Basic path & directory
+#     iiRawDir <- paste0(rawDataPath, .racmoR$racmoM[[ii]])
+#     # token$dirPaths$racmoM[[ii]]   <- iiRawDir             # path to directory
+#     # token$dirFolders$racmoM[[ii]] <- basename(iiRawDir)   # directory name
+#
+#     token$dirPaths[[paste0("racmoM_", ii)]]   <- iiRawDir             # path to directory
+#     token$dirFolders[[paste0("racmoM_", ii)]] <- basename(iiRawDir)   # directory name
+#
+#
+#     # Get variables' full paths
+#     iiVarPaths <- list.files(iiRawDir, ".nc",           # only NetCDFs
+#                              full.names = TRUE)         # get full paths
+#
+#     # Get variable names
+#     iiVarNames <- basename(iiVarPaths) |>
+#       strsplit("_") |>
+#       lapply('[', 1) |>
+#       unlist()
+#
+#     # Store as a named list for "$" access
+#     token$varPaths$racmoM[[ii]] <- setNames(as.list(iiVarPaths), iiVarNames)
+#
+#     # Keep a vector of variables names
+#     token$vars$racmoM[[ii]] <- iiVarNames
+#   }
+# }
+# ```
