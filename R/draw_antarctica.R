@@ -3,6 +3,7 @@ draw_antarctica <- function(extent = "",
                             rectangularExtent = FALSE,
                             simplify = 0,
                             crs = "racmo",
+                            newPlot = FALSE,
                             extentArgs = list(),
                             ...) {
   #' Draw MEaSURES Antarctic outlines on maps
@@ -29,6 +30,9 @@ draw_antarctica <- function(extent = "",
   #'   numbers are coarser; 0 (default) is no simplifying.
   #' @param crs "string": Which crs should the lines be drawn in? See the
   #'   `set_crs()` function
+  #' @param newPlot BINARY: If TRUE, Antarctica is drawn on an empty window; if
+  #'   FALSE (the default), it is drawn on top of the existing plot. If there is
+  #'   no existing plot, this defaults to TRUE.
   #' @param extentArgs A list of arguments to feed into `get_extent()`. Only
   #'   necessary if
   #' @param ... Any arguments that can be used in `terra::lines()`
@@ -42,6 +46,14 @@ draw_antarctica <- function(extent = "",
   # Handle necessary arguments for the inner get_extent() function calls
   extentArgs$crs    <- crs
   extentArgs$extent <- extent
+
+  # Draw on top of existing plot, or create as a new blank plot?
+  if (is.null(dev.list())) newPlot <- TRUE
+  if (isTRUE(newPlot)) {
+    devExt <- do.call(get_extent, extentArgs)
+    devExt <- terra::extend(devExt, (devExt[2] - devExt[1]) / 20)
+    terra::plot(devExt)
+  }
 
   # Add grounding lines
   if ("g" %in% sbcg) {

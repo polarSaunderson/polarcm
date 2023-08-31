@@ -10,6 +10,7 @@ draw_antarctica(
   rectangularExtent = FALSE,
   simplify = 0,
   crs = "racmo",
+  newPlot = FALSE,
   extentArgs = list(),
   ...
 )
@@ -38,6 +39,10 @@ numbers are coarser; 0 (default) is no simplifying.}
 
 \item{crs}{"string": Which crs should the lines be drawn in? See the
 \code{set_crs()} function}
+
+\item{newPlot}{BINARY: If TRUE, Antarctica is drawn on an empty window; if
+FALSE (the default), it is drawn on top of the existing plot. If there is
+no existing plot, this defaults to TRUE.}
 
 \item{extentArgs}{A list of arguments to feed into \code{get_extent()}. Only
 necessary if}
