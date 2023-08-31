@@ -41,6 +41,7 @@ arguments, accounting for whether the months should be split into
 calendar years or austral summer years.
 
 The following examples further illustrates this function.
+\subsection{Example 1 - Annual Winter (JJA) total precipitation}{
 \enumerate{
 \item Take a monthly RACMO dataset of precipitation, including all months
 each year from 1979--2018 (i.e. 12 months * 40 years = 480 layers). Set
@@ -50,13 +51,19 @@ JJA precipitation. The date of each returned layer is the date of the
 first of the constituent layers that it was computed from. Only layers
 with the same units are processed together, and only years when all
 requested months are available are returned.
+}
+}
+
+\subsection{Example 2 - Austral Summer (DJF) mean wind speed}{
+\enumerate{
 \item Take a monthly RACMO dataset of average monthly wind speeds, including
 all months each year from 1979--2018 (i.e. 12 months * 40 years = 480
-layers). Set 'months' as c(12, 1, 2) (i.e. DJF), and FUN as "mean". The
-returned SpatRaster will contain 40 layers, with each one being that
-summers's average DJF wind speed. The date of each returned layer is the
-date of the first of constituent layers that it was computed from. Only
-layers with the same units are processed together, and only austral years
-when all requested months are available are returned.
+layers). Set 'months' as c(12, 1, 2) (i.e. DJF), FUN as "mean" and annual
+as 3. The returned SpatRaster will contain 40 layers, with each one being
+that summers's average DJF wind speed. The date of each returned layer is
+the date of the first of constituent layers that it was computed from.
+Only layers with the same units are processed together, and only austral
+years when all requested months are available are returned.
+}
 }
 }
