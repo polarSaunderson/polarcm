@@ -134,7 +134,7 @@ get_extent <- function(extent = "",
   #' @export
 
   # Code -----------------------------------------------------------------------
-  racmoInfo  <- configure_racmoR()
+  token      <- configure_polaR()
   extentType <- methods::is(extent)
 
   # Output depends on extent type
@@ -152,7 +152,7 @@ get_extent <- function(extent = "",
       terra::ext()                                          # reprojected extent
   } else if (extent[[1]] == "") {
   # Extent for all of Antarctica
-    xBounds <- terra::project(racmoInfo$measures$coastline,
+    xBounds <- terra::project(token$measures$coastline,
                               use_crs(crs))
     xBounds <- terra::ext(xBounds)
   } else {
@@ -163,16 +163,16 @@ get_extent <- function(extent = "",
                        "GR", "grounded", "grounded ice", "land ice", "land")
 
     # Find name/s of the extent's ice shelves name/s in the MEaSURES datasets
-    xShelves <- racmoInfo$measures$shelves[racmoInfo$measures$shelves$NAME %in% extent]
+    xShelves <- token$measures$iceShelves[token$measures$iceShelves$NAME %in% extent]
 
     # Find name/s of the extent's basins name/s in the MEaSURES datasets
     if (isTRUE(imbieBasins)) {
-      xBasins  <- racmoInfo$imbie$basins[racmoInfo$imbie$basins$NAME %in% extent]
+      xBasins  <- token$measures$imbieBasins[token$measures$imbieBasins$NAME %in% extent]
     } else if (isFALSE(imbieBasins)) {
-      xBasins  <- racmoInfo$measures$basins[racmoInfo$measures$basins$NAME %in% extent]
+      xBasins  <- token$measures$refinedBasins[token$measures$refinedBasins$NAME %in% extent]
     } else if (is.null(imbieBasins)) {
-      immB <- racmoInfo$imbie$basins[racmoInfo$imbie$basins$NAME %in% extent]
-      meas <- racmoInfo$measures$basins[racmoInfo$measures$basins$NAME %in% extent]
+      immB <- token$measures$imbieBasins[token$measures$imbieBasins$NAME %in% extent]
+      meas <- token$measures$refinedBasins[token$measures$refinedBasins$NAME %in% extent]
       xBasins <- rbind(immB, meas)
     }
 

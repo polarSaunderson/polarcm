@@ -60,8 +60,10 @@ get_shelf_outline <- function(extent = "",
   #' @export
 
   # Code -----------------------------------------------------------------------
+  token <- configure_polaR()
+
   # Prepare all possible ice shelves
-  shelves <- configure_racmoR()$measures$shelves   # MEaSURES is EPSG:3031
+  shelves <- token$measures$iceShelves   # MEaSURES is EPSG:3031
 
   # These must be rectangles, as there isn't enough extra information
   if ("SpatRaster" %in% methods::is(extent)) {

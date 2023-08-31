@@ -56,14 +56,16 @@ get_basin_outline <- function(extent = "",
   #' @export
 
   # Code -----------------------------------------------------------------------
+  token <- configure_polaR()
+
   # Prepare possible basin combinations; basins are stored as EPSG:3031
   if (isTRUE(returnImbie)) {
-    basins <- configure_racmoR()$imbie$basins
+    basins <- token$measures$imbieBasins
   } else if (isFALSE(returnImbie)) {
-    basins <- configure_racmoR()$measures$basins
+    basins <- token$measures$refinedBasins
   } else if (is.null(returnImbie)) {
-    basins <- rbind(configure_racmoR()$imbie$basins,
-                    configure_racmoR()$measures$basins)
+    basins <- rbind(token$measures$imbieBasins,
+                    token$measures$refinedBasins)
   }
 
   # The following extents must be rectangles, as there's not enough information

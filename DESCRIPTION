@@ -1,16 +1,17 @@
-Package: racmoR
+Package: polaR
 Type: Package
-Title: Interact and Manipulate Data from the RACMO Regional Climate Model
-Version: 0.0.0.6
+Title: Interact and Manipulate Data from the RACMO & MAR Regional Climate Models
+Version: 0.0.1.0
 Authors@R: 
     person("Dominic", "Saunderson",
            role = c("aut", "cre"),
            email = "dominicsaunderson@gmail.com",
            comment = c(ORCID = "0000-0001-7440-0101"))
-Description: racmoR is a personal package for interacting with and manipulating 
-    output from the RACMO regional climate model. The package is an ongoing work 
-    in progress, is not foolproof, and is essentially a lot of syntactic 
-    wrapping around the terra package to ease repeated processes.
+Description: polaR is a personal package for interacting with and manipulating 
+    output from the RACMO and MAR regional climate models. The package is an 
+    ongoing work in progress, is not foolproof, and is essentially a lot of 
+    data wrangling to accommodate different RCM datasets, and syntactic wrapping 
+    around the `terra` package to ease repeated processes.
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

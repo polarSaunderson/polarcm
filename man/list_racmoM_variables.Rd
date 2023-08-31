@@ -12,7 +12,7 @@ for use inside other functions.}
 }
 \description{
 Which monthly RACMO variables are available? It simply reads
-the names of the files as created by \code{\link[=configure_racmoR]{configure_racmoR()}} (and thus
+the names of the files as created by \code{\link[=configure_polaR]{configure_polaR()}} (and thus
 only accounts for the files present when that function was initially
 called).
 }

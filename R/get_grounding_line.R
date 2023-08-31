@@ -45,8 +45,10 @@ get_grounding_line <- function(extent = "",
   #' @export
 
   # Code -----------------------------------------------------------------------
+  token <- configure_polaR()
+
   # Prepare full grounding line data
-  groundingLine <- configure_racmoR()$measures$groundingLine
+  groundingLine <- token$measures$groundingLine
   groundingLine <- terra::vect(terra::geom(groundingLine), type = "lines")
   terra::crs(groundingLine) <- use_crs("stereo")    # MEaSURES is EPSG:3031
 

@@ -48,8 +48,10 @@ get_coastline <- function(extent = "",
   #' @export
 
   # Code -----------------------------------------------------------------------
+  token <- configure_polaR()
+
   # Prepare full coastline data
-  fullCoast  <- configure_racmoR()$measures$coastline
+  fullCoast  <- token$measures$coastline
   fullCoast  <- terra::vect(terra::geom(fullCoast), type = "lines")
   terra::crs(fullCoast) <- use_crs("stereo")     # MEaSURES is EPSG:3031
 
