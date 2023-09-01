@@ -26,9 +26,7 @@ list_racmoD_variables <- function(print = TRUE) {
   #' @description Which daily RACMO variables are available? It simply reads the
   #'   names of the files as created by [configure_polaR()] (and thus only
   #'   accounts for the files present when that function was initially called).
-  #'
-  #' @param print BINARY: Should the variables be printed out? Can be suppressed
-  #'   for use inside other functions.
+  #' @inheritParams list_racmoM_variables
   #'
   #' @export
 
@@ -48,8 +46,7 @@ list_marH_variables <- function(print = TRUE) {
   #'   names of the files as created by [configure_polaR()] (and thus only
   #'   accounts for the files present when that function was initially called).
   #'
-  #' @param print BINARY: Should the variables be printed out? Can be suppressed
-  #'   for use inside other functions.
+  #' @inheritParams list_racmoM_variables
   #'
   #' @export
 
@@ -69,8 +66,7 @@ list_marD_variables <- function(print = TRUE) {
   #'   names of the files as created by [configure_polaR()] (and thus only
   #'   accounts for the files present when that function was initially called).
   #'
-  #' @param print BINARY: Should the variables be printed out? Can be suppressed
-  #'   for use inside other functions.
+  #' @inheritParams list_racmoM_variables
   #'
   #' @export
 
@@ -90,8 +86,7 @@ list_marM_variables <- function(print = TRUE) {
   #'   names of the files as created by [configure_polaR()] (and thus only
   #'   accounts for the files present when that function was initially called).
   #'
-  #' @param print BINARY: Should the variables be printed out? Can be suppressed
-  #'   for use inside other functions.
+  #' @inheritParams list_racmoM_variables
   #'
   #' @export
 
