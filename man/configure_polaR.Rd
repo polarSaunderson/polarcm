@@ -4,7 +4,16 @@
 \alias{configure_polaR}
 \title{Prepare necessary datasets and variables}
 \usage{
-configure_polaR()
+configure_polaR(refresh = FALSE)
+}
+\arguments{
+\item{refresh}{BINARY: Should \code{polaR} be configured again? Mainly for
+developers and forces \code{polaR} to run the configuration again. Detaches
+the existing \code{.polarEnv}, and sources the ".Rprofile" file again. By
+default, 'refresh' is FALSE, because it is usually not necessary to
+reconfigure the package very often at all -  after the first call in a
+session, we usually just want it to return what has already stored in the
+\code{.polarEnv} and reconfiguring would unnecessarily slow it down.}
 }
 \description{
 Please read the Instructions below!
@@ -37,8 +46,8 @@ For more information on ".Rprofile" files, see Section 2.4 of
 \url{https://csgillespie.github.io/efficientR/set-up.html}.
 
 The following code should be copy and pasted into the ".Rprofile" file.
-This code lets \code{polaR} where to find the datasets on your system, and
-what type of data it is. You must adjust the paths to match your
+This code lets \code{polaR} know where to find the datasets on your system,
+and also which dataset it is. You must adjust the paths to match your
 directory structure:
 \itemize{
 \item \code{.polarEnv$rawDataPath} must be relative to your current working
@@ -50,18 +59,20 @@ See "Defining Datasets" below for more information on modifying the
 following code block.
 
 \if{html}{\out{<div class="sourceCode R">}}\preformatted{# Prepare data paths for polaR
-  .polarEnv = new.env()                           # hidden polaR environment
+  if(!exists(".polarEnv")) .polarEnv <- new.env() # hidden polaR environment
   .polarEnv$rawDataPath <- "../../Data/"          # relative to working dir
+
+  # MEaSURES
   .polarEnv$MEaSURES    <- "MEaSURES Boundaries/" # relative to rawDataPath
 
-  # racmoM data
+  # Monthly RACMO data (racmoM)
   .polarEnv$racmoM$rp3  <- list("dir" = RACMO/RACMO2.3p3_CON_ANT27_monthly/",
                                 "src" = "10.5281/zenodo.5512076")
 
   .polarEnv$racmoD      <- NULL      # no racmoD data
   .polarEnv$marM        <- NULL      # no marM data
   .polarEnv$marD        <- NULL      # no marD data
-  .polarEnv$marH        <- NULL      # no marH data
+  .polarEnv$marH        <- NULL      # no marH (hourly) data
 
   # Attach the hidden environment so it is available to polaR functions
   attach(.polarEnv)
@@ -114,6 +125,13 @@ line) on MEaSURES data. The MEaSURES data (Version 2; Mouginot et al.,
 Zenodo; it is assumed that any versions of the datasets shared using the
 same Zenodo dataset will be set up in the same way. Let me know if this
 is not the case.
+
+\emph{Note:} If multiple datasets are added to a section (e.g. there is both
+RACMO2.3p2 and RACMO2.3p3 monthly data), the first one defined will be
+considered as the default in functions. This can be overridden in the
+functions that care (mainly the \code{read_x()} functions) using the 'version'
+argument set to match the corresponding \verb{<name>} (see "Defining Datasets"
+below).
 
 \emph{Note:} It is okay to choose your own name for the directory containing
 these datasets (as long as they are defined in ".Rprofile"), but the file

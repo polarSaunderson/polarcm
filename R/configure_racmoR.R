@@ -1,4 +1,4 @@
-configure_polaR <- function() {
+configure_polaR <- function(refresh = FALSE) {
   #' Prepare necessary datasets and variables
   #'
   #' @description
@@ -14,6 +14,14 @@ configure_polaR <- function() {
   #'   Datasets"); any datasets that are not available need to be defined as
   #'   NULL and will be ignored, with predictable consequences - things don't
   #'   work!).
+  #'
+  #' @param refresh BINARY: Should `polaR` be configured again? Mainly for
+  #'   developers and forces `polaR` to run the configuration again. Detaches
+  #'   the existing `.polarEnv`, and sources the ".Rprofile" file again. By
+  #'   default, 'refresh' is FALSE, because it is usually not necessary to
+  #'   reconfigure the package very often at all -  after the first call in a
+  #'   session, we usually just want it to return what has already stored in the
+  #'   `.polarEnv` and reconfiguring would unnecessarily slow it down.
   #'
   #' @details # Instructions
   #'
@@ -31,8 +39,8 @@ configure_polaR <- function() {
   #'   [https://csgillespie.github.io/efficientR/set-up.html]().
   #'
   #'   The following code should be copy and pasted into the ".Rprofile" file.
-  #'   This code lets `polaR` where to find the datasets on your system, and
-  #'   what type of data it is. You must adjust the paths to match your
+  #'   This code lets `polaR` know where to find the datasets on your system,
+  #'   and also which dataset it is. You must adjust the paths to match your
   #'   directory structure:
   #'    - `.polarEnv$rawDataPath` must be relative to your current working
   #'    directory;
@@ -43,18 +51,20 @@ configure_polaR <- function() {
   #'
   #'   ```R
   #'   # Prepare data paths for polaR
-  #'     .polarEnv = new.env()                           # hidden polaR environment
+  #'     if(!exists(".polarEnv")) .polarEnv <- new.env() # hidden polaR environment
   #'     .polarEnv$rawDataPath <- "../../Data/"          # relative to working dir
+  #'
+  #'     # MEaSURES
   #'     .polarEnv$MEaSURES    <- "MEaSURES Boundaries/" # relative to rawDataPath
   #'
-  #'     # racmoM data
+  #'     # Monthly RACMO data (racmoM)
   #'     .polarEnv$racmoM$rp3  <- list("dir" = RACMO/RACMO2.3p3_CON_ANT27_monthly/",
   #'                                   "src" = "10.5281/zenodo.5512076")
   #'
   #'     .polarEnv$racmoD      <- NULL      # no racmoD data
   #'     .polarEnv$marM        <- NULL      # no marM data
   #'     .polarEnv$marD        <- NULL      # no marD data
-  #'     .polarEnv$marH        <- NULL      # no marH data
+  #'     .polarEnv$marH        <- NULL      # no marH (hourly) data
   #'
   #'     # Attach the hidden environment so it is available to polaR functions
   #'     attach(.polarEnv)
@@ -102,6 +112,13 @@ configure_polaR <- function() {
   #'   Zenodo; it is assumed that any versions of the datasets shared using the
   #'   same Zenodo dataset will be set up in the same way. Let me know if this
   #'   is not the case.
+  #'
+  #'   *Note:* If multiple datasets are added to a section (e.g. there is both
+  #'   RACMO2.3p2 and RACMO2.3p3 monthly data), the first one defined will be
+  #'   considered as the default in functions. This can be overridden in the
+  #'   functions that care (mainly the `read_x()` functions) using the 'version'
+  #'   argument set to match the corresponding `<name>` (see "Defining Datasets"
+  #'   below).
   #'
   #'   *Note:* It is okay to choose your own name for the directory containing
   #'   these datasets (as long as they are defined in ".Rprofile"), but the file
@@ -173,11 +190,20 @@ configure_polaR <- function() {
   # Check if the .Rprofile has been prepared configuration
   if (!exists(".polarEnv")) {
     stop("\nType ?configure_polaR and read the Instructions section.")
-  } else if (isTRUE(.polarEnv$configured)) {
+  } else if (isTRUE(refresh)) {
+    # print("reconfiguring")
+    detach(.polarEnv)              # print(".polarEnv should have been detached")
+    source(".Rprofile")            # print(".Rprofile sourced, .polarEnv should be refreshed!")
+    .polarEnv$configured <- FALSE  # print("added nonconfigured to .polarEnv")
+  } #else { print("just proceeding...") }
+
+  # Do we need to configure everything?
+  if (isTRUE(.polarEnv$configured)) {
+    # message("polaR already configured!")
     token <- as.list(.polarEnv)
     return(invisible(token))
   } else {
-    message("Configuring polaR...")
+    message("Configuring polaR...\n")
   }
 
   # Basic Set-Up ---------------------------------------------------------------
@@ -188,22 +214,6 @@ configure_polaR <- function() {
   rawDataPath      <- .polarEnv$rawDataPath
   token$dirPaths   <- list("rawData" = rawDataPath)
   token$dirFolders <- list("rawData" = basename(rawDataPath))
-
-  # Define defaults
-  token$defaults$racmoM  <- names(.polarEnv$racmoM)[[1]]
-  token$defaults$racmoD  <- names(.polarEnv$racmoD)[[1]]
-  token$defaults$marM    <- names(.polarEnv$marM)[[1]]
-  token$defaults$marD    <- names(.polarEnv$marD)[[1]]
-  token$defaults$marH    <- names(.polarEnv$marH)[[1]]
-  # token$defaults$marD   <- domR::set_if_null(.polarEnv$defaults$marD,
-  #                                                  names(.polarEnv$marD)[[1]])
-  # token$defaults$marM   <- domR::set_if_null(.polarEnv$defaults$marM,
-  #                                                  names(.polarEnv$marM)[[1]])
-  # token$defaults$racmoD <- domR::set_if_null(.polarEnv$defaults$racmoD,
-  #                                                  names(.polarEnv$racmoD)[[1]])
-  # token$defaults$racmoM <- domR::set_if_null(.polarEnv$defaults$racmoM,
-  #                                                  names(.polarEnv$racmoM)[[1]])
-  message("  The polaR defaults have been succesfully configured.")
 
   # MEaSURES Datasets ----------------------------------------------------------
   if (!is.null(.polarEnv$MEaSURES)) {
@@ -217,6 +227,7 @@ configure_polaR <- function() {
                     "Coastline_Antarctica/Coastline_Antarctica_v02.shp")
     if (file.exists(coast)) {
       token$measures$coastline <- terra::vect(coast)
+      token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "coastline")
     } else {warning("Cannot access the coastline in the MEaSURES dataset! ",
                     "   Expected filename:\n  ", coast, "\n\n")}
 
@@ -225,6 +236,7 @@ configure_polaR <- function() {
                  "GroundingLine_Antarctica/GroundingLine_Antarctica_v02.shp")
     if (file.exists(GL)) {
       token$measures$groundingLine <- terra::vect(GL)
+      token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "groundingLine")
     } else {warning("Cannot access the grounding line in the MEaSURES dataset! ",
                     "   Expected filename:\n  ", GL, "\n\n")}
 
@@ -233,6 +245,7 @@ configure_polaR <- function() {
                       "IceShelf_Antarctica/IceShelf_Antarctica_v02.shp")
     if (file.exists(shelves)) {
       token$measures$iceShelves <- terra::vect(shelves)
+      token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "iceShelves")
     } else {warning("Cannot access ice shelves in the MEaSURES dataset! ",
                     "   Expected filename:\n  ", shelves, "\n\n")}
 
@@ -241,6 +254,7 @@ configure_polaR <- function() {
                     "Basins_IMBIE_Antarctica/Basins_IMBIE_Antarctica_v02.shp")
     if (file.exists(imbie)) {
       token$measures$imbieBasins <- terra::vect(imbie)
+      token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "imbieBasins")
     } else {warning("Cannot access IMBIE Basins in the MEaSURES dataset! ",
                     "   Expected filename:\n  ", imbie, "\n\n")}
 
@@ -249,11 +263,11 @@ configure_polaR <- function() {
                      "Basins_Antarctica/Basins_Antarctica_v02.shp")
     if (file.exists(basins)) {
       token$measures$refinedBasins <- terra::vect(basins)
+      token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "refinedBasins")
     } else {warning("Cannot access Basins in the MEaSURES dataset! ",
                     "   Expected filename:\n  ", basins, "\n\n")}
 
     # Keep vector of MEaSURES data
-    token$datasets$MEaSURES <- names(token$measures)
     message("  The MEaSURES dataset has been succesfully configured.")
   }
 
@@ -281,6 +295,7 @@ configure_polaR <- function() {
         # Store as a named list for "$" access
         token$varPaths$racmoM[[ii]] <- setNames(as.list(iiVarPaths), iiVarNames)
         token$varNames$racmoM[[ii]] <- iiVarNames
+        token$datasets$racmoM <- c(token$datasets$racmoM, ii)
 
         message("  The ", ii, " racmoM dataset has been succesfully configured.")
       } else if (iiSrc %in% c("10.5281/zenodo.7961732")) {
@@ -326,6 +341,9 @@ configure_polaR <- function() {
           jjFiles <- list.files(iiRawDir, pattern = paste0(jj, ".+nc"))
           token$varPaths$racmoD[[ii]][[jj]] <- jjFiles
         }
+
+        token$datasets$racmoD <- c(token$datasets$racmoD, ii)
+
         message("  The ", ii, " racmoD dataset has been successfully configured.")
       } else {
         warning("  We don't recognise the src of the racmoD '", ii, "' dataset.",
@@ -359,7 +377,7 @@ configure_polaR <- function() {
           jjFiles <- list.files(iiRawDir, pattern = paste0(jj, ".+nc"))
           token$varPaths$marH[[ii]][[jj]] <- jjFiles
         }
-
+        token$datasets$marH <- c(token$datasets$marH, ii)
         message("  The ", ii, " marH dataset has been successfully configured.")
       } else {
         warning("  We don't recognise the src of the marH '", ii, "' dataset.",
@@ -369,23 +387,38 @@ configure_polaR <- function() {
   }
 
   # Miscellaneous --------------------------------------------------------------
+  # Define defaults
+  token$defaults$racmoM  <- names(.polarEnv$racmoM)[[1]]
+  token$defaults$racmoD  <- names(.polarEnv$racmoD)[[1]]
+  token$defaults$marM    <- names(.polarEnv$marM)[[1]]
+  token$defaults$marD    <- names(.polarEnv$marD)[[1]]
+  token$defaults$marH    <- names(.polarEnv$marH)[[1]]
+  message("  The polaR defaults have been succesfully configured.")
+
   # Define CRS
   token$crs$racmo <- use_crs("racmo")
-  token$crs$mar <- use_crs("mar")
+  token$crs$mar   <- use_crs("mar")
 
   # Confirm Configuration
   token$configured <- TRUE
+  token$message <- .polarEnv$testing
 
-  # alt name options: polaR  antarcticR   antarcticaR   Rcm   maRacmo   racmoR
+  # alt name options: polaR  antarcticR antarcticaR   Rcm   maRacmo   racmoR racMar
+  # We want to keep a copy of the original
+  # token$Rprofile  <- as.list(.polarEnv)
+  # within(token$Rprofile, rm("Rprofile"))
+  # Remove the data we added from
   origNames <- names(.polarEnv)
   rm(list = origNames, envir = .polarEnv)
 
   # Create as a hidden .polarEnv environment
-  detach(.polarEnv)                             # remove existing from .Rprofile
-  list2env(x = token, envir = .polarEnv)        # create new environment
-  attach(.polarEnv)                             # attach new
+  detach(.polarEnv)                         # remove existing (created in .Rprofile
+  list2env(x = token, envir = .polarEnv)    # create new environment for the list
+  attach(.polarEnv)                         # attach new environment
 
-  return(invisible(token))                   # return as a list
+  # Let us know we succeeded and return a list if we want
+  message("\npolaR successfully configured!\n")
+  return(invisible(token))
 }
 
 

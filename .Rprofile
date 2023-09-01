@@ -1,5 +1,5 @@
 # Prepare paths for polaR
-.polarEnv = new.env()
+if (!exists(".polarEnv")) .polarEnv <- new.env()
 
 # Raw Data Path
 .polarEnv$rawDataPath  <- "../../../../Data/"
@@ -33,13 +33,8 @@
 .polarEnv$marH$marMelt <- list("dir" = "MAR/MARv3.11_AP_3H_Melt/",
                              "src" = "10.5281/zenodo.6347190")
 
-# Set defaults
-.polarEnv$defaults$marD   <- NULL
-.polarEnv$defaults$marM   <- NULL
-.polarEnv$defaults$marH   <- NULL
-.polarEnv$defaults$racmoD <- NULL
-.polarEnv$defaults$racmoM <- NULL
+.polarEnv$testing <- "Goooood luck & enjoy!!!"
 
 attach(.polarEnv)
 
-message("< Hi devDomi, let's go write some polaR code!")
+message("< Hi devDomi, let's go write some cool polaR code!")
