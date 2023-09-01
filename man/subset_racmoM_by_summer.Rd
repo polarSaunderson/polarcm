@@ -4,7 +4,7 @@
 \alias{subset_racmoM_by_summer}
 \title{Subset monthly RACMO data based on the austral summer}
 \usage{
-subset_racmoM_by_summer(racmoData, summers, australSplit = 3)
+subset_racmoM_by_summer(racmoData, summers, australSplit = 3, version = NULL)
 }
 \arguments{
 \item{racmoData}{The monthly RACMO data to subset. Can be either a
@@ -19,6 +19,12 @@ means that all months \emph{AFTER} March are considered as part of the
 following summer (i.e. April 1991 -- March 1992 are all in 1992). Swap
 this value according: setting it as 4 means May 1991 -- April 1992 are
 all 1992.}
+
+\item{version}{Which version of the monthly RACMO data should be returned?
+The options are those defined by the user in their ".Rprofile" file; see
+\code{\link[=configure_polaR]{configure_polaR()}} for more information. By default, it uses the racmoM
+data that was defined first in the .Rprofile". Ignored if 'racmoData' is
+already a SpatRaster.}
 }
 \description{
 Subset monthly RACMO data based on the austral summer. This

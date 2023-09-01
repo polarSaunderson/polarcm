@@ -4,7 +4,7 @@
 \alias{subset_racmoM_by_year}
 \title{Subset monthly RACMO data based on the year}
 \usage{
-subset_racmoM_by_year(racmoData, years)
+subset_racmoM_by_year(racmoData, years, version = NULL)
 }
 \arguments{
 \item{racmoData}{The monthly RACMO data to subset. Can be either a
@@ -12,6 +12,12 @@ variable name, in which case raw monthly RACMO data is read in; or an
 existing SpatRaster of monthly RACMO data.}
 
 \item{years}{vector: Which year/s to return?}
+
+\item{version}{Which version of the monthly RACMO data should be returned?
+The options are those defined by the user in their ".Rprofile" file; see
+\code{\link[=configure_polaR]{configure_polaR()}} for more information. By default, it uses the racmoM
+data that was defined first in the .Rprofile". Ignored if 'racmoData' is
+already a SpatRaster.}
 }
 \description{
 Subset monthly RACMO data using based on year. This function

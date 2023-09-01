@@ -4,12 +4,17 @@
 \alias{subset_racmoM_by_month}
 \title{Subset monthly RACMO data based on the month}
 \usage{
-subset_racmoM_by_month(racmoData, months, excludeIncomplete = 3)
+subset_racmoM_by_month(
+  racmoData,
+  months,
+  excludeIncomplete = 3,
+  version = NULL
+)
 }
 \arguments{
 \item{racmoData}{The monthly RACMO data to subset. Can be either a
 variable name, in which case raw monthly RACMO data is read in; or an
-existing spatRaster of monthly RACMO data.}
+existing SpatRaster of monthly RACMO data.}
 
 \item{months}{vector: Which month/s to return? Input can be the month
 number (e.g. 12) or the month name, either in full ("December",
@@ -25,6 +30,12 @@ requested months in are returned. If the value is numeric (between 1 and
 the 'australSplit' argument to return only months in austral summers that
 contain all requested months. If any other value, all layers matching the
 months argument are returned, regardless of the summer or year.}
+
+\item{version}{Which version of the monthly RACMO data should be returned?
+The options are those defined by the user in their ".Rprofile" file; see
+\code{\link[=configure_polaR]{configure_polaR()}} for more information. By default, it uses the racmoM
+data that was defined first in the .Rprofile". Ignored if 'racmoData' is
+already a SpatRaster.}
 }
 \description{
 Subset monthly RACMO data based on month. This function is
