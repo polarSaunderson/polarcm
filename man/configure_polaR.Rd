@@ -66,13 +66,13 @@ following code block.
   .polarEnv$MEaSURES    <- "MEaSURES Boundaries/" # relative to rawDataPath
 
   # Monthly RACMO data (racmoM)
-  .polarEnv$racmoM$rp3  <- list("dir" = RACMO/RACMO2.3p3_CON_ANT27_monthly/",
+  .polarEnv$rcm$racmoM$rp3  <- list("dir" = RACMO/RACMO2.3p3_CON_ANT27_monthly/",
                                 "src" = "10.5281/zenodo.5512076")
 
-  .polarEnv$racmoD      <- NULL      # no racmoD data
-  .polarEnv$marM        <- NULL      # no marM data
-  .polarEnv$marD        <- NULL      # no marD data
-  .polarEnv$marH        <- NULL      # no marH (hourly) data
+  .polarEnv$rcm$racmoD      <- NULL      # no racmoD data
+  .polarEnv$rcm$marM        <- NULL      # no marM data
+  .polarEnv$rcm$marD        <- NULL      # no marD data
+  .polarEnv$rcm$marH        <- NULL      # no marH (hourly) data
 
   # Attach the hidden environment so it is available to polaR functions
   attach(.polarEnv)
@@ -150,8 +150,8 @@ whether I can add them in a future update.
 To make different datasets available, it is necessary to configure your
 ".Rprofile" file by including the following information for each dataset:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{ .polarEnv$<type>$<name> <- list("dir" = <dataDirectory>,
-                                 "src" = <doiCode>)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ .polarEnv$rcm$<type>$<name> <- list("dir" = <dataDirectory>,
+                                     "src" = <doiCode>)
 }\if{html}{\out{</div>}}
 
 \verb{<type>} Some functions need to know whether this is RACMO or MAR data, and
@@ -163,7 +163,7 @@ marD      Daily MAR
 marH      Hourly MAR
 
 All of these options must be included in the ".Rprofile". If the dataset
-is not available, set the value as NULL. e.g. \code{.polarEnv$marM <- NULL}  #'
+is not available, set it as NULL (e.g. \code{.polarEnv$rcm$marM <- NULL}).
 
 \verb{<name>} How do you want to refer to this dataset in your code? For example,
 when reading in data, which is more your style?:

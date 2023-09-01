@@ -1,58 +1,71 @@
-use_crs <- function(crs = "racmo") {
+use_crs <- function(crs = NULL) {
   #' Return a crs string
   #'
-  #' @description The RACMO projection does not have a standard EPSG code. This
-  #'   function returns the crs definition for RACMO in Antarctica. A couple of
-  #'   other common projection options for Antarctica are also available. The
-  #'   projection for RACMO is taken directly from the RACMO2.3p3 NetCDFs; use
-  #'   `ncdf4::ncatt_get(nc, "rotated_pole")` to view.  The MAR crs is based on
-  #'   EPSG:3031 (taken from the description of this Zenodo dataset
-  #'   [https://doi.org/10.5281/zenodo.2547638](), but it appears that it is in
-  #'   kilometres, not metres as a standard EPSG:3031 would be.
+  #' @description RCM projections do not have standard EPSG codes, and usually
+  #'   work on a rotated grid. This function returns the correct proj4 string
+  #'   for the RACMO or MAR data in Antarctica. A couple of other common
+  #'   projections for use in Antarctica are also available. These projection
+  #'   definitions are stored in `.polarEnv$crs`, which is configured by
   #'
+  #' @param crs "string": Which crs to return? See the "Options" section below
+  #'   for a list of available projections. If none of those names are matched,
+  #'   the string will be fed in as is, and assumed to be an alternative valid
+  #'   crs definition. Defaults to match whichever RCM data was listed first
+  #'   in the ".Rprofile" file (matches using the dataset's 'src').
+  #'
+  #' @details # Projections
+  #'
+  #'   ## RACMO
+  #'   The RACMO projections are taken directly from their respective NetCDFs.
+  #'   These can be viewed with a command such as
+  #'   `ncdf4::ncatt_get(nc, "rotated_pole")`.
+  #'
+  #'   ## MAR
+  #'   The default MAR crs is based on EPSG:3031 (taken from the description of
+  #'   this Zenodo dataset [https://doi.org/10.5281/zenodo.2547638](), but it
+  #'   appears that it is in kilometres, not metres as a standard EPSG:3031
+  #'   would be. This is very much to be finished off with the correct datasets!
+  #'
+  #'   ## Projection Options
+  #'   Options are:
+  #'
+  #'       - "racmo"             Antarctic wide
+  #'       - "racmoAA"           Antarctic wide (as above, just more explicit!)
+  #'       - "racmoAP"           Antarctic Peninsula
+  #'       - "mar"               Who knows at the moment?!
+  #'       - "stereo"            Stereographic (EPSG:3031)
+  #'       - "ortho"             Orthographic
+  #'       - "lambert"           Lambert Equal Area Equidistant
+  #'       - "WGS84" / "ERA5"    EPSG:4326
+  #'
+  #'   These crs definitions are stored in `.polarEnv$crs`.
   #'   For more information on RCM projections, see here:
   #'    [https://gitlab.tudelft.nl/slhermitte/manuals/blob/master/RACMO_reproject.md]
-  #'
-  #' @param crs "string": Which crs to return? Defaults to "racmo", but other
-  #'   options are: "mar", "lambert", "ortho", "stereographic" (EPSG:3031), and
-  #'   "era5" / "WGS84" (EPSG:4326).
   #'
   #' @export
 
   # Code -----------------------------------------------------------------------
-  # Non-EPSG Projections
-  racmoCrs   <- paste("+proj=ob_tran",
-                      "+o_proj=longlat",
-                      "+o_lat_p=-180.0 +lon_0=10.0",
-                      "-m 57.295779506")
-
-  marCrs     <- paste("+proj=stere",
-                      "+lat_0=-90 +lat_ts=-71",
-                      "+lon_0=0 +x_0=0 +y_0=0",
-                      "+datum=WGS84 +units=km +no_defs +type=crs") # km!
-
-  lambertCrs <- paste("+proj=laea",
-                      "+lat_0=-90 +lon_0=0",
-                      "+x_0=0 +y_0=0",
-                      "+datum=WGS84 +units=m +no_defs +type=crs")
-
-  orthoCrs   <- paste("+proj=ortho",
-                      "+f=0 +lat_0=-90 +lon_0=0",
-                      "+x_0=0 +y_0=0",
-                      "+datum=WGS84 +units=m +no_defs +type=crs")
+  # Prepare
+  token <- configure_polaR()
+  crs   <- domR::set_if_null(crs, token$defaults$rcm[3])
 
   # Switch and return crs
-  crs <- switch(tolower(crs),                   # make case insensitivite
-                   "racmo"                      = racmoCrs,
-                   "mar"                        = marCrs,
-                   "lambert"                    = lambertCrs,
-                   "ortho"  = , "orthographic"  = orthoCrs,
-                   "stereo" = , "stereographic" = ,
-                   "3031"   = , "epsg:3031"     = "EPSG:3031",
-                   "wgs84"  = , "wgs 84"        = ,
-                   "era5"   = , "ecmwf"         = ,
-                   "4326"   = , "epsg:4326"     = "EPSG:4326",
-                   crs)
-
+  crs <- switch(tolower(crs),       # make case insensitivite
+                "racmo"                      = ,
+                "10.5281/zenodo.5512076"     = ,           # RACMO2.3p3 AA
+                "10.5281/zenodo.7760490"     = ,           # RACMO2.3p2 AA
+                "racmoaa"                    = token$crs$racmoCrs,
+                "10.5281/zenodo.7961732"     = ,           # RACMO2.3p2 AP
+                "racmoap"                    = token$crs$racmoApCrs,
+                "10.5281/zenodo.6347190"     = ,
+                "mar"                        = token$crs$marCrs,
+                "lambert"                    = token$crs$lambertCrs,
+                "ortho"  = , "orthographic"  = token$crs$orthoCrs,
+                "stereo" = , "stereographic" = ,
+                "3031"   = , "epsg:3031"     = "EPSG:3031",
+                "wgs84"  = , "wgs 84"        = ,
+                "era5"   = , "ecmwf"         = ,
+                "4326"   = , "epsg:4326"     = "EPSG:4326",
+                crs)
   return(crs)
 }

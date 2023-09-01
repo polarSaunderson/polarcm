@@ -4,23 +4,55 @@
 \alias{use_crs}
 \title{Return a crs string}
 \usage{
-use_crs(crs = "racmo")
+use_crs(crs = NULL)
 }
 \arguments{
-\item{crs}{"string": Which crs to return? Defaults to "racmo", but other
-options are: "mar", "lambert", "ortho", "stereographic" (EPSG:3031), and
-"era5" / "WGS84" (EPSG:4326).}
+\item{crs}{"string": Which crs to return? See the "Options" section below
+for a list of available projections. If none of those names are matched,
+the string will be fed in as is, and assumed to be an alternative valid
+crs definition. Defaults to match whichever RCM data was listed first
+in the ".Rprofile" file (matches using the dataset's 'src').}
 }
 \description{
-The RACMO projection does not have a standard EPSG code. This
-function returns the crs definition for RACMO in Antarctica. A couple of
-other common projection options for Antarctica are also available. The
-projection for RACMO is taken directly from the RACMO2.3p3 NetCDFs; use
-\code{ncdf4::ncatt_get(nc, "rotated_pole")} to view.  The MAR crs is based on
-EPSG:3031 (taken from the description of this Zenodo dataset
-\url{https://doi.org/10.5281/zenodo.2547638}, but it appears that it is in
-kilometres, not metres as a standard EPSG:3031 would be.
+RCM projections do not have standard EPSG codes, and usually
+work on a rotated grid. This function returns the correct proj4 string
+for the RACMO or MAR data in Antarctica. A couple of other common
+projections for use in Antarctica are also available. These projection
+definitions are stored in \code{.polarEnv$crs}, which is configured by
+}
+\section{Projections}{
+\subsection{RACMO}{
 
+The RACMO projections are taken directly from their respective NetCDFs.
+These can be viewed with a command such as
+\code{ncdf4::ncatt_get(nc, "rotated_pole")}.
+}
+
+\subsection{MAR}{
+
+The default MAR crs is based on EPSG:3031 (taken from the description of
+this Zenodo dataset \url{https://doi.org/10.5281/zenodo.2547638}, but it
+appears that it is in kilometres, not metres as a standard EPSG:3031
+would be. This is very much to be finished off with the correct datasets!
+}
+
+\subsection{Projection Options}{
+
+Options are:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  - "racmo"             Antarctic wide
+  - "racmoAA"           Antarctic wide (as above, just more explicit!)
+  - "racmoAP"           Antarctic Peninsula
+  - "mar"               Who knows at the moment?!
+  - "stereo"            Stereographic (EPSG:3031)
+  - "ortho"             Orthographic
+  - "lambert"           Lambert Equal Area Equidistant
+  - "WGS84" / "ERA5"    EPSG:4326
+}\if{html}{\out{</div>}}
+
+These crs definitions are stored in \code{.polarEnv$crs}.
 For more information on RCM projections, see here:
 \link{https://gitlab.tudelft.nl/slhermitte/manuals/blob/master/RACMO_reproject.md}
 }
+}
+
