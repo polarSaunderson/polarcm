@@ -23,18 +23,18 @@ outline.
 }
 \examples{
 -----------------------------------------------------------------
-  \dontrun{
-    x <- subset_racmoM_by_summer("precip", 1991) |>
-      subset_racmoM_by_month(12)
+\dontrun{
+  x <- subset_racmoM_by_summer("precip", 1991) |>
+  subset_racmoM_by_month(12)
 
-    # Single shelf
-    xCrop <- crop_racmo_to_shelf(x, "Amery")
-    terra::plot(xCrop)
+  # Single shelf
+  xCrop <- crop_racmo_to_shelf(x, "Amery")
+  terra::plot(xCrop)
 
-    # Multiple shelves
-    xCrop2 <- crop_racmo_to_shelf(x, c("Amery", "Shackleton"))
-    terra::plot(xCrop2)
-  }
+  # Multiple shelves
+  xCrop2 <- crop_racmo_to_shelf(x, c("Amery", "Shackleton"))
+  terra::plot(xCrop2)
+}
 
 }
 \seealso{

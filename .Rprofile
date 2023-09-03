@@ -23,7 +23,7 @@ if (!exists(".polarEnv")) .polarEnv <- new.env()
 ## Daily RACMO Data Paths ------------------------------------------------------
 .polarEnv$rcm$racmoD$rp3   <- list(
   "dir" = "RACMO/RACMO2.3p3_CON_ANT27_daily/",
-  "src" = "10.5281/zenodo.5512076") # matches
+  "src" = "10.5281/zenodo.5512076") # matches the monthly data
 
 ## Monthly MAR Data Paths ------------------------------------------------------
 .polarEnv$rcm$marD         <- NULL

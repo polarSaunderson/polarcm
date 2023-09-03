@@ -23,18 +23,18 @@ basin outline.
 }
 \examples{
 -----------------------------------------------------------------
-  dontrun{
-    x <- subset_racmoM_by_summer("precip", 1991) |>
-      subset_racmoM_by_month(12)
+\dontrun{
+  x <- subset_racmoM_by_summer("precip", 1991) |>
+  subset_racmoM_by_month(12)
 
-    # Single basin
-    xCrop <- crop_racmo_to_basin(x, "A-Ap")
-    terra::plot(xCrop)
+  # Single basin
+  xCrop <- crop_racmo_to_basin(x, "A-Ap")
+  terra::plot(xCrop)
 
-    # Multiple basins
-    xCrop2 <- crop_racmo_to_basin(x, c("A-Ap", "Dry Valleys"))
-    terra::plot(xCrop2)
-  }
+  # Multiple basins
+  xCrop2 <- crop_racmo_to_basin(x, c("A-Ap", "Dry Valleys"))
+  terra::plot(xCrop2)
+}
 
 }
 \seealso{

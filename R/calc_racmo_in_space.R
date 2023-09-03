@@ -45,20 +45,20 @@ calc_racmo_in_space <- function(racmoData,
   #'   than define this list.
   #'
   #' @examples -----------------------------------------------------------------
-  #'   \dontrun{
-  #'     # racmoData
-  #'     x <- subset_racmoM_by_summer("precip", 1991:1994) |>
-  #'       subset_racmoM_by_month(c(11, 12, 1, 2))
+  #' \dontrun{
+  #'   # racmoData
+  #'   x <- subset_racmoM_by_summer("precip", 1991:1994) |>
+  #'   subset_racmoM_by_month(c(11, 12, 1, 2))
   #'
-  #'     # shelf extent
-  #'     y <- get_shelf_outline("Shackleton")
+  #'   # shelf extent
+  #'   y <- get_shelf_outline("Shackleton")
   #'
-  #'     # Average value across Shackleton each month
-  #'     zMean <- calc_racmo_in_space(racmoData = x, extent = y, FUN = "mean")
-  #'     zSd   <- calc_racmo_in_space(racmoData = x, extent = y, FUN = "sd")
-  #'     print(zMean)
-  #'     print(zSd)
-  #'   }
+  #'   # Average value across Shackleton each month
+  #'   zMean <- calc_racmo_in_space(racmoData = x, extent = y, FUN = "mean")
+  #'   zSd   <- calc_racmo_in_space(racmoData = x, extent = y, FUN = "sd")
+  #'   print(zMean)
+  #'   print(zSd)
+  #' }
   #'
   #' @export
 
@@ -125,18 +125,18 @@ average_racmo_in_space <- function(racmoData,
   #'   than define this list.
   #'
   #' @examples -----------------------------------------------------------------
-  #'   \dontrun{
-  #'     # racmoData
-  #'     x <- subset_racmoM_by_summer("precip", 1991:1994) |>
-  #'       subset_racmoM_by_month(c(11, 12, 1, 2))
+  #' \dontrun{
+  #'   # racmoData
+  #'   x <- subset_racmoM_by_summer("precip", 1991:1994) |>
+  #'   subset_racmoM_by_month(c(11, 12, 1, 2))
   #'
-  #'     # shelf extent
-  #'     y <- get_shelf_outline("Shackleton")
+  #'   # shelf extent
+  #'   y <- get_shelf_outline("Shackleton")
   #'
-  #'     # Average value across Shackleton each month
-  #'     z <- average_racmo_in_space(racmoData = x, extent = y, minArea = 0.5)
-  #'     print(z)
-  #'   }
+  #'   # Average value across Shackleton each month
+  #'   z <- average_racmo_in_space(racmoData = x, extent = y, minArea = 0.5)
+  #'   print(z)
+  #' }
   #'
   #' @export
 

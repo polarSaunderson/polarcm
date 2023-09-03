@@ -16,18 +16,18 @@ mask_racmo_to_shelf <- function(racmoData, shelf) {
   #' @seealso mask_racmo_to_basin()
   #'
   #' @examples -----------------------------------------------------------------
-  #'   \dontrun{
-  #'     x <- subset_racmoM_by_summer("precip", 1991) |>
-  #'       subset_racmoM_by_month(12)
+  #' \dontrun{
+  #'   x <- subset_racmoM_by_summer("precip", 1991) |>
+  #'   subset_racmoM_by_month(12)
   #'
-  #'     # Single shelf
-  #'     xMask <- mask_racmo_to_shelf(x, "Amery")
-  #'     terra::plot(xMask)
+  #'   # Single shelf
+  #'   xMask <- mask_racmo_to_shelf(x, "Amery")
+  #'   terra::plot(xMask)
   #'
-  #'     # Multiple shelves
-  #'     xMask2 <- mask_racmo_to_shelf(x, c("Amery", "Shackleton"))
-  #'     terra::plot(xMask2)
-  #'   }
+  #'   # Multiple shelves
+  #'   xMask2 <- mask_racmo_to_shelf(x, c("Amery", "Shackleton"))
+  #'   terra::plot(xMask2)
+  #' }
   #'
   #' @export
 
@@ -69,18 +69,18 @@ mask_racmo_to_basin <- function(racmoData, basin) {
   #' @seealso mask_racmo_to_shelf()
   #'
   #' @examples -----------------------------------------------------------------
-  #'   \dontrun{
-  #'     x <- subset_racmoM_by_summer("precip", 1991) |>
-  #'       subset_racmoM_by_month(12)
+  #' \dontrun{
+  #'   x <- subset_racmoM_by_summer("precip", 1991) |>
+  #'   subset_racmoM_by_month(12)
   #'
-  #'     # Single basin
-  #'     xMask <- mask_racmo_to_basin(x, "A-Ap")
-  #'     terra::plot(xMask)
+  #'   # Single basin
+  #'   xMask <- mask_racmo_to_basin(x, "A-Ap")
+  #'   terra::plot(xMask)
   #'
-  #'     # Multiple basins
-  #'     xMask2 <- mask_racmo_to_basin(x, c("A-Ap", "Dry Valleys"))
-  #'     terra::plot(xMask2)
-  #'   }
+  #'   # Multiple basins
+  #'   xMask2 <- mask_racmo_to_basin(x, c("A-Ap", "Dry Valleys"))
+  #'   terra::plot(xMask2)
+  #' }
   #'
   #' @export
 

@@ -22,18 +22,18 @@ use \code{crop_racmo_to_shelf()} for a rectangular bounding box.
 }
 \examples{
 -----------------------------------------------------------------
-  \dontrun{
-    x <- subset_racmoM_by_summer("precip", 1991) |>
-      subset_racmoM_by_month(12)
+\dontrun{
+  x <- subset_racmoM_by_summer("precip", 1991) |>
+  subset_racmoM_by_month(12)
 
-    # Single shelf
-    xMask <- mask_racmo_to_shelf(x, "Amery")
-    terra::plot(xMask)
+  # Single shelf
+  xMask <- mask_racmo_to_shelf(x, "Amery")
+  terra::plot(xMask)
 
-    # Multiple shelves
-    xMask2 <- mask_racmo_to_shelf(x, c("Amery", "Shackleton"))
-    terra::plot(xMask2)
-  }
+  # Multiple shelves
+  xMask2 <- mask_racmo_to_shelf(x, c("Amery", "Shackleton"))
+  terra::plot(xMask2)
+}
 
 }
 \seealso{

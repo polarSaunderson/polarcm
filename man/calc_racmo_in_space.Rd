@@ -62,19 +62,19 @@ Pixels can also be weighted by their area within the 'extent'.
 }
 \examples{
 -----------------------------------------------------------------
-  \dontrun{
-    # racmoData
-    x <- subset_racmoM_by_summer("precip", 1991:1994) |>
-      subset_racmoM_by_month(c(11, 12, 1, 2))
+\dontrun{
+  # racmoData
+  x <- subset_racmoM_by_summer("precip", 1991:1994) |>
+  subset_racmoM_by_month(c(11, 12, 1, 2))
 
-    # shelf extent
-    y <- get_shelf_outline("Shackleton")
+  # shelf extent
+  y <- get_shelf_outline("Shackleton")
 
-    # Average value across Shackleton each month
-    zMean <- calc_racmo_in_space(racmoData = x, extent = y, FUN = "mean")
-    zSd   <- calc_racmo_in_space(racmoData = x, extent = y, FUN = "sd")
-    print(zMean)
-    print(zSd)
-  }
+  # Average value across Shackleton each month
+  zMean <- calc_racmo_in_space(racmoData = x, extent = y, FUN = "mean")
+  zSd   <- calc_racmo_in_space(racmoData = x, extent = y, FUN = "sd")
+  print(zMean)
+  print(zSd)
+}
 
 }
