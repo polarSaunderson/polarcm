@@ -1,5 +1,7 @@
 ##
-subset_racmoD_by_day <- function(racmoData, days) {
+subset_racmoD_by_day <- function(racmoData,
+                                 days,
+                                 version = NULL) {
   #' Subset daily RACMO data based on the day of the month
   #'
   #' @description Subset the daily RACMO data based on the day of the month. It
@@ -12,11 +14,12 @@ subset_racmoD_by_day <- function(racmoData, days) {
   #'   name, in which case raw daily RACMO data is read in; or an existing
   #'   SpatRaster of daily RACMO data.
   #' @param days vector: Which day/s to return?
+  #' @inheritParams read_racmoD
   #'
   #' @export
 
   # Code --------------------------------------------------------------------
-  racmoData   <- read_racmoD_data(racmoData)
+  racmoData   <- read_racmoD(racmoData = racmoData, version = version)
   racmoSubset <- terrapin::subset_by_day(x = racmoData, days = days)
   return(racmoSubset)
 }

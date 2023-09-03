@@ -1,7 +1,8 @@
 ##
 subset_racmoD_by_summer <- function(racmoData,
                                     summers,
-                                    australSplit = 3) {
+                                    australSplit = 3,
+                                    version = NULL) {
   #' Subset daily RACMO data based on the austral summer
   #'
   #' @description Subset monthly RACMO data based on the austral summer. This
@@ -19,11 +20,12 @@ subset_racmoD_by_summer <- function(racmoData,
   #'   following summer (i.e. April 1991 -- March 1992 are all in 1992). Swap
   #'   this value according: setting it as 4 means May 1991 -- April 1992 are
   #'   all 1992.
+  #' @inheritParams read_racmoD
   #'
   #' @export
 
   # Code -----------------------------------------------------------------------
-  racmoData   <- read_racmoD_data(racmoData)
+  racmoData   <- read_racmoD(racmoData = racmoData, version = version)
   racmoSubset <- terrapin::subset_by_summer(x = racmoData, summers = summers,
                                             australSplit = australSplit)
   return(racmoSubset)

@@ -4,7 +4,7 @@
 \alias{subset_racmoD_by_year}
 \title{Subset daily RACMO data based on the year}
 \usage{
-subset_racmoD_by_year(racmoData, years)
+subset_racmoD_by_year(racmoData, years, version = NULL)
 }
 \arguments{
 \item{racmoData}{The daily RACMO data to subset. Can be either a variable

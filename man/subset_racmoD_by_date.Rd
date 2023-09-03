@@ -4,18 +4,25 @@
 \alias{subset_racmoD_by_date}
 \title{Subset daily RACMO data based on specific dates}
 \usage{
-subset_racmoD_by_date(racmoData, dates = NULL, dateList = NULL)
+subset_racmoD_by_date(racmoData, dates = NULL, dateList = NULL, version = NULL)
 }
 \arguments{
 \item{racmoData}{The daily RACMO data to subset. Can be either a variable
 name, in which case raw daily RACMO data is read in; or an existing
 SpatRaster of daily RACMO data.}
 
-\item{dates}{A vector of specific dates to return. Must be in the format
-"YYYY-MM-DD".}
+\item{dates}{A vector of specific dates to return. Each date must be in the
+format "YYYY-MM-DD".}
 
 \item{dateList}{A list of vectors, with the first value in each vector
-indicating when the period begins, and the second when the period ends.}
+indicating when the period begins, and the second when the period ends.
+Each date must be in the format "YYYY-MM-DD".}
+
+\item{version}{Which version of the daily RACMO data should be returned?
+The options are those defined by the user in their ".Rprofile" file; see
+\code{\link[=configure_polaR]{configure_polaR()}} for more information. By default, it uses the racmoD
+data that was defined first in the ".Rprofile". Ignored if 'racmoData' is
+already a SpatRaster.}
 }
 \description{
 Subset daily RACMO data based on specific dates. This function

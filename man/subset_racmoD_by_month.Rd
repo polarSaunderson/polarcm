@@ -4,7 +4,12 @@
 \alias{subset_racmoD_by_month}
 \title{Subset daily RACMO data based on the month}
 \usage{
-subset_racmoD_by_month(racmoData, months, excludeIncomplete = FALSE)
+subset_racmoD_by_month(
+  racmoData,
+  months,
+  excludeIncomplete = FALSE,
+  version = NULL
+)
 }
 \arguments{
 \item{racmoData}{The daily RACMO data to subset. Can be either a variable
@@ -18,13 +23,20 @@ at once (e.g. c(12, 1, 2)), but do not try to mix strings and numbers in
 the vector.}
 
 \item{excludeIncomplete}{If the value is "years", the data is run through
-\code{terrapin::exclude_incomplete_years()}, and only months in years with all
-requested months in are returned. If the value is numeric (between 1 and
-12), the data is fed into the \code{terrapin::exclude_incomplete_summers()}
-and the value is used as the "australSplit" argument to return only
-months in austral summers that contain all requested months. If any other
-value (including the default, FALSE), all layers matching the months
-argument are returned, regardless of the summer or year.}
+\code{terrapin::exclude_incomplete_years()}, and only data from months in
+years with all requested months in are returned. If the value is numeric
+(between 1 and 12), the data is fed into the
+\code{terrapin::exclude_incomplete_summers()} and the value is used as the
+"australSplit" argument to return only months in austral summers that
+contain all requested months. If any other value (including the default,
+FALSE), all layers matching the months argument are returned, regardless
+of the summer or year.}
+
+\item{version}{Which version of the daily RACMO data should be returned?
+The options are those defined by the user in their ".Rprofile" file; see
+\code{\link[=configure_polaR]{configure_polaR()}} for more information. By default, it uses the racmoD
+data that was defined first in the ".Rprofile". Ignored if 'racmoData' is
+already a SpatRaster.}
 }
 \description{
 Subset daily RACMO data based on the month. This function is

@@ -4,7 +4,7 @@
 \alias{subset_racmoD_by_day}
 \title{Subset daily RACMO data based on the day of the month}
 \usage{
-subset_racmoD_by_day(racmoData, days)
+subset_racmoD_by_day(racmoData, days, version = NULL)
 }
 \arguments{
 \item{racmoData}{The daily RACMO data to subset. Can be either a variable
@@ -12,6 +12,12 @@ name, in which case raw daily RACMO data is read in; or an existing
 SpatRaster of daily RACMO data.}
 
 \item{days}{vector: Which day/s to return?}
+
+\item{version}{Which version of the daily RACMO data should be returned?
+The options are those defined by the user in their ".Rprofile" file; see
+\code{\link[=configure_polaR]{configure_polaR()}} for more information. By default, it uses the racmoD
+data that was defined first in the ".Rprofile". Ignored if 'racmoData' is
+already a SpatRaster.}
 }
 \description{
 Subset the daily RACMO data based on the day of the month. It

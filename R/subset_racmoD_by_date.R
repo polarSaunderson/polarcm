@@ -1,7 +1,8 @@
 ##
 subset_racmoD_by_date <- function(racmoData,
                                   dates = NULL,
-                                  dateList = NULL) {
+                                  dateList = NULL,
+                                  version = NULL) {
   #' Subset daily RACMO data based on specific dates
   #'
   #' @description Subset daily RACMO data based on specific dates. This function
@@ -14,15 +15,17 @@ subset_racmoD_by_date <- function(racmoData,
   #' @param racmoData The daily RACMO data to subset. Can be either a variable
   #'   name, in which case raw daily RACMO data is read in; or an existing
   #'   SpatRaster of daily RACMO data.
-  #' @param dates A vector of specific dates to return. Must be in the format
-  #'   "YYYY-MM-DD".
+  #' @param dates A vector of specific dates to return. Each date must be in the
+  #'   format "YYYY-MM-DD".
   #' @param dateList A list of vectors, with the first value in each vector
   #'   indicating when the period begins, and the second when the period ends.
+  #'   Each date must be in the format "YYYY-MM-DD".
+  #' @inheritParams read_racmoD
   #'
   #' @export
 
   # Code -----------------------------------------------------------------------
-  racmoData   <- read_racmoD_data(racmoData)
+  racmoData   <- read_racmoD(racmoData = racmoData, version = version)
   racmoSubset <- terrapin::subset_by_date(x = racmoData,
                                           dates = dates, dateList = dateList)
   return(racmoSubset)

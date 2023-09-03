@@ -1,5 +1,7 @@
 ##
-subset_racmoD_by_year <- function(racmoData, years) {
+subset_racmoD_by_year <- function(racmoData,
+                                  years,
+                                  version = NULL) {
   #' Subset daily RACMO data based on the year
   #'
   #' @description Subset daily RACMO data based on the year. This function is
@@ -13,7 +15,7 @@ subset_racmoD_by_year <- function(racmoData, years) {
   #' @export
 
   # Code -----------------------------------------------------------------------
-  racmoData   <- read_racmoD_data(racmoData)
+  racmoData   <- read_racmoD(racmoData = racmoData, version = version)
   racmoSubset <- terrapin::subset_by_year(x = racmoData, years = years)
   return(racmoSubset)
 }
