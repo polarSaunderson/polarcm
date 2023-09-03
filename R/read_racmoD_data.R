@@ -45,6 +45,39 @@ read_racmoD_data <- function(racmoData) {
   return(racmoD)
 }
 
+# for use with the new racmoD configuration
+# # attempt at the full code for read_racmoD_data function; needs testing.
+# # get_racmoD_file_path is no longer necessary
+#   if ("SpatRaster" %notIn% methods::is(racmoData)) {
+#     racmoPaths <- configure_racmoR()$varPaths$racmoD[[version]][[variable]]
+#     racmoD     <- terra::rast()  # preallocate empty raster
+#
+#     for (ii in racmoPaths) {
+#       iiRast <- terra::rast(ii, subds = variable)
+#       racmoD <- c(racmoD, iiRast)
+#    }
+#
+#     terra::crs(racmoD) <- use_crs("racmo")
+#     terra::ext(racmoD) <- terra::ext(c(-32.875, 32.625, -30.125, 29.875))
+#   } else {
+#     racmoD <- racmoData
+#   }
+#   return(racmoD)
+# }
+
+# # original code from trying the new approach
+# iiPaths <- token$varPaths$racmoD$rp3[[ii]]
+#
+# iiRast  <- terra::rast()
+#
+# for (jj in iiPaths) {
+#   jjRast <- terra::rast(jj, subds = ii)
+#   iiRast <- c(iiRast, jjRast)
+# }
+
+
+
+
 ##
 get_racmoD_file_path <- function(variable, year) {
   #' Create the file path for the daily racmo data

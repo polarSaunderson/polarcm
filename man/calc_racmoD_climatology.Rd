@@ -29,10 +29,10 @@ used when calculating the function.
 Can be useful so the function is applied to the same years/summers for
 each day, but be careful! Worst case scenario: if a dataset ran from 2nd
 January 2000 to 1st January 2001, no data would be used because none of
-the dates occur in both 2000 and 2001. See \code{\link[=exclude_unmatched_days]{exclude_unmatched_days()}}. It
-is likely much easier and clearer to establish which dates are in the
-dataset first, and then run this function with 'excludeIncomplete' set as
-FALSE.}
+the dates occur in both 2000 and 2001. See
+\code{\link[terrapin:exclude_unmatched_days]{terrapin::exclude_unmatched_days()}}. It is likely much easier and
+clearer to establish which dates are in the dataset first, and then run
+this function with 'excludeIncomplete' set as FALSE.}
 
 \item{...}{Any arguments that need to be fed to the 'FUN' functions. If
 there are multiple values in the 'FUN' vector (i.e. multiple functions

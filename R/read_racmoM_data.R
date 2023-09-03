@@ -31,8 +31,8 @@ read_racmoM <- function(racmoData, version = NULL) {
     racmoM <- terra::rast(varPath, subds = racmoData)
 
     # Explicitly add the RACMO crs & extent as they aren't always read correctly
-    terra::crs(racmoM) <- use_crs(token$grids$racmoM[[version]][[crs]])
-    terra::ext(racmoM) <- use_crs(token$grids$racmoM[[version]][[ext]])
+    terra::crs(racmoM) <- use_crs(token$grids$racmoM[[version]]$crs)
+    terra::ext(racmoM) <- use_crs(token$grids$racmoM[[version]]$ext)
   } else {
     racmoM <- racmoData    # Simply returning the input
   }

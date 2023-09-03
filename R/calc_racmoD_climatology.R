@@ -30,10 +30,10 @@ calc_racmoD_climatology <- function(racmoData,
   #'   Can be useful so the function is applied to the same years/summers for
   #'   each day, but be careful! Worst case scenario: if a dataset ran from 2nd
   #'   January 2000 to 1st January 2001, no data would be used because none of
-  #'   the dates occur in both 2000 and 2001. See [exclude_unmatched_days()]. It
-  #'   is likely much easier and clearer to establish which dates are in the
-  #'   dataset first, and then run this function with 'excludeIncomplete' set as
-  #'   FALSE.
+  #'   the dates occur in both 2000 and 2001. See
+  #'   [terrapin::exclude_unmatched_days()]. It is likely much easier and
+  #'   clearer to establish which dates are in the dataset first, and then run
+  #'   this function with 'excludeIncomplete' set as FALSE.
   #' @param ... Any arguments that need to be fed to the 'FUN' functions. If
   #'   there are multiple values in the 'FUN' vector (i.e. multiple functions
   #'   will be applied), the "..." arguments will be fed to all of the
@@ -70,7 +70,7 @@ calc_racmoD_climatology <- function(racmoData,
 
   # Preallocate
   rKlima    <- list(rep(terra::rast(), length(FUN)))
-  varName   <- names(x)[[1]] |>
+  varName   <- names(racmoData)[[1]] |>
     strsplit("_") |>
     lapply('[', 1) |>
     unlist()

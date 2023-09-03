@@ -40,7 +40,7 @@ use_crs <- function(crs = NULL) {
   #'
   #'   These crs definitions are stored in `.polarEnv$crs`.
   #'   For more information on RCM projections, see here:
-  #'    [https://gitlab.tudelft.nl/slhermitte/manuals/blob/master/RACMO_reproject.md]
+  #'    [https://gitlab.tudelft.nl/slhermitte/manuals/blob/master/RACMO_reproject.md]()
   #'
   #' @export
 

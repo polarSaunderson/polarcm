@@ -136,7 +136,7 @@ calc_annual_racmo <- function(racmoData,
   #' @export
 
   # Code -----------------------------------------------------------------------
-  x <- calc_multiMonth_data(racmoData, months, TRUE, FUN, ...)
+  x <- calc_multiMonth_racmo(racmoData, months, TRUE, FUN, ...)
   return(x)
 }
 
@@ -177,6 +177,6 @@ calc_austral_racmo <- function(racmoData,
   #' @export
 
   # Code -----------------------------------------------------------------------
-  x <- calc_multiMonth_data(racmoData, months, australSplit, FUN, ...)
+  x <- calc_multiMonth_racmo(racmoData, months, australSplit, FUN, ...)
   return(x)
 }

@@ -19,15 +19,15 @@ the vector.}
 \item{annual}{BINARY: Should the months be split based on calendar years
 (TRUE), or an austral summer? If the latter, provide a numeric value
 between 1 and 12 to indicate which is the last month included in an
-austral summer before the new austral year begins? For example, a value
+austral summer before the new austral year begins. For example, a value
 of 3 means that all months \emph{AFTER} March are considered as part of the
-following summer (i.e. April 1991 -- March 1992 are all in 1992).}
+following year / summer (i.e. April 1991 -- March 1992 are all in 1992).}
 
 \item{FUN}{Which function should be applied? Examples include "mean", "sd",
 and "median". This function is applied to each pixel across the months
-each year. For example, "mean" gives each pixel's average value in the
-months each year; using "sum" would calculate the total across those
-months.}
+each year. For example, "mean" gives each pixel's average value across
+the months each year; using "sum" would calculate the total across those
+months each year.}
 
 \item{...}{Any arguments that should be passed to the 'FUN' function.}
 }
@@ -42,8 +42,8 @@ calendar years or austral summer years.
 
 The following examples further illustrates this function.
 \subsection{Example 1 - Annual Winter (JJA) total precipitation}{
-\enumerate{
-\item Take a monthly RACMO dataset of precipitation, including all months
+
+Take a monthly RACMO dataset of precipitation, including all months
 each year from 1979--2018 (i.e. 12 months * 40 years = 480 layers). Set
 'months' as c(6, 7, 8) (i.e. JJA), and FUN as "sum". The returned
 SpatRaster will contain 40 layers, with each one being that year's total
@@ -52,18 +52,16 @@ first of the constituent layers that it was computed from. Only layers
 with the same units are processed together, and only years when all
 requested months are available are returned.
 }
-}
 
 \subsection{Example 2 - Austral Summer (DJF) mean wind speed}{
-\enumerate{
-\item Take a monthly RACMO dataset of average monthly wind speeds, including
+
+Take a monthly RACMO dataset of average monthly wind speeds, including
 all months each year from 1979--2018 (i.e. 12 months * 40 years = 480
 layers). Set 'months' as c(12, 1, 2) (i.e. DJF), FUN as "mean" and annual
 as 3. The returned SpatRaster will contain 40 layers, with each one being
 that summers's average DJF wind speed. The date of each returned layer is
 the date of the first of constituent layers that it was computed from.
 Only layers with the same units are processed together, and only austral
-years when all requested months are available are returned.
-}
+summers / years when all requested months are available are returned.
 }
 }

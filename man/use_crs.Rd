@@ -52,7 +52,7 @@ Options are:
 
 These crs definitions are stored in \code{.polarEnv$crs}.
 For more information on RCM projections, see here:
-\link{https://gitlab.tudelft.nl/slhermitte/manuals/blob/master/RACMO_reproject.md}
+\url{https://gitlab.tudelft.nl/slhermitte/manuals/blob/master/RACMO_reproject.md}
 }
 }
 

@@ -48,7 +48,7 @@ draw_antarctica <- function(extent = "",
   extentArgs$extent <- extent
 
   # Draw on top of existing plot, or create as a new blank plot?
-  if (is.null(dev.list())) newPlot <- TRUE
+  if (is.null(grDevices::dev.list())) newPlot <- TRUE
   if (isTRUE(newPlot)) {
     devExt <- do.call(get_extent, extentArgs)
     devExt <- terra::extend(devExt, (devExt[2] - devExt[1]) / 20)

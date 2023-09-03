@@ -18,9 +18,9 @@ the vector.}
 
 \item{FUN}{Which function should be applied? Examples include "mean", "sd",
 and "median". This function is applied to each pixel across the months
-each year. For example, "mean" gives each pixel's average value in the
-months each year; using "sum" would calculate the total across those
-months.}
+each year. For example, "mean" gives each pixel's average value across
+the months each year; using "sum" would calculate the total across those
+months each year.}
 
 \item{australSplit}{numeric: Which is the last month included in an austral
 summer before the new austral year begins? The default value is 3, which
