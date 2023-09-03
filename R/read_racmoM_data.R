@@ -4,23 +4,23 @@ read_racmoM <- function(racmoData, version = NULL) {
   #' @description Read in the NetCDF files for monthly resolution RACMO data
   #'   (racmoM). This function returns a SpatRaster (see the `terra` package),
   #'   but knows how to handle some different configurations of the racmoM
-  #'   polaR` functions need
+  #'   `polaR` functions need.
   #'
-  #' @param racmoData If a valid string is input, the monthly RACMO data for that
-  #'   variable is returned as a SpatRaster from the corresponding NetCDF
+  #' @param racmoData If a valid string is input, the monthly RACMO data for
+  #'   that variable is returned as a SpatRaster from the corresponding NetCDF
   #'   file/s. Use [list_racmoM_variables()] to see the valid variables. If a
   #'   SpatRaster is entered, it is simply returned as it is.
   #' @param version Which version of the monthly RACMO data should be returned?
   #'   The options are those defined by the user in their ".Rprofile" file; see
   #'   [configure_polaR()] for more information. By default, it uses the racmoM
-  #'   data that was defined first in the .Rprofile". Ignored if 'racmoData' is
+  #'   data that was defined first in the ".Rprofile". Ignored if 'racmoData' is
   #'   already a SpatRaster.
   #'
   #' @export
 
   # Code -----------------------------------------------------------------------
   # If already a SpatRaster, it is returned.
-  # If note already a SpatRaster, read in the correct monthly RACMO NetCDF data
+  # If not already a SpatRaster, read in the correct monthly RACMO NetCDF data
   if ("SpatRaster" %notIn% methods::is(racmoData)) {
     # Prepare
     token   <- configure_polaR()
@@ -32,7 +32,7 @@ read_racmoM <- function(racmoData, version = NULL) {
 
     # Explicitly add the RACMO crs & extent as they aren't always read correctly
     terra::crs(racmoM) <- use_crs(token$grids$racmoM[[version]]$crs)
-    terra::ext(racmoM) <- use_crs(token$grids$racmoM[[version]]$ext)
+    terra::ext(racmoM) <- token$grids$racmoM[[version]]$ext
   } else {
     racmoM <- racmoData    # Simply returning the input
   }

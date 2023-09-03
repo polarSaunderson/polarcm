@@ -54,13 +54,13 @@ use_crs <- function(crs = NULL) {
                 "racmo"                      = ,
                 "10.5281/zenodo.5512076"     = ,           # RACMO2.3p3 AA
                 "10.5281/zenodo.7760490"     = ,           # RACMO2.3p2 AA
-                "racmoaa"                    = token$crs$racmoCrs,
+                "racmoaa"                    = token$grids$crs$racmoCrs,
                 "10.5281/zenodo.7961732"     = ,           # RACMO2.3p2 AP
-                "racmoap"                    = token$crs$racmoApCrs,
+                "racmoap"                    = token$grids$crs$racmoApCrs,
                 "10.5281/zenodo.6347190"     = ,
-                "mar"                        = token$crs$marCrs,
-                "lambert"                    = token$crs$lambertCrs,
-                "ortho"  = , "orthographic"  = token$crs$orthoCrs,
+                "mar"                        = token$grids$crs$marCrs,
+                "lambert"                    = token$grids$crs$lambertCrs,
+                "ortho"  = , "orthographic"  = token$grids$crs$orthoCrs,
                 "stereo" = , "stereographic" = ,
                 "3031"   = , "epsg:3031"     = "EPSG:3031",
                 "wgs84"  = , "wgs 84"        = ,

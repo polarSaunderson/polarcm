@@ -258,30 +258,33 @@ configure_polaR <- function(refresh = FALSE) {
   token$dirFolders <- list("rawData" = basename(rawDataPath))
 
   # CRS Definitions ------------------------------------------------------------
-  token$crs$racmoCrs   <- paste("+proj=ob_tran",
-                                "+o_proj=longlat",
-                                "+o_lat_p=-180.0 +lon_0=10.0",
-                                "-m 57.295779506")
+  token$grids$ext$racmoExt   <- terra::ext(c(-32.875, 32.625, -30.125, 29.875))
+  token$grids$crs$racmoCrs   <- paste("+proj=ob_tran",
+                                      "+o_proj=longlat",
+                                      "+o_lat_p=-180.0 +lon_0=10.0",
+                                      "-m 57.295779506")
 
-  token$crs$racmoApCrs <- paste("+proj=ob_tran",
-                                "+o_proj=latlon",
-                                "+o_lat_p=-180.0 +lon_0=30.0",
-                                "-m 57.295779506")
+  token$grids$ext$racmoApExt <- terra::ext(c(-32.025, -12.525, -8.725, 5.975))
+  token$grids$crs$racmoApCrs <- paste("+proj=ob_tran",
+                                      "+o_proj=latlon",
+                                      "+o_lat_p=-180.0 +lon_0=30.0",
+                                      "-m 57.295779506")
 
-  token$crs$marCrs     <- paste("+proj=stere",
-                                "+lat_0=-90 +lat_ts=-71",
-                                "+lon_0=0 +x_0=0 +y_0=0",
-                                "+datum=WGS84 +units=km +no_defs +type=crs") # km!
+  token$grids$ext$marExt     <- NA
+  token$grids$crs$marCrs     <- paste("+proj=stere",
+                                      "+lat_0=-90 +lat_ts=-71",
+                                      "+lon_0=0 +x_0=0 +y_0=0",
+                                      "+datum=WGS84 +units=km +no_defs +type=crs") # km!
 
-  token$crs$lambertCrs <- paste("+proj=laea",
-                                "+lat_0=-90 +lon_0=0",
-                                "+x_0=0 +y_0=0",
-                                "+datum=WGS84 +units=m +no_defs +type=crs")
+  token$grids$crs$lambertCrs <- paste("+proj=laea",
+                                      "+lat_0=-90 +lon_0=0",
+                                      "+x_0=0 +y_0=0",
+                                      "+datum=WGS84 +units=m +no_defs +type=crs")
 
-  token$crs$orthoCrs   <- paste("+proj=ortho",
-                                "+f=0 +lat_0=-90 +lon_0=0",
-                                "+x_0=0 +y_0=0",
-                                "+datum=WGS84 +units=m +no_defs +type=crs")
+  token$grids$crs$orthoCrs   <- paste("+proj=ortho",
+                                      "+f=0 +lat_0=-90 +lon_0=0",
+                                      "+x_0=0 +y_0=0",
+                                      "+datum=WGS84 +units=m +no_defs +type=crs")
 
   message("  The crs definitions have been succesfully configured.")
 
@@ -390,10 +393,9 @@ configure_polaR <- function(refresh = FALSE) {
         # Keep a record of which dataset this is, regardless of the user's name
         token$datasets$racmoM[[ii]] <- iiSrc
 
-        # Store grid information
-        token$grids$racmoM[[ii]]$crs <- token$crs$racmoAp
-        token$grids$racmoM[[ii]]$ext <- terra::ext(c(-32.875, 32.625,
-                                                     -30.125, 29.875))
+        # Assign grid information
+        token$grids$racmoM[[ii]]$crs <- token$grids$crs$racmoCrs
+        token$grids$racmoM[[ii]]$ext <- token$grids$ext$racmoExt
 
         message("  The ", ii, " racmoM dataset has been succesfully configured.")
       } else if (iiSrc %in% c("10.5281/zenodo.7961732")) {
@@ -411,11 +413,11 @@ configure_polaR <- function(refresh = FALSE) {
         # Store variables & paths
         warning("A decision needs to be made on the ", ii, " dataset!\n")
 
-        # Store grid information
-        token$grids$racmoM[[ii]]$crs <- token$crs$racmoApCrs
+        # Assign grid information
+        token$grids$racmoM[[ii]]$crs <- token$grids$crs$racmoApCrs
+        token$grids$racmoM[[ii]]$ext <- token$grids$ext$racmoApExt
         # token$grids$racmoM[[ii]]$res <- c(0.05, 0.05)
-        token$grids$racmoM[[ii]]$ext <- terra::ext(c(-32.025, -12.525,
-                                                     -8.725, 5.975))
+
       } else {
         warning("  We don't recognise the src of the racmoM '", ii, "' dataset.",
                 "\n  Type ?configure_antarctica and read the instructions.\n")
@@ -460,6 +462,10 @@ configure_polaR <- function(refresh = FALSE) {
 
         # Keep a record of which dataset this is, regardless of the user's name
         token$datasets$racmoD[[ii]] <- iiSrc
+
+        # Assign grid information
+        token$grids$racmoD[[ii]]$crs <- token$grids$crs$racmoCrs
+        token$grids$racmoD[[ii]]$ext <- token$grids$ext$racmoExt
 
         message("  The ", ii, " racmoD dataset has been succesfully configured.")
       } else {
@@ -546,6 +552,7 @@ configure_polaR <- function(refresh = FALSE) {
 
 # alt name options: polaR  antarcticR antarcticaR   Rcm   maRacmo   racmoR racMar
 
+# OLD ====
 
 #' configure_racmoR <- function() {
 #'   #' Define paths to RACMO datasets and variables
