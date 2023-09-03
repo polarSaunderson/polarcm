@@ -61,7 +61,7 @@ calc_racmoD_climatology <- function(racmoData,
     stop("Set excludeIncomplete as TRUE, FALSE or a value from 1:12")
   }
   racmoData <- terrapin::exclude_unmatched_days(x = racmoData,
-                                      australSplit = australSplit)
+                                                australSplit = australSplit)
 
   # Define dates
   rDates    <- terrapin::get_terra_dates(racmoData, australSplit = australSplit)

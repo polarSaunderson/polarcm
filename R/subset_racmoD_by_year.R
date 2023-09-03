@@ -11,6 +11,7 @@ subset_racmoD_by_year <- function(racmoData,
   #'   name, in which case raw daily RACMO data is read in; or an existing
   #'   SpatRaster of daily RACMO data.
   #' @param years numeric: Which year/s to return?
+  #' @inheritParams read_racmoD
   #'
   #' @export
 

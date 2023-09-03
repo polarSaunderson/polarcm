@@ -41,6 +41,7 @@ get_shelf_outline <- function(extent = "",
   #' @inheritParams get_extent
   #'
   #' @examples -----------------------------------------------------------------
+  #' \dontrun{
   #'   # All ice shelves in Antarctica
   #'   t1 <- get_shelf_outline()
   #'   terra::plot(t1)
@@ -56,7 +57,7 @@ get_shelf_outline <- function(extent = "",
   #'   # Multiple shelves; includes intermediary shelves
   #'   t4 <- get_shelf_outline(c("Amery", "West"), rectangularExtent = TRUE)
   #'   terra::plot(t4)
-  #'
+  #' }
   #' @export
 
   # Code -----------------------------------------------------------------------

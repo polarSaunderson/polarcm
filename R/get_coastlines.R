@@ -19,6 +19,7 @@ get_coastline <- function(extent = "",
   #' @inheritParams get_extent
   #'
   #' @examples -----------------------------------------------------------------
+  #' \dontrun{
   #'   # Full coastline
   #'   t1 <- get_coastline()
   #'   terra::plot(t1)
@@ -44,7 +45,7 @@ get_coastline <- function(extent = "",
   #'
   #'   t6 <- get_coastline("Drygalski", preferType = "basins")
   #'   terra::plot(t6)
-  #'
+  #' }
   #' @export
 
   # Code -----------------------------------------------------------------------

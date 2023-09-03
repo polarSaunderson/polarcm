@@ -16,13 +16,13 @@ use_racmo_name <- function(racmoVars,
   #' @param originalUnits Should the same units as the dataset be used (TRUE;
   #'   default)? Often this makes the most sense, but some of the variables are
   #'   often changed in the same way for ease of use. For example, it is usually
-  #'   easier to think of snow/ice temperatures in ºC rather than Kelvin, to use
-  #'   Wm-2 rather than total joules, and to think of melt or precipitation as
-  #'   daily totals rather than fluxes per second. Be *VERY VERY VERY* careful
-  #'   if setting this as FALSE - it just assumes that the changes are the
-  #'   common ones that I have previously done, there is nothing clever about
-  #'   it! Set this or 'monthlyData' as NULL to suppress the unit output and
-  #'   just return the variable name.
+  #'   easier to think of snow/ice temperatures in `\u00B0`C rather than Kelvin,
+  #'   to use Wm-2 rather than total joules, and to think of melt or
+  #'   precipitation as daily totals rather than fluxes per second. Be *VERY
+  #'   VERY VERY* careful if setting this as FALSE - it just assumes that the
+  #'   changes are the common ones that I have previously done, there is nothing
+  #'   clever about it! Set this or 'monthlyData' as NULL to suppress the unit
+  #'   output and just return the variable name.
   #' @param monthlyData Is the RACMO data monthly resolution (i.e. racmoM; TRUE)
   #'   or daily (i.e. racmoD; FALSE, the default)? For some variables, this
   #'   makes a difference (e.g. all radiative fluxes are in Joules in monthly
@@ -103,7 +103,7 @@ use_racmo_name <- function(racmoVars,
                            "runoff"   = ,
                            "subl"     = ,
                            "snowmelt" = bquote("( kg "~m^-2~day^-1~")"),
-                           "t2m"      = "( ºC )",
+                           "t2m"      = "( \u00B0 C )",
                            "albedo"   = "%",
                            dailyUnits)
       monthlyUnits <- switch(iiVar,
@@ -118,7 +118,7 @@ use_racmo_name <- function(racmoVars,
                              "senf"     = ,
                              "latf"     = ,
                              "seb"      = bquote("( W"~m^-2~")"),
-                             "t2m"      = "( ºC )",
+                             "t2m"      = "( \u00B0C )",
                              "albedo"   = "%",
                              monthlyUnits)
     }

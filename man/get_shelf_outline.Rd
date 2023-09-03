@@ -87,6 +87,7 @@ Finally, the shelves can be reprojected (set via 'crs').
 }
 \examples{
 -----------------------------------------------------------------
+\dontrun{
   # All ice shelves in Antarctica
   t1 <- get_shelf_outline()
   terra::plot(t1)
@@ -102,5 +103,5 @@ Finally, the shelves can be reprojected (set via 'crs').
   # Multiple shelves; includes intermediary shelves
   t4 <- get_shelf_outline(c("Amery", "West"), rectangularExtent = TRUE)
   terra::plot(t4)
-
+}
 }

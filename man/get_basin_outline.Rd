@@ -94,10 +94,12 @@ Finally, the basins can be reprojected (set via 'crs').
 }
 \examples{
 -----------------------------------------------------------------
+\dontrun{
   # Compare returnImbie argument
   t1 <- "A-Ap"
   get_basin_outline(t1) |> terra::plot(col = "black")
   get_basin_outline(t1, FALSE, returnImbie = NULL) |>
-  terra::lines(col = "red", lwd = 2)
+    terra::lines(col = "red", lwd = 2)
+}
 
 }

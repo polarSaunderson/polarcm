@@ -12,6 +12,12 @@ name, in which case raw daily RACMO data is read in; or an existing
 SpatRaster of daily RACMO data.}
 
 \item{years}{numeric: Which year/s to return?}
+
+\item{version}{Which version of the daily RACMO data should be returned?
+The options are those defined by the user in their ".Rprofile" file; see
+\code{\link[=configure_polaR]{configure_polaR()}} for more information. By default, it uses the racmoD
+data that was defined first in the ".Rprofile". Ignored if 'racmoData' is
+already a SpatRaster.}
 }
 \description{
 Subset daily RACMO data based on the year. This function is

@@ -91,6 +91,7 @@ extent can be either exact shape outlines or a rectangular SpatExtent.
 }
 \examples{
 -----------------------------------------------------------------
+\dontrun{
   # Full Antarctic extent
   t1 <- get_extent()
   terra::plot(t1)
@@ -140,5 +141,5 @@ extent can be either exact shape outlines or a rectangular SpatExtent.
   t11 <- get_extent(c("Amery", "Shackleton", "West", "Dry Valleys"),
                     useOnly = "basins")
   terra::plot(t11)
-
+}
 }

@@ -68,6 +68,7 @@ the extent is returned. This function is mainly for use in the
 }
 \examples{
 -----------------------------------------------------------------
+\dontrun{
   # Full grounding line
   t1 <- get_grounding_line()
   terra::plot(t1)
@@ -89,5 +90,5 @@ the extent is returned. This function is mainly for use in the
 
   t6 <- get_grounding_line("Drygalski", preferType = "basins")
   terra::plot(t6)
-
+}
 }

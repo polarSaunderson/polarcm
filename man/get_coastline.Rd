@@ -67,6 +67,7 @@ in the \code{draw_antarctica()} function.
 }
 \examples{
 -----------------------------------------------------------------
+\dontrun{
   # Full coastline
   t1 <- get_coastline()
   terra::plot(t1)
@@ -92,5 +93,5 @@ in the \code{draw_antarctica()} function.
 
   t6 <- get_coastline("Drygalski", preferType = "basins")
   terra::plot(t6)
-
+}
 }
