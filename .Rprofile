@@ -39,9 +39,8 @@ if (!exists(".polarEnv")) .polarEnv <- new.env()
   "dir" = "MAR/MARv3.11_AP_3H_Melt/",
   "src" = "10.5281/zenodo.6347190")
 
-## Attach .polarEnv ------------------------------------------------------------
+## .polarEnv should be ready! --------------------------------------------------
 .polarEnv$testing <- "Goooood luck & enjoy!!!"
-attach(.polarEnv)
 
 # Miscellaneous ================================================================
 message("< Hi devDomi, let's go write some cool polaR code!")

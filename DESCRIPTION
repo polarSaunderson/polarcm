@@ -1,7 +1,7 @@
 Package: polaR
 Type: Package
 Title: Interact and Manipulate Data from the RACMO & MAR Regional Climate Models
-Version: 0.0.1.1
+Version: 0.0.1.2
 Authors@R: 
     person("Dominic", "Saunderson",
            role = c("aut", "cre"),
@@ -18,6 +18,8 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports:
   terra,
-  methods
+  methods,
+  stats,
+  grDevices
 Suggests:
   terrapin

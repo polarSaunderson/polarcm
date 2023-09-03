@@ -8,26 +8,27 @@ configure_polaR(refresh = FALSE)
 }
 \arguments{
 \item{refresh}{BINARY: Should \code{polaR} be configured again? Mainly for
-developers and forces \code{polaR} to run the configuration again. Detaches
-the existing \code{.polarEnv}, and sources the ".Rprofile" file again. By
-default, 'refresh' is FALSE, because it is usually not necessary to
-reconfigure the package very often at all -  after the first call in a
-session, we usually just want it to return what has already stored in the
-\code{.polarEnv} and reconfiguring would unnecessarily slow it down.}
+developers and forces \code{polaR} to run the configuration again. It sets the
+existing \code{.polarEnv} as an empty list, and then sources the ".Rprofile"
+again. By default, 'refresh' is FALSE, because it is usually not
+necessary to reconfigure the package very often at all -  after the first
+call in a session, we usually just want it to return what has already
+stored in the \code{.polarEnv} and reconfiguring would unnecessarily slow it
+down.}
 }
 \description{
 Please read the Instructions below!
 
 \code{polaR} functions need to know where certain datasets are on your system
-to work - the \code{configure_polaR()} function helps with by creating the
-required paths and datasets in a hidden environment that the other
-functions can access. The \code{configure_polaR} function therefore needs to
-be called before any \code{polaR} functions are used (which is automatically
-done as part of most \code{polaR} functions). The necessary datasets \emph{must}
-already be saved and accessible on your system (see "Accessing
-Datasets"); any datasets that are not available need to be defined as
-NULL and will be ignored, with predictable consequences - things don't
-work!).
+to work - the \code{configure_polaR()} function helps by creating the
+required paths and datasets in a hidden environment (\code{.polarEnv}) that
+the other functions can access. The \code{configure_polaR} function therefore
+needs to be called before any \code{polaR} functions are used (which is
+automatically done as part of most \code{polaR} functions). The necessary
+datasets \emph{must} already be saved and accessible on your system (see
+"Accessing Datasets"); any datasets that are not available need to be
+defined as NULL and will be ignored, with predictable consequences -
+functions that try to call them won't work!).
 }
 \section{Instructions}{
 This function must be called before using any \code{polaR} functions (once
@@ -45,7 +46,7 @@ The ".Rprofile" file should be in either:
 For more information on ".Rprofile" files, see Section 2.4 of
 \url{https://csgillespie.github.io/efficientR/set-up.html}.
 
-The following code should be copy and pasted into the ".Rprofile" file.
+The following code should be copied and pasted into the ".Rprofile" file.
 This code lets \code{polaR} know where to find the datasets on your system,
 and also which dataset it is. You must adjust the paths to match your
 directory structure:
@@ -53,33 +54,41 @@ directory structure:
 \item \code{.polarEnv$rawDataPath} must be relative to your current working
 directory;
 \item all other paths must be relative to the "rawDataPath" directory.
+\item If the data is not available (or you don't want it accessible), the
+path must be set as NULL (see racmoD example).
 }
 
 See "Defining Datasets" below for more information on modifying the
 following code block.
 
-\if{html}{\out{<div class="sourceCode R">}}\preformatted{# Prepare data paths for polaR
-  if(!exists(".polarEnv")) .polarEnv <- new.env() # hidden polaR environment
-  .polarEnv$rawDataPath <- "../../Data/"          # relative to working dir
+\if{html}{\out{<div class="sourceCode R">}}\preformatted{  # polaR ========================================================================
+  if(!exists(".polarEnv")) .polarEnv <- new.env()       # hidden polaR environment
 
-  # MEaSURES
-  .polarEnv$MEaSURES    <- "MEaSURES Boundaries/" # relative to rawDataPath
+  ## Raw Data Path ---------------------------------------------------------------
+  .polarEnv$rawDataPath     <- "../../Data/"            # relative to working dir
 
-  # Monthly RACMO data (racmoM)
+  ## MEaSURES Data Path ----------------------------------------------------------
+  .polarEnv$MEaSURES        <- "MEaSURES Boundaries/"   # relative to rawDataPath
+
+  ## Monthly RACMO Data Paths ----------------------------------------------------
   .polarEnv$rcm$racmoM$rp3  <- list("dir" = RACMO/RACMO2.3p3_CON_ANT27_monthly/",
-                                "src" = "10.5281/zenodo.5512076")
+                                    "src" = "10.5281/zenodo.5512076")
 
+  ## Daily RACMO Data Paths ------------------------------------------------------
   .polarEnv$rcm$racmoD      <- NULL      # no racmoD data
+
+  ## RCM Datasets ----------------------------------------------------------------
   .polarEnv$rcm$marM        <- NULL      # no marM data
   .polarEnv$rcm$marD        <- NULL      # no marD data
   .polarEnv$rcm$marH        <- NULL      # no marH (hourly) data
 
-  # Attach the hidden environment so it is available to polaR functions
-  attach(.polarEnv)
 }\if{html}{\out{</div>}}
 }
 
 \section{Accessing Datasets}{
+\code{polaR} \strong{DOES NOT} download data for you. Follow the doi links on this
+page to find data on Zenodo and download the data you want to use first.
+
 \code{polaR} has been created to handle some commonly-used, openly-accessible
 RACMO and MAR datasets shared on Zenodo (see "Zenodo RCM Datasets"). Some
 functions will also work with other versions of the data, or perhaps even
@@ -121,10 +130,10 @@ line) on MEaSURES data. The MEaSURES data (Version 2; Mouginot et al.,
 \item \verb{[m01_dt]}  MARv3.11 3-Hourly Melt AA Peninsula  \url{https://doi.org/10.5281/zenodo.6347190}
 }
 
-\emph{Note:} The Zenodo doi's resolve to the latest version of the dataset on
-Zenodo; it is assumed that any versions of the datasets shared using the
-same Zenodo dataset will be set up in the same way. Let me know if this
-is not the case.
+\emph{Note:} The Zenodo doi's listed resolve to the latest version of the
+dataset on Zenodo; it is assumed that any versions of the datasets shared
+using the same Zenodo dataset will be set up in the same way. Let me know
+if this is not the case.
 
 \emph{Note:} If multiple datasets are added to a section (e.g. there is both
 RACMO2.3p2 and RACMO2.3p3 monthly data), the first one defined will be
@@ -137,10 +146,10 @@ below).
 these datasets (as long as they are defined in ".Rprofile"), but the file
 names should be the same as those on Zenodo.
 
-\emph{Note:} Ideally, there will become a standardised way of distributing such data
-in future, but if you are aware of any other openly accessible datasets
-that you think should be added to this list, let me know and I'll see
-whether I can add them in a future update.
+\emph{Note:} Ideally, there will become a standardised way of distributing
+such data in future, but if you are aware of any other openly accessible
+datasets that you think should be added to this list, let me know and
+I'll see whether I can add them in a future update.
 }
 
 }
@@ -148,25 +157,28 @@ whether I can add them in a future update.
 
 \section{Defining Datasets}{
 To make different datasets available, it is necessary to configure your
-".Rprofile" file by including the following information for each dataset:
+".Rprofile" file by including the following information for \strong{each}
+dataset type:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{ .polarEnv$rcm$<type>$<name> <- list("dir" = <dataDirectory>,
                                      "src" = <doiCode>)
 }\if{html}{\out{</div>}}
 
-\verb{<type>} Some functions need to know whether this is RACMO or MAR data, and
-whether it is monthly, daily, or hourly data. Currently, the options are:
+\verb{<type>} Some functions need to know whether this is RACMO or MAR data,
+and whether it is monthly, daily, or hourly data. Currently, the options
+are:
 racmoM    Monthly RACMO
 racmoD    Daily RACMO
 marM      Monthly MAR
 marD      Daily MAR
 marH      Hourly MAR
 
-All of these options must be included in the ".Rprofile". If the dataset
-is not available, set it as NULL (e.g. \code{.polarEnv$rcm$marM <- NULL}).
+All of these options \strong{must} be included in the ".Rprofile" even if the
+dataset is not available or not wanted. In which case, just set the value
+as NULL (e.g. \code{.polarEnv$rcm$marM <- NULL}).
 
-\verb{<name>} How do you want to refer to this dataset in your code? For example,
-when reading in data, which is more your style?:
+\verb{<name>} How do you want to refer to this dataset in your code? For
+example, when reading in data, which is more your style?:
 
 \if{html}{\out{<div class="sourceCode R">}}\preformatted{   read_racmoM(var = "snowmelt", ver = "rp2")
    read_racmoM(var = "snowmelt", ver = "RACMO2.3p2")
@@ -177,19 +189,48 @@ when reading in data, which is more your style?:
 relative path compared to the "Data/" directory as defined in the
 ".Rprofile" file as ".polarEnv$rawDataPath".
 
-\verb{<doiCode>} Which dataset is this? As explained above, there is no standard
-way to distribute these datasets so we need to explicitly tell \code{polaR}
-what we are giving it. We do this using the doi of the download page. For
-example, for the monthly RACMO2.3p3 data above (r01_dt), with doi
-https://doi.org/10.5281/zenodo.5512076, the \if{html}{\out{<doiCode>}} must be
-"10.5281/zenodo.5512076". If the data has not been shared, but you know
-it is in EXACTLY the same format (e.g. organisation of data files, crs,
-extent), you can just add the respective \if{html}{\out{<doiCode>}}.
+\verb{<doiCode>} Which dataset is this? As explained above, there is no
+standard way to distribute these datasets so we need to explicitly tell
+\code{polaR} what dataset we are giving it. We do this using the doi of the
+download page. For example, for the monthly RACMO2.3p3 data above
+(r01_dt, with doi "https://doi.org/10.5281/zenodo.5512076"), the
+\if{html}{\out{<doiCode>}} must be "10.5281/zenodo.5512076". If the data has not been
+shared, but you know it is in EXACTLY the same format (e.g. organisation
+of data files, crs, extent), you can just add the respective \if{html}{\out{<doiCode>}}.
+\subsection{Directory Structure}{
 
 This function assumes that all raw data is stored in a "Data/" directory
 (i.e. what we define in ".Rprofile" using '.polarEnv$rawDataPath').
 Separate subdirectories are then expected for the MEaSURES data and any
-RACMO or MAR datasets.
+RACMO or MAR datasets. These can be either separate directories for each
+dataset (e.g. the RACMO Monthly examples below) or further nested (e.g.
+the MAR Monthly examples below). Whichever way, make sure that the path
+in the "dir" points to the dataset.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Data/
+| - - MEaSURES Boundaries/
+|     | - Basins_Antarctica/
+|         | - Basins_Antarctica_v02.shp
+|
+| - - RACMO2.3p3 Monthly/
+|     | - albedo.nc
+|     | - swsd.nc
+|
+| - - RACMO2.3p2 Monthly/
+|     | - albedo.nc
+|     | - swsd.nc
+|
+| - - MAR Monthly/
+|     | - MARv3.11/
+|     |   | - 2015.nc
+|     |   | - 2016.nc
+|     | - MARv3.12/
+|         | - 2011.nc
+|
+| - - MAR Daily/
+|     | - 1980.nc
+|     | - 1981.nc
+}\if{html}{\out{</div>}}
 
 \emph{!!!REMEMBER!!!}
 
@@ -201,5 +242,6 @@ expected ways - for example, if no daily RACMO data is available, the
 racmoD functions will fail. However, that may not be an issue. The
 MEaSURES data is used for any location-based calculations or subsetting,
 and for drawing borders.
+}
 }
 
