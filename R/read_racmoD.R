@@ -28,11 +28,6 @@ read_racmoD <- function(racmoData, version = NULL) {
     varPaths <- token$varPaths$racmoD[[version]][[racmoData]]
 
     # Load in the data - racmoD data is split into different files by decade
-    # racmoD   <- terra::rast()    # preallocate
-    # for (ii in varPaths) {
-      # iiRast <- terra::rast(ii, subds = racmoData)
-      # racmoD <- c(racmoD, iiRast) |> suppressWarnings() # warning about
-    # }
     racmoD <- terra::rast(varPaths, subds = racmoData)
 
     # Explicitly add the RACMO crs & extent as they aren't always read correctly

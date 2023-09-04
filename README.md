@@ -16,6 +16,7 @@ The public version of this repo can be accessed at:
 ## To-Do
 ### 2023-09-04
 - [ ] Work on examples for everything!
+- [ ] Need to correct messages in `configure_polaR`
 
 ### 2023-08-14
 - [ ] Check units in use_racmo_name

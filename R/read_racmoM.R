@@ -28,11 +28,13 @@ read_racmoM <- function(racmoData, version = NULL) {
     varPath <- token$varPaths$racmoM[[version]][[racmoData]]
 
     # Read in data
-    racmoM <- terra::rast(varPath, subds = racmoData)
+    racmoM <- terra::rast(varPath, subds = racmoData) |>
+      suppressWarnings() # suppress issues with crs & extent, which we add below
 
     # Explicitly add the RACMO crs & extent as they aren't always read correctly
     terra::crs(racmoM) <- use_crs(token$grids$racmoM[[version]]$crs)
     terra::ext(racmoM) <- token$grids$racmoM[[version]]$ext
+    message("Sorted out rast ext.")
   } else {
     racmoM <- racmoData    # Simply returning the input
   }

@@ -304,6 +304,7 @@ configure_polaR <- function(refresh = FALSE) {
       token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "coastline")
       token$grids$measures$coastline$crs <- "EPSG:3031"
       token$grids$measures$coastline$ext <- terra::ext(coast)
+      message("  The MEaSURES coastline dataset has been succesfully configured.")
     } else {warning("Cannot access the coastline in the MEaSURES dataset! ",
                     "   Expected filename:\n  ", coast, "\n\n")}
 
@@ -316,6 +317,7 @@ configure_polaR <- function(refresh = FALSE) {
       token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "groundingLine")
       token$grids$measures$groundingLine$crs <- "EPSG:3031"
       token$grids$measures$groundingLine$ext <- terra::ext(GL)
+      message("  The MEaSURES grounding line dataset has been succesfully configured.")
     } else {warning("Cannot access the grounding line in the MEaSURES dataset! ",
                     "   Expected filename:\n  ", GL, "\n\n")}
 
@@ -328,6 +330,7 @@ configure_polaR <- function(refresh = FALSE) {
       token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "iceShelves")
       token$grids$measures$iceShelves$crs <- "EPSG:3031"
       token$grids$measures$iceShelves$crs <- terra::ext(shelves)
+      message("  The MEaSURES ice shelves dataset has been succesfully configured.")
     } else {warning("Cannot access ice shelves in the MEaSURES dataset! ",
                     "   Expected filename:\n  ", shelves, "\n\n")}
 
@@ -340,6 +343,7 @@ configure_polaR <- function(refresh = FALSE) {
       token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "imbieBasins")
       token$grids$measures$imbieBasins$crs <- "EPSG:3031"
       token$grids$measures$imbieBasins$ext <- terra::ext(imbie)
+      message("  The MEaSURES IMBIE basins dataset has been succesfully configured.")
     } else {warning("Cannot access IMBIE Basins in the MEaSURES dataset! ",
                     "   Expected filename:\n  ", imbie, "\n\n")}
 
@@ -352,14 +356,10 @@ configure_polaR <- function(refresh = FALSE) {
       token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "refinedBasins")
       token$grids$measures$refinedBasins$crs <- "EPSG:3031"
       token$grids$measures$refinedBasins$ext <- terra::ext(basins)
-    } else {warning("Cannot access Basins in the MEaSURES dataset! ",
+      message("  The MEaSURES refined basins dataset has been succesfully configured.")
+    } else {warning("Cannot access refined basins in the MEaSURES dataset! ",
                     "   Expected filename:\n  ", basins, "\n\n")}
 
-    # Keep vector of MEaSURES data
-    # token$grids$measures$crs <- "epsg:3031"
-    # token$grids$measures$ext <- "epsg:3031"
-
-    message("  The MEaSURES dataset has been succesfully configured.")
   }
 
   # racmoM Datasets ------------------------------------------------------------
