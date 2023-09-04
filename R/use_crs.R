@@ -22,7 +22,7 @@ use_crs <- function(crs = NULL) {
   #'
   #'   ## MAR
   #'   The default MAR crs is based on EPSG:3031 (taken from the description of
-  #'   this Zenodo dataset [https://doi.org/10.5281/zenodo.2547638](), but it
+  #'   this [Zenodo dataset](https://doi.org/10.5281/zenodo.2547638), but it
   #'   appears that it is in kilometres, not metres as a standard EPSG:3031
   #'   would be. This is very much to be finished off with the correct datasets!
   #'
@@ -33,14 +33,20 @@ use_crs <- function(crs = NULL) {
   #'       - "racmoAA"           Antarctic wide (as above, just more explicit!)
   #'       - "racmoAP"           Antarctic Peninsula
   #'       - "mar"               Who knows at the moment?!
-  #'       - "stereo"            Stereographic (EPSG:3031)
-  #'       - "ortho"             Orthographic
-  #'       - "lambert"           Lambert Equal Area Equidistant
-  #'       - "WGS84" / "ERA5"    EPSG:4326
+  #'       - "stereo"            Antarctic Polar Stereographic EPSG:[3031](https://epsg.io/3031)
+  #'       - "lambertEqual"      Lambert Equal Area Equidistant (EPSG: [102020](https://epsg.io/102020))
+  #'       - "ortho"             Orthographic South Pole (EPSG: [102037](https://epsg.io/102037))
+  #'       - "WGS84" / "ERA5"    WGS84 GPS System (EPSG: [4326](https://epsg.io/4326))
+  #'       - "stereoAus"         Australian Antarctic Polar Stereographic (EPSG: [3032](https://epsg.io/3032))
+  #'       - "lambertAus"        Australian Antarctic Lambert (EPSG: [3033](https://epsg.io/3033))
+  #'       - "ease2"             NSIDC EASE-Grid 2.0 South (EPSG: [6932](https://epsg.io.6932))
   #'
-  #'   These crs definitions are stored in `.polarEnv$crs`.
+  #'   These crs definitions are stored in `.polarEnv$grids$crs`.
   #'   For more information on RCM projections, see here:
   #'    [https://gitlab.tudelft.nl/slhermitte/manuals/blob/master/RACMO_reproject.md]()
+  #'   For more information on the non-RCM EPSG codes, follow the links; those
+  #'   pages are particularly good for showing the extent where the projection
+  #'   has been created for.
   #'
   #' @export
 
