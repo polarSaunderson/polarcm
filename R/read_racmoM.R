@@ -34,7 +34,6 @@ read_racmoM <- function(racmoData, version = NULL) {
     # Explicitly add the RACMO crs & extent as they aren't always read correctly
     terra::crs(racmoM) <- use_crs(token$grids$racmoM[[version]]$crs)
     terra::ext(racmoM) <- token$grids$racmoM[[version]]$ext
-    message("Sorted out rast ext.")
   } else {
     racmoM <- racmoData    # Simply returning the input
   }

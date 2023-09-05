@@ -294,6 +294,9 @@ configure_polaR <- function(refresh = FALSE) {
     rawDir <- paste0(rawDataPath, .polarEnv$MEaSURES)
     token$dirPaths$MEaSURES   <- rawDir
     token$dirFolders$MEaSURES <- basename(rawDir)
+    token$datasets$MEaSURES$doi  <- "doi.org/10.5067/AXE4121732AD"
+    token$datasets$MEaSURES$name <-
+         "MEaSUREs Antarctic Boundaries for IPY 2007-2009 from Satellite Radar, Version 2"
 
     # Antarctic Coastline
     coast <- paste0(rawDir,
@@ -301,7 +304,7 @@ configure_polaR <- function(refresh = FALSE) {
     if (file.exists(coast)) {
       coast <- terra::vect(coast)
       token$measures$coastline <- coast
-      token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "coastline")
+      token$datasets$MEaSURES$maps <- c(token$datasets$MEaSURES$maps, "coastline")
       token$grids$measures$coastline$crs <- "EPSG:3031"
       token$grids$measures$coastline$ext <- terra::ext(coast)
       message("  The MEaSURES coastline dataset has been succesfully configured.")
@@ -314,7 +317,7 @@ configure_polaR <- function(refresh = FALSE) {
     if (file.exists(GL)) {
       GL <- terra::vect(GL)
       token$measures$groundingLine <- GL
-      token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "groundingLine")
+      token$datasets$MEaSURES$maps <- c(token$datasets$MEaSURES$maps, "groundingLine")
       token$grids$measures$groundingLine$crs <- "EPSG:3031"
       token$grids$measures$groundingLine$ext <- terra::ext(GL)
       message("  The MEaSURES grounding line dataset has been succesfully configured.")
@@ -327,7 +330,7 @@ configure_polaR <- function(refresh = FALSE) {
     if (file.exists(shelves)) {
       shelves <- terra::vect(shelves)
       token$measures$iceShelves <- shelves
-      token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "iceShelves")
+      token$datasets$MEaSURES$maps <- c(token$datasets$MEaSURES$maps, "iceShelves")
       token$grids$measures$iceShelves$crs <- "EPSG:3031"
       token$grids$measures$iceShelves$crs <- terra::ext(shelves)
       message("  The MEaSURES ice shelves dataset has been succesfully configured.")
@@ -340,7 +343,7 @@ configure_polaR <- function(refresh = FALSE) {
     if (file.exists(imbie)) {
       imbie <- terra::vect(imbie)
       token$measures$imbieBasins <- imbie
-      token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "imbieBasins")
+      token$datasets$MEaSURES$maps <- c(token$datasets$MEaSURES$maps, "imbieBasins")
       token$grids$measures$imbieBasins$crs <- "EPSG:3031"
       token$grids$measures$imbieBasins$ext <- terra::ext(imbie)
       message("  The MEaSURES IMBIE basins dataset has been succesfully configured.")
@@ -353,13 +356,12 @@ configure_polaR <- function(refresh = FALSE) {
     if (file.exists(basins)) {
       basins <- terra::vect(basins)
       token$measures$refinedBasins <- basins
-      token$datasets$MEaSURES <- c(token$datasets$MEaSURES, "refinedBasins")
+      token$datasets$MEaSURES$maps <- c(token$datasets$MEaSURES$maps, "refinedBasins")
       token$grids$measures$refinedBasins$crs <- "EPSG:3031"
       token$grids$measures$refinedBasins$ext <- terra::ext(basins)
       message("  The MEaSURES refined basins dataset has been succesfully configured.")
     } else {warning("Cannot access refined basins in the MEaSURES dataset! ",
                     "   Expected filename:\n  ", basins, "\n\n")}
-
   }
 
   # racmoM Datasets ------------------------------------------------------------
@@ -391,7 +393,14 @@ configure_polaR <- function(refresh = FALSE) {
         token$varNames$racmoM[[ii]] <- iiVarNames
 
         # Keep a record of which dataset this is, regardless of the user's name
-        token$datasets$racmoM[[ii]] <- iiSrc
+        token$datasets$racmoM[[ii]]$doi  <- paste0("doi.org/", iiSrc)
+        if (iiSrc == "10.5281/zenodo.5512076") {
+          token$datasets$racmoM[[ii]]$name <-
+               "RACMO2.3p3 Monthly SMB, SEB and t2m data for Antarctica (1979-2018)"
+        } else if (iiSrc == "10.5281/zenodo.7760490") {
+          token$datasets$racmoM[[ii]]$name <-
+               "Monthly averaged RACMO2.3p2 variables (1979-2022); Antarctica"
+        }
 
         # Assign grid information
         token$grids$racmoM[[ii]]$crs <- token$grids$crs$racmoCrs
@@ -461,7 +470,9 @@ configure_polaR <- function(refresh = FALSE) {
         }
 
         # Keep a record of which dataset this is, regardless of the user's name
-        token$datasets$racmoD[[ii]] <- iiSrc
+        token$datasets$racmoD[[ii]]$doi  <- paste0("doi.org/", iiSrc)
+        token$datasets$racmoD[[ii]]$name <-
+             "Daily version of RACMO2.3p3 SMB, SEB and t2m data for Antarctica (1979-2018)"
 
         # Assign grid information
         token$grids$racmoD[[ii]]$crs <- token$grids$crs$racmoCrs
@@ -512,7 +523,9 @@ configure_polaR <- function(refresh = FALSE) {
         }
 
         # Keep a record of which dataset this is, regardless of the user's name
-        token$datasets$marH[[ii]] <- iiSrc
+        token$datasets$marH[[ii]]$doi  <- paste0("doi.org/", iiSrc)
+        token$datasets$marH[[ii]]$name <-
+             "Antarctic Peninsula MAR 3-hourly data"
 
         message("  The ", ii, " marH dataset has been succesfully configured.")
       } else {
