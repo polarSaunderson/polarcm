@@ -397,9 +397,15 @@ configure_polaR <- function(refresh = FALSE) {
         if (iiSrc == "10.5281/zenodo.5512076") {
           token$datasets$racmoM[[ii]]$name <-
                "RACMO2.3p3 Monthly SMB, SEB and t2m data for Antarctica (1979-2018)"
+          token$datasets$ramcoM[[ii]]$authors <- c("C. van Dalum",
+                                                   "W.J. van de Berg",
+                                                   "M. van den Broeke")
         } else if (iiSrc == "10.5281/zenodo.7760490") {
           token$datasets$racmoM[[ii]]$name <-
                "Monthly averaged RACMO2.3p2 variables (1979-2022); Antarctica"
+          token$datasets$ramcoM[[ii]]$authors <- c("J.M. van Wessem",
+                                                   "W.J. van de Berg",
+                                                   "M.R. van den Broeke")
         }
 
         # Assign grid information
@@ -470,9 +476,12 @@ configure_polaR <- function(refresh = FALSE) {
         }
 
         # Keep a record of which dataset this is, regardless of the user's name
-        token$datasets$racmoD[[ii]]$doi  <- paste0("doi.org/", iiSrc)
-        token$datasets$racmoD[[ii]]$name <-
+        token$datasets$racmoD[[ii]]$doi    <- paste0("doi.org/", iiSrc)
+        token$datasets$racmoD[[ii]]$name   <-
              "Daily version of RACMO2.3p3 SMB, SEB and t2m data for Antarctica (1979-2018)"
+        token$datasets$ramcoM[[ii]]$authors <- c("C. van Dalum",
+                                                 "W.J. van de Berg",
+                                                 "M. van den Broeke")
 
         # Assign grid information
         token$grids$racmoD[[ii]]$crs <- token$grids$crs$racmoCrs
@@ -523,9 +532,11 @@ configure_polaR <- function(refresh = FALSE) {
         }
 
         # Keep a record of which dataset this is, regardless of the user's name
-        token$datasets$marH[[ii]]$doi  <- paste0("doi.org/", iiSrc)
-        token$datasets$marH[[ii]]$name <-
+        token$datasets$marH[[ii]]$doi     <- paste0("doi.org/", iiSrc)
+        token$datasets$marH[[ii]]$name    <-
              "Antarctic Peninsula MAR 3-hourly data"
+        token$datasets$marH[[ii]]$authors <- c("C. Kittel", "X. Fettweis",
+                                               "J. Wille")
 
         message("  The ", ii, " marH dataset has been succesfully configured.")
       } else {
