@@ -1,7 +1,7 @@
 Package: polaR
 Type: Package
 Title: Interact and Manipulate Data from the RACMO & MAR Regional Climate Models
-Version: 0.0.1.3
+Version: 0.0.1.4
 Authors@R: 
     person("Dominic", "Saunderson",
            role = c("aut", "cre"),

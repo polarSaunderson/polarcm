@@ -66,7 +66,7 @@ calc_racmo_in_space <- function(racmoData,
   # Extract data
   extentArgs$extent <- extent
   extent      <- do.call(get_extent, extentArgs)
-  pixelValues <- terra::extract(racmoData, extent, exact = TRUE)
+  pixelValues <- terra::extract(x = racmoData, y = extent, exact = TRUE)
   pixelValues <- pixelValues[pixelValues$fraction > minArea, ]
 
   # Weight the values?
@@ -75,12 +75,11 @@ calc_racmo_in_space <- function(racmoData,
   }
 
   # Apply the FUN function on each layer (each column / each date)
-  funName     <- as.character(substitute(FUN))
   racmoValues <- apply(pixelValues, 2, FUN, ...)
   racmoValues <- racmoValues[-c(1, length(racmoValues))] # remove fraction & ID
 
   # Create as a data frame
-  racmoVar   <- paste0(funName, "_", terra::varnames(racmoData)[[1]])
+  racmoVar   <- paste0(FUN, "_", terra::varnames(racmoData)[[1]])
   funValues  <- terrapin::get_terra_dates(racmoData)  # create df of dates
   funValues[[racmoVar]] <- racmoValues                # add FUN values column
 
