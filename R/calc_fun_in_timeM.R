@@ -1,15 +1,16 @@
-calc_multiMonth_racmo <- function(racmoData,
-                                  months, annual,
-                                  FUN, ...) {
-  #' Calculate RACMO values over multiple months each year / austral summer
+calc_fun_in_timeM <- function(x,
+                              months,
+                              annual,
+                              FUN, ...) {
+  #' Calculate RCM values across multiple months each year / austral summer
   #'
-  #' @description Often, it is necessary to look at RACMO values across multiple
+  #' @description Often, it is necessary to look at RCM values across multiple
   #'   months each year / summer. For example, what is the total JJA
   #'   precipitation each year? Or what is the average wind speed in DJF each
-  #'   summer? This function takes the input RACMO data, and creates new
+  #'   summer? This function takes the input RCM data, and creates new
   #'   SpatRasters based on the requested 'months' and the 'FUN' (function)
   #'   arguments, accounting for whether the months should be split into
-  #'   calendar years or austral summer years.
+  #'   calendar years or austral summers / years.
   #'
   #'   The following examples further illustrates this function.
   #'
@@ -24,7 +25,7 @@ calc_multiMonth_racmo <- function(racmoData,
   #'   requested months are available are returned.
   #'
   #'   ## Example 2 - Austral Summer (DJF) mean wind speed
-  #'   Take a monthly RACMO dataset of average monthly wind speeds, including
+  #'   Take a monthly MAR dataset of average monthly wind speeds, including
   #'   all months each year from 1979--2018 (i.e. 12 months * 40 years = 480
   #'   layers). Set 'months' as c(12, 1, 2) (i.e. DJF), FUN as "mean" and annual
   #'   as 3. The returned SpatRaster will contain 40 layers, with each one being
@@ -33,7 +34,7 @@ calc_multiMonth_racmo <- function(racmoData,
   #'   Only layers with the same units are processed together, and only austral
   #'   summers / years when all requested months are available are returned.
   #'
-  #' @param racmoData SpatRaster: The RACMO data to use with 'FUN'. It must be
+  #' @param x SpatRaster: The RACMO or MAR data to use with 'FUN'. It must be
   #'   an existing SpatRaster.
   #' @param months vector: Which month/s to include? Input can be the month
   #'   number (e.g. 12) or the month name, either in full ("December",
@@ -55,29 +56,32 @@ calc_multiMonth_racmo <- function(racmoData,
 
   # Code -----------------------------------------------------------------------
   # Preallocate for multiple SpatRaster layers
-  racmoCubud <- list()
+  xCubud     <- list()
   incMonths  <- paste0(substring(month.abb[months], 1, 1),
                        collapse = "") # equivalent to domR::get_initials
 
   # Basic data
   if (isTRUE(annual)) {
-    racmoData  <- subset_racmoM_by_month(racmoData, months,
-                                         excludeIncomplete = "years")
-    racmoDates <- terrapin::get_terra_dates(racmoData)
-    periods    <- unique(racmoDates$year)
+    xData   <- terrapin::subset_by_month(x, months,
+                                         excludeIncomplete = "years",
+                                         dailyResolution = FALSE)
+    xDates  <- terrapin::get_terra_dates(racmoData)
+    periods <- unique(xDates$year)
   } else if (annual %in% 1:12) {
-    racmoData  <- subset_racmoM_by_month(racmoData, months,
-                                         excludeIncomplete = annual)
-    racmoDates <- terrapin::get_terra_dates(racmoData)
-    periods    <- unique(racmoDates$summer)
+    xData   <- terrapin::subset_by_month(x, months,
+                                         excludeIncomplete = annual,
+                                         dailyResolution = FALSE)
+    xDates  <- terrapin::get_terra_dates(x)
+    periods <- unique(xDates$summer)
   }
 
   # Apply FUN each year / summer
   for (ii in periods) {
     if (isTRUE(annual)) {
-      iiData <- subset_racmoM_by_year(racmoData, ii)
+      iiData <- terrapin::subset_by_year(xData, years = ii)
     } else {
-      iiData <- subset_racmoM_by_summer(racmoData, ii, annual)
+      iiData <- terrapin::subset_by_summer(xData, summers = ii,
+                                           australSplit = annual)
     }
     units  <- terra::units(iiData)
 
@@ -93,30 +97,30 @@ calc_multiMonth_racmo <- function(racmoData,
                                  ii, sep = "-"),
                            names(iiData)[[1]])
       # Store outside the loop
-      racmoCubud[[which(periods == ii)]] <- iiFun
+      xCubud[[which(periods == ii)]] <- iiFun
     }
   }
 
   # Return as a complete SpatRaster
-  racmoCubud <- terra::rast(unlist(racmoCubud))
-  terra::varnames(racmoCubud)  <- terra::varnames(racmoData)
-  terra::longnames(racmoCubud) <- terra::longnames(racmoData)
-  terra::units(racmoCubud)     <- paste0(units[1], " ", incMonths, "_", funName)
+  xCubud <- terra::rast(unlist(xCubud))
+  terra::varnames(xCubud)  <- terra::varnames(xData)
+  terra::longnames(xCubud) <- terra::longnames(xData)
+  terra::units(xCubud)     <- paste0(units[1], " ", incMonths, "_", funName)
 
-  return(racmoCubud)
+  return(xCubud)
 }
 
 
-calc_annual_racmo <- function(racmoData,
-                              months,
-                              FUN,
-                              ...) {
-  #' Calculate RACMO values over multiple months each year
+calc_fun_annualM <- function(x,
+                             months,
+                             FUN,
+                             ...) {
+  #' Calculate RCM values over multiple months each year
   #'
-  #' @description Often, it is necessary to look at RACMO values across multiple
+  #' @description Often, it is necessary to look at RCM values across multiple
   #'   months each year. For example, what is the total JJA precipitation each
   #'   year? Or what is the average wind speed in SON? This function takes the
-  #'   input RACMO data, and creates new SpatRasters based on the requested
+  #'   input RCM data, and creates new SpatRasters based on the requested
   #'   'months' and the 'FUN' (function) arguments.
   #'
   #'   The following example further illustrates this function. Take a monthly
@@ -129,28 +133,29 @@ calc_annual_racmo <- function(racmoData,
   #'   processed together, and only years when all requested months are
   #'   available are returned.
   #'
-  #' @inheritParams calc_multiMonth_racmo
+  #' @inheritParams calc_fun_in_timeM
   #'
-  #' @seealso calc_austral_racmo
+  #' @seealso calc_fun_australM
   #'
   #' @export
 
   # Code -----------------------------------------------------------------------
-  x <- calc_multiMonth_racmo(racmoData, months, TRUE, FUN, ...)
+  x <- calc_fun_in_time(x, months = months, annual = TRUE,
+                        FUN = FUN, ...)
   return(x)
 }
 
-calc_austral_racmo <- function(racmoData,
-                               months,
-                               FUN,
-                               australSplit = 3,
-                               ...) {
-  #' Calculate RACMO values over multiple months each austral summer / year
+calc_fun_australM <- function(x,
+                              months,
+                              FUN,
+                              australSplit = 3,
+                              ...) {
+  #' Calculate RCM values over multiple months each austral summer / year
   #'
-  #' @description Often, it is necessary to look at RACMO values across multiple
+  #' @description Often, it is necessary to look at RCM values across multiple
   #'   months, but across austral summers / years. For example, what is the
   #'   total DJF precipitation each austral year / summer? Or what is the
-  #'   average wind speed in DJF? This function takes the input RACMO data, and
+  #'   average wind speed in DJF? This function takes the input RCM data, and
   #'   creates new SpatRasters based on the requested 'months' and the 'FUN'
   #'   (function) arguments.
   #'
@@ -164,7 +169,7 @@ calc_austral_racmo <- function(racmoData,
   #'   Only layers with the same units are processed together, and only austral
   #'   years when all requested months are available are returned.
   #'
-  #' @inheritParams calc_multiMonth_racmo
+  #' @inheritParams calc_fun_in_timeM
   #' @param australSplit numeric: Which is the last month included in an austral
   #'   summer before the new austral year begins? The default value is 3, which
   #'   means that all months *AFTER* March are considered as part of the
@@ -172,11 +177,12 @@ calc_austral_racmo <- function(racmoData,
   #'   this value according: setting it as 4 means May 1991 -- April 1992 are
   #'   all 1992.
   #'
-  #' @seealso calc_annual_racmo
+  #' @seealso calc_fun_annualM
   #'
   #' @export
 
   # Code -----------------------------------------------------------------------
-  x <- calc_multiMonth_racmo(racmoData, months, australSplit, FUN, ...)
+  x <- calc_fun_in_timeM(x, months = months, annual = australSplit,
+                         FUN = FUN, ...)
   return(x)
 }
