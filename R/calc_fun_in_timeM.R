@@ -65,7 +65,7 @@ calc_fun_in_timeM <- function(x,
     xData   <- terrapin::subset_by_month(x, months,
                                          excludeIncomplete = "years",
                                          dailyResolution = FALSE)
-    xDates  <- terrapin::get_terra_dates(racmoData)
+    xDates  <- terrapin::get_terra_dates(x)
     periods <- unique(xDates$year)
   } else if (annual %in% 1:12) {
     xData   <- terrapin::subset_by_month(x, months,
@@ -140,7 +140,7 @@ calc_fun_annualM <- function(x,
   #' @export
 
   # Code -----------------------------------------------------------------------
-  x <- calc_fun_in_time(x, months = months, annual = TRUE,
+  x <- calc_fun_in_timeM(x, months = months, annual = TRUE,
                         FUN = FUN, ...)
   return(x)
 }
