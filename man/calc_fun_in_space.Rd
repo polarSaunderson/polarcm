@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_fun_in_space.R
 \name{calc_fun_in_space}
 \alias{calc_fun_in_space}
-\title{Apply a function to a RCM variable over a given extent}
+\title{Apply a function to a RACMO or MAR variable over a given extent}
 \usage{
 calc_fun_in_space(
   x,
@@ -63,7 +63,7 @@ Pixels can also be weighted by their area within the 'extent'.
 \examples{
 -----------------------------------------------------------------
 \dontrun{
-  # racmoData
+  # Example using monthly racmo data
   x <- subset_racmoM_by_summer("precip", 1991:1994) |>
     subset_racmoM_by_month(c(11, 12, 1, 2))
 
@@ -71,8 +71,8 @@ Pixels can also be weighted by their area within the 'extent'.
   y <- get_shelf_outline("Shackleton")
 
   # Average value across Shackleton each month
-  zMean <- calc_fun_in_space(racmoData = x, extent = y, FUN = "mean")
-  zSd   <- calc_fun_in_space(racmoData = x, extent = y, FUN = "sd")
+  zMean <- calc_fun_in_space(x = x, extent = y, FUN = "mean")
+  zSd   <- calc_fun_in_space(x = x, extent = y, FUN = "sd")
   print(zMean)
   print(zSd)
 }

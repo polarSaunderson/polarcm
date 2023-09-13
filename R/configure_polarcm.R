@@ -1,22 +1,22 @@
-configure_polaR <- function(refresh = FALSE) {
+configure_polarcm <- function(refresh = FALSE) {
   #' Prepare necessary datasets and variables
   #'
   #' @description
   #'   Please read the Instructions below!
   #'
-  #'   `polaR` functions need to know where certain datasets are on your system
-  #'   to work - the `configure_polaR()` function helps by creating the
+  #'   `polarcm` functions need to know where certain datasets are on your system
+  #'   to work - the `configure_polarcm()` function helps by creating the
   #'   required paths and datasets in a hidden environment (`.polarEnv`) that
-  #'   the other functions can access. The `configure_polaR` function therefore
-  #'   needs to be called before any `polaR` functions are used (which is
-  #'   automatically done as part of most `polaR` functions). The necessary
+  #'   the other functions can access. The `configure_polarcm` function therefore
+  #'   needs to be called before any `polarcm` functions are used (which is
+  #'   automatically done as part of most `polarcm` functions). The necessary
   #'   datasets *must* already be saved and accessible on your system (see
   #'   "Accessing Datasets"); any datasets that are not available need to be
   #'   defined as NULL and will be ignored, with predictable consequences -
   #'   functions that try to call them won't work!).
   #'
-  #' @param refresh BINARY: Should `polaR` be configured again? Mainly for
-  #'   developers and forces `polaR` to run the configuration again. It sets the
+  #' @param refresh BINARY: Should `polarcm` be configured again? Mainly for
+  #'   developers and forces `polarcm` to run the configuration again. It sets the
   #'   existing `.polarEnv` as an empty list, and then sources the ".Rprofile"
   #'   again. By default, 'refresh' is FALSE, because it is usually not
   #'   necessary to reconfigure the package very often at all -  after the first
@@ -26,7 +26,7 @@ configure_polaR <- function(refresh = FALSE) {
   #'
   #' @details # Instructions
   #'
-  #'   This function must be called before using any `polaR` functions (once
+  #'   This function must be called before using any `polarcm` functions (once
   #'   per R session). The raw data paths need to be defined in an ".Rprofile"
   #'   file. The ".Rprofile" file is simply a file called ".Rprofile" that runs
   #'   automatically when R starts a new session.
@@ -40,7 +40,7 @@ configure_polaR <- function(refresh = FALSE) {
   #'   [https://csgillespie.github.io/efficientR/set-up.html]().
   #'
   #'   The following code should be copied and pasted into the ".Rprofile" file.
-  #'   This code lets `polaR` know where to find the datasets on your system,
+  #'   This code lets `polarcm` know where to find the datasets on your system,
   #'   and also which dataset it is. You must adjust the paths to match your
   #'   directory structure:
   #'    - `.polarEnv$rawDataPath` must be relative to your current working
@@ -53,8 +53,8 @@ configure_polaR <- function(refresh = FALSE) {
   #'   following code block.
   #'
   #'   ```R
-  #'     # polaR ========================================================================
-  #'     if(!exists(".polarEnv")) .polarEnv <- new.env()       # hidden polaR environment
+  #'     # polarcm ========================================================================
+  #'     if(!exists(".polarEnv")) .polarEnv <- new.env()       # hidden polarcm environment
   #'
   #'     ## Raw Data Path ---------------------------------------------------------------
   #'     .polarEnv$rawDataPath     <- "../../Data/"            # relative to working dir
@@ -77,32 +77,32 @@ configure_polaR <- function(refresh = FALSE) {
   #'   ```
   #'
   #'   # Accessing Datasets
-  #'   `polaR` **DOES NOT** download data for you. Follow the doi links on this
+  #'   `polarcm` **DOES NOT** download data for you. Follow the doi links on this
   #'   page to find data on Zenodo and download the data you want to use first.
   #'
-  #'   `polaR` has been created to handle some commonly-used, openly-accessible
+  #'   `polarcm` has been created to handle some commonly-used, openly-accessible
   #'   RACMO and MAR datasets shared on Zenodo (see "Zenodo RCM Datasets"). Some
   #'   functions will also work with other versions of the data, or perhaps even
   #'   output from other RCMs, if you **really** want to try it.
   #'
   #'   However, there is no standard way to share MAR or RACMO output (or any
   #'   other RCM output). The lack of standardisation means that a lot of the
-  #'   ease of using `polaR` comes from background wrangling of the datasets to
-  #'   get the data into the structure that `polaR` expects. For example, some
+  #'   ease of using `polarcm` comes from background wrangling of the datasets to
+  #'   get the data into the structure that `polarcm` expects. For example, some
   #'   authors distribute the data with each file storing a different variable,
   #'   whilst others store all variables in a single file, but create separate
-  #'   files for each year or month. `polaR` works best when data is organised
+  #'   files for each year or month. `polarcm` works best when data is organised
   #'   by variable.
   #'
-  #'   As noted, `polaR` handles these differences as well as it can do in the
+  #'   As noted, `polarcm` handles these differences as well as it can do in the
   #'   background, but the package has only been set up for certain datasets
-  #'   *so far*. The following subsections list the datasets that `polaR` knows
+  #'   *so far*. The following subsections list the datasets that `polarcm` knows
   #'   what to do with. These datasts are all openly available on Zenodo, and
   #'   need to be identified in the ".Rprofile" file by their doi (see
   #'   "Defining Datasets").
   #'
   #'   ## MEaSURES Data
-  #'   `polaR` bases the spatial aspects (e.g. using shelf outlines or grounding
+  #'   `polarcm` bases the spatial aspects (e.g. using shelf outlines or grounding
   #'   line) on MEaSURES data. The MEaSURES data (Version 2; Mouginot et al.,
   #'   2017) needs to be downloaded first, from here:
   #'
@@ -122,21 +122,27 @@ configure_polaR <- function(refresh = FALSE) {
   #'   using the same Zenodo dataset will be set up in the same way. Let me know
   #'   if this is not the case.
   #'
-  #'   *Note:* If multiple datasets are added to a section (e.g. there is both
-  #'   RACMO2.3p2 and RACMO2.3p3 monthly data), the first one defined will be
-  #'   considered as the default in functions. This can be overridden in the
+  #'   *Note:* If multiple datasets are included, the first one will be used as
+  #'   the default in functions concerned with the projections. For example, in
+  #'   [draw_antarctica()], the default projection will match the projection of
+  #'   the first dataset included here. The crs projection parameters can be
+  #'   overwritten when necessary.
+  #'
+  #'   *Note:* If multiple datasets are added to the same section (e.g. there is
+  #'   both RACMO2.3p2 and RACMO2.3p3 monthly data), the first one defined will
+  #'   be considered as the default in functions. This can be overridden in the
   #'   functions that care (mainly the `read_x()` functions) using the 'version'
   #'   argument set to match the corresponding `<name>` (see "Defining Datasets"
   #'   below).
   #'
   #'   *Note:* It is okay to choose your own name for the directory containing
   #'   these datasets (as long as they are defined in ".Rprofile"), but the file
-  #'   names should be the same as those on Zenodo.
+  #'   names for the NetCDFs should be the same as those on Zenodo.
   #'
   #'   *Note:* Ideally, there will become a standardised way of distributing
-  #'   such data in future, but if you are aware of any other openly accessible
-  #'   datasets that you think should be added to this list, let me know and
-  #'   I'll see whether I can add them in a future update.
+  #'   such polar RCM data in future, but if you are aware of any other openly
+  #'   accessible datasets that you think should be added to `polarcm`, let me
+  #'   know and I'll see whether I can add them in a future update.
   #'
   #'   # Defining Datasets
   #'   To make different datasets available, it is necessary to configure your
@@ -173,7 +179,7 @@ configure_polaR <- function(refresh = FALSE) {
   #'
   #'   `<doiCode>` Which dataset is this? As explained above, there is no
   #'   standard way to distribute these datasets so we need to explicitly tell
-  #'   `polaR` what dataset we are giving it. We do this using the doi of the
+  #'   `polarcm` what dataset we are giving it. We do this using the doi of the
   #'   download page. For example, for the monthly RACMO2.3p3 data above
   #'   (r01_dt, with doi "https://doi.org/10.5281/zenodo.5512076"), the
   #'   <doiCode> must be "10.5281/zenodo.5512076". If the data has not been
@@ -218,7 +224,7 @@ configure_polaR <- function(refresh = FALSE) {
   #'   *!!!REMEMBER!!!*
   #'
   #'   The data must have already been downloaded before
-  #'   trying to use `polaR` - the package *does not* try to find and download
+  #'   trying to use `polarcm` - the package *does not* try to find and download
   #'   data for you. If any datasets are not available, set their path as
   #'   `NULL`. NULLs will restrict the capabilities of the racmoR package in
   #'   expected ways - for example, if no daily RACMO data is available, the
@@ -231,7 +237,7 @@ configure_polaR <- function(refresh = FALSE) {
   # Code -----------------------------------------------------------------------
   # Check if the .Rprofile has been prepared configuration
   if (!exists(".polarEnv")) {
-    stop("\nType ?configure_polaR and read the Instructions section.")
+    stop("\nType ?configure_polarcm and read the Instructions section.")
   } else if (isTRUE(refresh)) {
     # print("reconfiguring")
     list2env(x = list(), envir = .polarEnv)
@@ -241,11 +247,11 @@ configure_polaR <- function(refresh = FALSE) {
 
   # Do we need to configure everything?
   if (isTRUE(.polarEnv$configured)) {
-    # message("polaR already configured!")
+    # message("polarcm already configured!")
     token <- as.list(.polarEnv)
     return(invisible(token))
   } else {
-    message("Configuring polaR...\n")
+    message("Configuring polarcm...\n")
   }
 
   # Basic Set-Up ---------------------------------------------------------------
@@ -415,7 +421,7 @@ configure_polaR <- function(refresh = FALSE) {
         token$grids$racmoM[[ii]]$crs <- token$grids$crs$racmoCrs
         token$grids$racmoM[[ii]]$ext <- token$grids$ext$racmoExt
 
-        message("  The ", ii, " racmoM dataset has been succesfully configured.")
+        message("  The racmoM dataset ", ii, " has been succesfully configured.")
       } else if (iiSrc %in% c("10.5281/zenodo.7961732")) {
         # print("Antarctic Peninsula")
         # Get paths for this dataset version
@@ -490,7 +496,7 @@ configure_polaR <- function(refresh = FALSE) {
         token$grids$racmoD[[ii]]$crs <- token$grids$crs$racmoCrs
         token$grids$racmoD[[ii]]$ext <- token$grids$ext$racmoExt
 
-        message("  The ", ii, " racmoD dataset has been succesfully configured.")
+        message("  The racmoD dataset ", ii, " has been succesfully configured.")
       } else {
         warning("  We don't recognise the src of the racmoD '", ii, "' dataset.",
                 "\n  Type ?configure_antarctica and read the instructions.\n")
@@ -541,7 +547,7 @@ configure_polaR <- function(refresh = FALSE) {
         token$datasets$marH[[ii]]$authors <- c("C. Kittel", "X. Fettweis",
                                                "J. Wille")
 
-        message("  The ", ii, " marH dataset has been succesfully configured.")
+        message("  The marH dataset ", ii, " has been succesfully configured.")
       } else {
         warning("  We don't recognise the src of the marH '", ii, "' dataset.",
                 "\n  Type ?configure_antarctica and read the instructions.\n")
@@ -550,16 +556,22 @@ configure_polaR <- function(refresh = FALSE) {
   }
 
   # Define defaults ------------------------------------------------------------
+  # which dataset was defined first?
+  defType <- names(.polarEnv$rcm)[[1]]                     # type e.g. racmoM
+  defVer  <- names(.polarEnv$rcm[[1]])[1]                  # version e.g. rp2
+  defSrc  <- .polarEnv$rcm[[1]][[1]]$src                   # src info
+  token$defaults$rcm  <- c(defType, defVer, defSrc)        # store above
+  token$defaults$grid <- token$grids[[defType]][[defVer]]  # default projection
+
+  # Defaults of each data type
   token$defaults$racmoM  <- names(.polarEnv$rcm$racmoM)[[1]]
   token$defaults$racmoD  <- names(.polarEnv$rcm$racmoD)[[1]]
   token$defaults$marM    <- names(.polarEnv$rcm$marM)[[1]]
   token$defaults$marD    <- names(.polarEnv$rcm$marD)[[1]]
   token$defaults$marH    <- names(.polarEnv$rcm$marH)[[1]]
-  token$defaults$rcm     <- c(names(.polarEnv$rcm)[[1]],    # type (e.g. racmoM)
-                              names(.polarEnv$rcm[[1]])[1], # version (e.g. rp2)
-                              .polarEnv$rcm[[1]][[1]]$src)  # src
 
-  message("  The polaR defaults have been succesfully configured.")
+  message("  The polarcm defaults have been succesfully configured.")
+  message("  ", defType, " ", defVer, " will be considered the default RCM data.")
 
   # Confirm & Finish Configuration ---------------------------------------------
   token$configured <- TRUE
@@ -573,7 +585,7 @@ configure_polaR <- function(refresh = FALSE) {
   list2env(x = token, envir = .polarEnv)   # create new environment for the list
 
   # Let us know we succeeded and return a list if we want
-  message("\npolaR succesfully configured!\n")
+  message("\npolarcm succesfully configured!\n")
   return(invisible(token))
 }
 

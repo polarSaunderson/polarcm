@@ -1,30 +1,32 @@
 get_shelf_outline <- function(extent = "",
                               rectangularExtent = FALSE,
-                              crs = "racmo",
+                              crs = NULL,
                               preferType = NULL,
                               useOnly = NULL,
                               imbieBasins = NULL,
                               crsIn = NULL) {
   #' Return ice shelf outlines for a given extent
   #'
-  #' @description This function is useful for plotting ice shelves in
-  #'   Antarctica. It is mainly used in the `crop_racmo...()` and
-  #'   `draw_antarctica()` functions.
+  #' @description This function is useful for plotting or cropping to Antarctic
+  #'   ice shelves. It is mainly used in the [draw_antarctica()] and
+  #'   [crop_to_shelf()] functions, but can be used separately as well.
   #'
-  #'   The function works in two ways.
+  #'   The function works in 2 ways.
   #'
-  #'   1) a vector of shelf names can be entered as the 'extent', and these
-  #'   shelves are simply returned from the MEaSURES ice shelf dataset. The
-  #'   names must match the dataset exactly.
+  #'   1) A vector of shelf names can be entered as the 'extent', and these
+  #'   exact ice shelves are simply returned from the MEaSURES ice shelf
+  #'   dataset. The ice shelf names must match those in the dataset exactly.
   #'
-  #'   2) an extent can be defined according to `get_extent()`. Any shelves
+  #'   2) An extent can be defined according to [get_extent()]. Any shelves
   #'   which intersect with this extent are then returned. This occurs if
   #'   'rectangularExtent' is TRUE, and most of the remaining arguments are fed
-  #'   directly into `get_extent()`.
+  #'   directly into [get_extent()].
   #'
-  #'   3) an existing shelf SpatVector will be returned.
+  #'   The ice shelves will be returned in the projection specified by the 'crs'
+  #'   argument.
   #'
-  #'   Finally, the shelves can be reprojected (set via 'crs').
+  #'   **Note:** If an existing ice shelf SpatVector is entered, it will be
+  #'   returned.
   #'
   #' @param extent Define the extent used to select ice shelves.
   #'
@@ -32,12 +34,16 @@ get_shelf_outline <- function(extent = "",
   #'   set 'rectangularExtents' as FALSE (the default).
   #'
   #'   To return any ice shelves that fall within a geographical extent, set
-  #'   'rectangularExtents' as TRUE, and follow the logic of `get_extents()` to
-  #'   define the geographical extent. The most obvious reason to do this would
-  #'   be to include the outline of ice shelves within the bounding box of the
-  #'   named ice shelves, but that aren't named themselves. See examples.
+  #'   'rectangularExtents' as TRUE, and follow the logic of [get_extents()] to
+  #'   define the geographical extent with the remaining parameters. The most
+  #'   obvious reason to do this would be to include the outline of ice shelves
+  #'   within the bounding box of the named ice shelves, but that aren't named
+  #'   themselves. See examples.
   #'
   #' @param crs "string": Which projection should the shelves be returned in?
+  #'   See `use_crs()` or `terra::crs()`. By default (i.e. NULL), it will match
+  #'   the first RCM data defined in the ".Rprofile".
+  #'
   #' @inheritParams get_extent
   #'
   #' @examples -----------------------------------------------------------------
@@ -61,7 +67,10 @@ get_shelf_outline <- function(extent = "",
   #' @export
 
   # Code -----------------------------------------------------------------------
-  token <- configure_polaR()
+  # Handle default CRS
+  token  <- configure_polarcm()
+  crs    <- domR::set_if_null(crs, token$defaults$grid$crs)
+  crs    <- use_crs(crs)
 
   # Prepare all possible ice shelves
   shelves <- token$measures$iceShelves   # MEaSURES is EPSG:3031

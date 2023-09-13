@@ -4,22 +4,44 @@
 \alias{subset_racmoD_by_year}
 \title{Subset daily RACMO data based on the year}
 \usage{
-subset_racmoD_by_year(racmoData, years, version = NULL)
+subset_racmoD_by_year(
+  racmoData,
+  years = NULL,
+  before = NULL,
+  after = NULL,
+  except = NULL,
+  version = NULL
+)
 }
 \arguments{
 \item{racmoData}{The daily RACMO data to subset. Can be either a variable
 name, in which case raw daily RACMO data is read in; or an existing
 SpatRaster of daily RACMO data.}
 
-\item{years}{numeric: Which year/s to return?}
+\item{years}{Which year/s to return? Use this argument for exact matches
+(e.g. c(1983:1986, 1991:1992). Cannot be used in conjunction with
+the 'before', 'after' or 'except' arguments.}
 
-\item{version}{Which version of the daily RACMO data should be returned?
-The options are those defined by the user in their ".Rprofile" file; see
+\item{before}{Only data that occurs before this value is returned. Cannot
+be used in conjunction with the exact values, 'after' or 'except'
+arguments.}
+
+\item{after}{Only data that occurs after this value is returned. Cannot be
+used in conjunction with the exact values, 'before' or 'except'
+arguments.}
+
+\item{except}{vector: Which data should be excluded from the SpatRaster?
+Cannot be used in conjunction with the exact values, 'after' or 'before'
+arguments.}
+
+\item{version}{Which version of the daily RACMO data should be used? The
+options are those defined by the user in their ".Rprofile" file; see
 \code{\link[=configure_polaR]{configure_polaR()}} for more information. By default, it uses the racmoD
 data that was defined first in the ".Rprofile". Ignored if 'racmoData' is
 already a SpatRaster.}
 }
 \description{
 Subset daily RACMO data based on the year. This function is
-essentially a RACMO-specific wrapper around \code{terrapin::subset_by_year()}.
+essentially a wrapper around \code{terrapin::subset_by_year()} for daily RACMO
+data.
 }

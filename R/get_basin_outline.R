@@ -1,30 +1,38 @@
 get_basin_outline <- function(extent = "",
                               rectangularExtent = FALSE,
                               returnImbie = NULL,
-                              crs = "racmo",
+                              crs = NULL,
                               preferType = NULL,
                               useOnly = NULL,
                               imbieBasins = NULL,
                               crsIn = NULL) {
   #' Return basin outlines for a given extent
   #'
-  #' @description This function is useful for plotting basins in Antarctica. It
-  #'   is mainly used in the `draw_antarctica()` function, but works separately
-  #'   as well. It is possible to return only IMBIE basins (e.g. "A-AP"), only
-  #'   MEaSURES basins (e.g. "Vincennes_Bay"), or both; see 'returnImbie'.
+  #' @description This function is useful for plotting or cropping to Antarctic
+  #'   basins. It is mainly used in the [draw_antarctica()] and
+  #'   [crop_to_basin()] functions, but can be used separately as well.
+  #'
+  #'   It is possible to return only IMBIE basins (e.g. "A-Ap"), only the
+  #'   refined MEaSURES basins (e.g. "Vincennes_Bay"), or both; see the
+  #'   'returnImbie' argument.
   #'
   #'   The function works in two ways.
   #'
-  #'   1) a vector of basin names can be entered as the 'extent', and these
-  #'   basins are simply returned from the relevant MEaSURES/IMBIE dataset. The
-  #'   names must match the dataset exactly.
+  #'   1) A vector of basin names can be entered as the 'extent', and these
+  #'   exact basins are simply returned (for either the IMBIE or the refined
+  #'   basins). The basin names must match those in the MEaSURES dataset
+  #'   exactly.
   #'
-  #'   2) an extent can be defined according to `get_extent()`. Any basins which
+  #'   2) An extent can be defined according to [get_extent()]. Any basins which
   #'   intersect with this extent (and match the 'returnImbie' argument) are
   #'   then returned. This occurs if 'rectangularExtent' is TRUE, and most of
   #'   the remaining arguments are fed directly into `get_extent()`.
   #'
-  #'   Finally, the basins can be reprojected (set via 'crs').
+  #'   The basins will be returned in the projection specified by the 'crs'
+  #'   argument.
+  #'
+  #'   **Note:** If an existing basin SpatVector is entered, it will be
+  #'   returned.
   #'
   #' @param extent Define the extent used to select basins.
   #'
@@ -33,32 +41,44 @@ get_basin_outline <- function(extent = "",
   #'
   #'   To return any basins that fall within a geographical extent, set
   #'   'rectangularExtents' as TRUE, and follow the logic of `get_extents()` to
-  #'   define the geographical extent. The most obvious reason to do this would
-  #'   be to include the outline of basins within the bounding box of the named
-  #'   basins, but that aren't named themselves. See examples.
+  #'   define the geographical extent with the remaining parameters. The most
+  #'   obvious reason to do this would be to include the outline of basins
+  #'   within the bounding box of the named basins, but that aren't named
+  #'   themselves. See examples.
   #'
-  #' @param returnImbie BINARY: By default (NULL), both "IMBIE" and "MEaSURES"
-  #'   basins within the extent are returned. Set this to return only the
-  #'   "IMBIE" (TRUE) or "MEaSURES" (FALSE) basins. This argument is distinct to
-  #'   the 'useOnly' and 'imbieBasins', which are used by `get_extent()` to
-  #'   define the initial extent to search for basins in.
+  #' @param returnImbie BINARY: By default (NULL), both the "IMBIE" and refined
+  #'   "MEaSURES" basins are returned.
+  #'
+  #'   To return only the IMBIE basins, set this as TRUE. To return the MEaSURES
+  #'   refined basins, set this as FALSE.
+  #'
+  #'   **Note:** This argument is distinct to the 'useOnly' and 'imbieBasins'
+  #'   arguments, which are fed in `get_extent()` to define the initial extent
+  #'   to search for basins in.
   #'
   #' @param crs "string": Which projection should the basins be returned in?
+  #'   See `use_crs()` or `terra::crs()`. By default (i.e. NULL), it will match
+  #'   the first RCM data defined in the ".Rprofile".
+  #'
   #' @inheritParams get_extent
   #'
   #' @examples -----------------------------------------------------------------
   #' \dontrun{
-  #'   # Compare returnImbie argument
+  #'   # Compare 'returnImbie' argument
   #'   t1 <- "A-Ap"
-  #'   get_basin_outline(t1) |> terra::plot(col = "black")
-  #'   get_basin_outline(t1, FALSE, returnImbie = NULL) |>
+  #'   get_basin_outline(t1) |>
+  #'     terra::plot(col = "black")
+  #'   get_basin_outline(t1, FALSE, returnImbie = TRUE) |>
   #'     terra::lines(col = "red", lwd = 2)
   #' }
   #'
   #' @export
 
   # Code -----------------------------------------------------------------------
-  token <- configure_polaR()
+  # Handle default CRS
+  token  <- configure_polarcm()
+  crs    <- domR::set_if_null(crs, token$defaults$grid$crs)
+  crs    <- use_crs(crs)
 
   # Prepare possible basin combinations; basins are stored as EPSG:3031
   if (isTRUE(returnImbie)) {

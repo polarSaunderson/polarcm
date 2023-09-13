@@ -7,8 +7,8 @@
 calc_racmoD_climatology(racmoData, FUN, excludeIncomplete = FALSE, ...)
 }
 \arguments{
-\item{racmoData}{SpatRaster: The RACMO data. It needs to be an existing
-SpatRaster.}
+\item{racmoData}{SpatRaster: The daily RACMO data. It needs to be an
+existing SpatRaster.}
 
 \item{FUN}{Which function/s should be applied across the dataset? For
 example, if set as "mean", this function will return the mean value of

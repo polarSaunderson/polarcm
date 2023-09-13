@@ -3,7 +3,7 @@ get_extent <- function(extent = "",
                        preferType = NULL,
                        useOnly = NULL,
                        imbieBasins = NULL,
-                       crs = "racmo",
+                       crs = NULL,
                        crsIn = NULL) {
   #' Return the extent of different Antarctic boundaries
   #'
@@ -13,17 +13,18 @@ get_extent <- function(extent = "",
   #'   However, it can also handle other SpatRasters, SpatVectors, or
   #'   SpatExtents, allowing it to be used in different contexts. The extent can
   #'   be returned in different projections via the 'crs' argument. The returned
-  #'   extent can be either exact shape outlines or a rectangular SpatExtent.
+  #'   extent can be either exact shape outlines (if applicable) or a
+  #'   rectangular SpatExtent.
   #'
   #' @param extent Multiple types are allowed as input.
   #'
   #'   If 'extent' is an empty string (i.e. "", the default), the whole of
   #'   Antarctica is returned.
   #'
-  #'   If 'extent' is a defined string (e.g. "Shackleton"), basins and ice shelves
-  #'   in the MEaSURES dataset with those names are returned; if the same name
-  #'   refers to both an ice shelf and a basin, 'preferType' determines which is
-  #'   returned.
+  #'   If 'extent' is a defined string (e.g. "Amery"), basins and ice shelves in
+  #'   the MEaSURES dataset with those names are returned; if the same name
+  #'   refers to both an ice shelf and a basin (e.g. "Shackleton"), 'preferType'
+  #'   determines which is returned.
   #'
   #'   A vector of multiple ice shelf/basin names can also be used at once; if
   #'   that vector contains both ice shelves and basins but only one type is
@@ -36,30 +37,41 @@ get_extent <- function(extent = "",
   #'   If 'extent' is a SpatRaster or SpatVector, then the extent of the
   #'   SpatRaster or SpatVector will be returned.
   #'
-  #'   If 'extent' is a SpatExtent, it is necessary to also set 'crsIn', and a
-  #'   SpatExtent will be returned.
+  #'   If 'extent' is a SpatExtent, it is necessary to also set the 'crsIn'
+  #'   argument, and a SpatExtent will be returned.
   #'
-  #' @param rectangularExtent If 'extent' is a defined string (e.g. "Amery"), the
-  #'   'rectangularExtent' argument determines whether the actual outline is
-  #'   returned (FALSE; the default), or if a rectangular extent box
-  #'   encompassing the area is returned (TRUE). If multiple ice shelves and/or
-  #'   basins are included, the extent box will extend over all of them at once.
+  #' @param rectangularExtent If 'extent' is a defined string (e.g. "Amery"),
+  #'   the 'rectangularExtent' argument determines whether the actual outline is
+  #'   returned (FALSE; the default), or if the rectangular extent of the
+  #'   bounding box encompassing the area is returned (TRUE). If multiple ice
+  #'   shelves and/or basins are included, the extent box will extend over all
+  #'   of them at once.
   #'
-  #' @param imbieBasins BINARY: Should the IMBIE basins (TRUE) or the MEaSURES
-  #'   basins (FALSE) be used to define the extent? The IMBIE basins have codes
-  #'   (e.g. "A-Ap") and are larger regions; the MEaSURES basins have names
-  #'   (that can overlap with the ice shelf names), and are smaller "sub" regions.
-  #'   If NULL (the default), both are returned. This is mainly useful if there
-  #'   is a vector containing both, but only one should be used. See also
-  #'   'useOnly'. Distinct from the 'returnImbie' argument used in similar
-  #'   functions such as `get_shelf_outline()` and `get_basin_outline()`.
+  #' @param imbieBasins BINARY: Should the IMBIE basins (TRUE) or the refined
+  #'   MEaSURES basins (FALSE) be used to define the extent? If NULL (the
+  #'   default), both the IMBIE and refined basins are returned.
   #'
-  #' @param preferType Sometimes an ice shelf and the MEaSURES basins have the
-  #'   same name; usually they both refer to the same general area, and by
-  #'   default (i.e. 'preferType' = NULL), both are combined to form a new larger
-  #'   extent encompassing both. However, for some names (e.g. "Shackleton" and
-  #'   "Drygalski"), the name refers to an ice shelf far away from the basin
-  #'   with the same name, returning an unexpected extent.
+  #'   The IMBIE basins are larger, and have codes (e.g. "A-Ap"); the refined
+  #'   MEaSURES basins are smaller, "sub" regions, and are named after glaciers
+  #'   (hence their names can overlap with ice shelf names).
+  #'
+  #'   This argument is mainly useful if the extent is a vector containing both
+  #'   names, but only one should be used. Otherwise, just enter only IMBIE or
+  #'   refined basin names.
+  #'
+  #'   **Note:** This argument is distinct from the 'returnImbie' argument used
+  #'   in functions such as `get_shelf_outline()` and `get_basin_outline()`.
+  #'
+  #' @param preferType Sometimes an ice shelf and the refined MEaSURES basins
+  #'   have the same name.
+  #'
+  #'   Usually they both refer to the same general area, and by default (i.e.
+  #'   'preferType' = NULL), this function combines both the shelf and basin
+  #'   extents to form a new larger extent.
+  #'
+  #'   However, for some names (e.g. "Shackleton" and "Drygalski"), the name
+  #'   refers to an ice shelf far away from the basin with the same name,
+  #'   returning an unexpected extent.
   #'
   #'   This argument lets the user choose between the two types if the name is
   #'   found in both the ice shelves and basins datasets: "shelf", "shelves",
@@ -74,11 +86,12 @@ get_extent <- function(extent = "",
   #'   argument.
   #'
   #' @param crs "string": Which crs should the extent be returned in? See
-  #'   `use_crs()` or `terra::crs()`.
+  #'   `use_crs()` or `terra::crs()`. By default (i.e. NULL), it will match the
+  #'   first RCM data defined in the ".Rprofile".
   #'
-  #' @param crsIn "string": Which projection is the extent given in? Needs
-  #'   defining if the extent is a SpatExtent, as they do not have a crs value
-  #'   attached.
+  #' @param crsIn "string": This only needs defining if the 'extent' argument is
+  #'   a SpatExtent, which don't store projection information. This argument
+  #'   tells the function which projection the extent was defined in.
   #'
   #' @examples -----------------------------------------------------------------
   #' \dontrun{
@@ -115,19 +128,20 @@ get_extent <- function(extent = "",
   #'                    preferType = "NULL")
   #'   terra::plot(t8)
   #'
-  #'   # Multiple shelves & basins, prefer the shelves: no Shackleton basin
+  #'   # Multiple shelves & basins, prefer the shelves
+  #'   # Result = no Shackleton basin
   #'   t9 <- get_extent(c("Amery", "Shackleton", "West", "Dry Valleys"),
   #'                    preferType = "shelf")
   #'   terra::plot(t9)
   #'
   #'   # Multiple shelves & basins; useOnly shelves
-  #'   # no Shackleton & Dry Valleys basins
+  #'   # Result = no Shackleton & Dry Valleys basins
   #'   t10 <- get_extent(c("Amery", "Shackleton", "West", "Dry Valleys"),
   #'                     useOnly = "shelf")
   #'   terra::plot(t10)
   #'
   #'   # Multiple shelves & basins; useOnly basins
-  #'   # no Shackleton, Amery & West shelves
+  #'   # Result = no Shackleton, Amery & West shelves
   #'   t11 <- get_extent(c("Amery", "Shackleton", "West", "Dry Valleys"),
   #'                     useOnly = "basins")
   #'   terra::plot(t11)
@@ -135,7 +149,12 @@ get_extent <- function(extent = "",
   #' @export
 
   # Code -----------------------------------------------------------------------
-  token      <- configure_polaR()
+  # Handle default CRS
+  token  <- configure_polarcm()
+  crs    <- domR::set_if_null(crs, token$defaults$grid$crs)
+  crs    <- use_crs(crs)
+
+  # We need to know what the 'extent' argument is!
   extentType <- methods::is(extent)
 
   # Output depends on extent type

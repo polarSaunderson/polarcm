@@ -10,8 +10,8 @@ calc_racmoD_climatology <- function(racmoData,
   #'   the days in the first weeks of January? This function can help answer
   #'   such questions.
   #'
-  #' @param racmoData SpatRaster: The RACMO data. It needs to be an existing
-  #'   SpatRaster.
+  #' @param racmoData SpatRaster: The daily RACMO data. It needs to be an
+  #'   existing SpatRaster.
   #' @param FUN Which function/s should be applied across the dataset? For
   #'   example, if set as "mean", this function will return the mean value of
   #'   the racmoData variable on the 1st Dec each year. Can be a vector of
@@ -64,7 +64,7 @@ calc_racmoD_climatology <- function(racmoData,
                                                 australSplit = australSplit)
 
   # Define dates
-  rDates    <- terrapin::get_terra_dates(racmoData, australSplit = australSplit)
+  rDates    <- terrapin::get_date_info(racmoData, australSplit = australSplit)
   rMonthDay <- rDates$monthDay
   rUnique   <- unique(rMonthDay)
 

@@ -3,19 +3,26 @@ get_coastline <- function(extent = "",
                           preferType = NULL,
                           useOnly = NULL,
                           imbieBasins = NULL,
-                          crs = "racmo",
+                          crs = NULL,
                           crsIn = NULL) {
   #' Return the MEaSURES coastline for a given extent
   #'
   #' @description This function is useful for plotting the Antarctic coastline
-  #'   (i.e. the most seaward part of the ice, either grounded or ice shelf). An
-  #'   extent is defined according to `get_extent()`, and the coastline that
+  #'   (i.e. the most seaward part of the ice, either grounded or ice shelf).
+  #'   The coastline is that from the MEaSURES dataset (Version 2; Mouginot et
+  #'   al., 2017).
+  #'
+  #'   The extent is defined according to [get_extent()], and any coastline that
   #'   intersects with the extent is returned. This function is mainly for use
-  #'   in the `draw_antarctica()` function.
+  #'   in the [draw_antarctica()] function.
   #'
   #' @param extent Define the extent used to crop the coastline. This argument
-  #'   is fed into `get_extent()`; see there for details of valid input.
+  #'   is fed into [get_extent()]; see there for details of valid input.
+  #'
   #' @param crs "string": Which projection should the coastline be returned in?
+  #'   See `use_crs()` or `terra::crs()`. By default (i.e. NULL), it will match
+  #'   the first RCM data defined in the ".Rprofile".
+  #'
   #' @inheritParams get_extent
   #'
   #' @examples -----------------------------------------------------------------
@@ -49,7 +56,10 @@ get_coastline <- function(extent = "",
   #' @export
 
   # Code -----------------------------------------------------------------------
-  token <- configure_polaR()
+  # Handle default CRS
+  token  <- configure_polarcm()
+  crs    <- domR::set_if_null(crs, token$defaults$grid$crs)
+  crs    <- use_crs(crs)
 
   # Prepare full coastline data
   fullCoast  <- token$measures$coastline

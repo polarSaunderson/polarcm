@@ -9,7 +9,7 @@ draw_antarctica(
   sbcg = "cg",
   rectangularExtent = FALSE,
   simplify = 0,
-  crs = "racmo",
+  crs = NULL,
   newPlot = FALSE,
   extentArgs = list(),
   ...
@@ -20,13 +20,8 @@ draw_antarctica(
 argument is fed into \code{get_extent()}; see there for details.}
 
 \item{sbcg}{"string": Which parts of Antarctica should be drawn? Options
-are:
-\itemize{
-\item shelves          "s"
-\item basins           "b"  # uses IMBIE; use "bb" for MEaSURES
-\item coasts           "c"
-\item grounding line   "g"
-}}
+are: * shelves          "s" * basins           "b"  # uses IMBIE; use
+"bb" for MEaSURES * coasts           "c" * grounding line   "g"}
 
 \item{rectangularExtent}{BINARY: Should only the defined shelf/shelves be
 included (TRUE), or can the outlines of all shelves within the bounding
@@ -37,8 +32,9 @@ box be included too (FALSE)?}
 nodes must be at least this far apart, defined in crs units. Larger
 numbers are coarser; 0 (default) is no simplifying.}
 
-\item{crs}{"string": Which crs should the lines be drawn in? See the
-\code{set_crs()} function}
+\item{crs}{"string": Which projection should the outlines be drawn in?
+See \code{use_crs()} or \code{terra::crs()}. By default (i.e. NULL), it will match
+the first RCM data defined in the ".Rprofile".}
 
 \item{newPlot}{BINARY: If TRUE, Antarctica is drawn on an empty window; if
 FALSE (the default), it is drawn on top of the existing plot. If there is
@@ -51,6 +47,7 @@ necessary if}
 }
 \description{
 Used after plotting a raster to add MEaSURES outlines. This
-function is essentialy a wrapper around \code{terra::lines()}, but lets us
-easily decide on the outlines to add, their extent, and with which crs.
+function is essentially a wrapper around \code{\link[=get_extent]{get_extent()}} and
+\code{\link[terra:lines]{terra::lines()}} that makes it quick and easy to add different outlines
+to a map.
 }

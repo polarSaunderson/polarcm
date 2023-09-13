@@ -2,7 +2,7 @@ list_racmoM_variables <- function(print = TRUE) {
   #' Return the available monthly RACMO variables
   #'
   #' @description Which monthly RACMO variables are available? It simply reads
-  #'   the names of the files as created by [configure_polaR()] (and thus
+  #'   the names of the files as created by [configure_polarcm()] (and thus
   #'   only accounts for the files present when that function was initially
   #'   called).
   #'
@@ -12,7 +12,7 @@ list_racmoM_variables <- function(print = TRUE) {
   #' @export
 
   # Code -----------------------------------------------------------------------
-  token <- configure_polaR()
+  token <- configure_polacm()
 
   # Use available names
   varNames <- token$varNames$racmoM
@@ -24,14 +24,14 @@ list_racmoD_variables <- function(print = TRUE) {
   #' Return the available daily RACMO variables
   #'
   #' @description Which daily RACMO variables are available? It simply reads the
-  #'   names of the files as created by [configure_polaR()] (and thus only
+  #'   names of the files as created by [configure_polarcm()] (and thus only
   #'   accounts for the files present when that function was initially called).
   #' @inheritParams list_racmoM_variables
   #'
   #' @export
 
   # Code -----------------------------------------------------------------------
-  token <- configure_polaR()
+  token <- configure_polarcm()
 
   # Use available names
   varNames <- token$varNames$racmoD
@@ -43,7 +43,7 @@ list_marH_variables <- function(print = TRUE) {
   #' Return the available hourly MAR variables
   #'
   #' @description Which hourly MAR variables are available? It simply reads the
-  #'   names of the files as created by [configure_polaR()] (and thus only
+  #'   names of the files as created by [configure_polarcm()] (and thus only
   #'   accounts for the files present when that function was initially called).
   #'
   #' @inheritParams list_racmoM_variables
@@ -51,7 +51,7 @@ list_marH_variables <- function(print = TRUE) {
   #' @export
 
   # Code -----------------------------------------------------------------------
-  token <- configure_polaR()
+  token <- configure_polarcm()
 
   # Use available names
   varNames <- token$varNames$marH
@@ -63,7 +63,7 @@ list_marD_variables <- function(print = TRUE) {
   #' Return the available daily MAR variables
   #'
   #' @description Which daily MAR variables are available? It simply reads the
-  #'   names of the files as created by [configure_polaR()] (and thus only
+  #'   names of the files as created by [configure_polarcm()] (and thus only
   #'   accounts for the files present when that function was initially called).
   #'
   #' @inheritParams list_racmoM_variables
@@ -71,7 +71,7 @@ list_marD_variables <- function(print = TRUE) {
   #' @export
 
   # Code -----------------------------------------------------------------------
-  token <- configure_polaR()
+  token <- configure_polarcm()
 
   # Use available names
   varNames <- token$varNames$marD
@@ -83,7 +83,7 @@ list_marM_variables <- function(print = TRUE) {
   #' Return the available monthly MAR variables
   #'
   #' @description Which monthly MAR variables are available? It simply reads the
-  #'   names of the files as created by [configure_polaR()] (and thus only
+  #'   names of the files as created by [configure_polarcm()] (and thus only
   #'   accounts for the files present when that function was initially called).
   #'
   #' @inheritParams list_racmoM_variables
@@ -91,7 +91,7 @@ list_marM_variables <- function(print = TRUE) {
   #' @export
 
   # Code -----------------------------------------------------------------------
-  token <- configure_polaR()
+  token <- configure_polarcm()
 
   # Use available names
   varNames <- token$varNames$marM

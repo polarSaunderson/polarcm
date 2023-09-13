@@ -7,20 +7,21 @@
 read_racmoD(racmoData, version = NULL)
 }
 \arguments{
-\item{racmoData}{If a valid string is input, the daily RACMO data for
-that variable is returned as a SpatRaster from the corresponding NetCDF
-file/s. Use \code{\link[=list_racmoD_variables]{list_racmoD_variables()}} to see the valid variables. If a
-SpatRaster is entered, it is simply returned as it is.}
+\item{racmoData}{The daily RACMO data to return. If a valid string, raw
+daily RACMO data for the corresponding variable is read in from the
+respective NetCDF files. Use \code{\link[=list_racmoD_variables]{list_racmoD_variables()}} to see the valid
+variable names. If an existing SpatRaster, it is simply returned as it
+is.}
 
-\item{version}{Which version of the daily RACMO data should be returned?
-The options are those defined by the user in their ".Rprofile" file; see
+\item{version}{Which version of the daily RACMO data should be used? The
+options are those defined by the user in their ".Rprofile" file; see
 \code{\link[=configure_polaR]{configure_polaR()}} for more information. By default, it uses the racmoD
 data that was defined first in the ".Rprofile". Ignored if 'racmoData' is
 already a SpatRaster.}
 }
 \description{
 Read in the NetCDF files for daily resolution RACMO data
-(racmoM). This function returns a SpatRaster (see the \code{terra} package),
-but knows how to handle some different configurations of the racmoD
+(racmoD). This function returns a SpatRaster (see the \code{terra} package),
+and knows how to handle some different configurations of the racmoD
 \code{polaR} functions need.
 }

@@ -5,7 +5,7 @@ calc_fun_in_space <- function(x,
                               minArea = 0,
                               weight = FALSE,
                               extentArgs = list()) {
-  #' Apply a function to a RCM variable over a given extent
+  #' Apply a function to a RACMO or MAR variable over a given extent
   #'
   #' @description Calculates a value of an RCM variable across a given extent
   #'   based on a any function ('FUN'). A single value is returned for each
@@ -46,7 +46,7 @@ calc_fun_in_space <- function(x,
   #'
   #' @examples -----------------------------------------------------------------
   #' \dontrun{
-  #'   # racmoData
+  #'   # Example using monthly racmo data
   #'   x <- subset_racmoM_by_summer("precip", 1991:1994) |>
   #'     subset_racmoM_by_month(c(11, 12, 1, 2))
   #'
@@ -54,8 +54,8 @@ calc_fun_in_space <- function(x,
   #'   y <- get_shelf_outline("Shackleton")
   #'
   #'   # Average value across Shackleton each month
-  #'   zMean <- calc_fun_in_space(racmoData = x, extent = y, FUN = "mean")
-  #'   zSd   <- calc_fun_in_space(racmoData = x, extent = y, FUN = "sd")
+  #'   zMean <- calc_fun_in_space(x = x, extent = y, FUN = "mean")
+  #'   zSd   <- calc_fun_in_space(x = x, extent = y, FUN = "sd")
   #'   print(zMean)
   #'   print(zSd)
   #' }

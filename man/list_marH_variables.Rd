@@ -12,6 +12,6 @@ for use inside other functions.}
 }
 \description{
 Which hourly MAR variables are available? It simply reads the
-names of the files as created by \code{\link[=configure_polaR]{configure_polaR()}} (and thus only
+names of the files as created by \code{\link[=configure_polarcm]{configure_polarcm()}} (and thus only
 accounts for the files present when that function was initially called).
 }

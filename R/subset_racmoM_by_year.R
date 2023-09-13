@@ -1,6 +1,9 @@
 ##
 subset_racmoM_by_year <- function(racmoData,
-                                  years,
+                                  years   = NULL,
+                                  after   = NULL,
+                                  before  = NULL,
+                                  except  = NULL,
                                   version = NULL) {
   #' Subset monthly RACMO data based on the year
   #'
@@ -9,13 +12,17 @@ subset_racmoM_by_year <- function(racmoData,
   #'   `terrapin::subset_by_year()`.
   #'
   #' @inheritParams subset_racmoM_by_month
-  #' @param years vector: Which year/s to return?
-  #' @inheritParams read_racmoM
+  #' @inheritParams terrapin::subset_by_year
   #'
   #' @export
 
   # Code -----------------------------------------------------------------------
   racmoData   <- read_racmoM(racmoData = racmoData, version = version)
-  racmoSubset <- terrapin::subset_by_year(x = racmoData, years = years)
+  racmoSubset <- terrapin::subset_by_year(x = racmoData,
+                                          years = years,
+                                          after = after,
+                                          before = before,
+                                          except = except)
   return(racmoSubset)
 }
+

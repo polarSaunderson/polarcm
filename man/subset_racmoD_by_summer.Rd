@@ -4,31 +4,58 @@
 \alias{subset_racmoD_by_summer}
 \title{Subset daily RACMO data based on the austral summer}
 \usage{
-subset_racmoD_by_summer(racmoData, summers, australSplit = 3, version = NULL)
+subset_racmoD_by_summer(
+  racmoData,
+  summers = NULL,
+  australSplit = 3,
+  after = NULL,
+  before = NULL,
+  except = NULL,
+  version = NULL
+)
 }
 \arguments{
 \item{racmoData}{The daily RACMO data to subset. Can be either a variable
 name, in which case raw daily RACMO data is read in; or an existing
 SpatRaster of daily RACMO data.}
 
-\item{summers}{numeric: Which summer/s to return?}
+\item{summers}{Which summer/s to return? Use this argument for exact
+matches (e.g. c(1980:1990, 1995:1997). Cannot be used in conjunction with
+the 'before', 'after' or 'except' arguments.}
 
-\item{australSplit}{numeric: Which is the last month included in an austral
-summer before the new austral year begins? The default value is 3, which
-means that all months \emph{AFTER} March are considered as part of the
-following summer (i.e. April 1991 -- March 1992 are all in 1992). Swap
-this value according: setting it as 4 means May 1991 -- April 1992 are
-all 1992.}
+\item{australSplit}{numeric: If not FALSE, create an additional column for
+the austral summer / year. For example, December 1991 and January 1992
+often need to be considered as part of summer 1991/1992 in the southern
+hemisphere rather than in their respective years.
 
-\item{version}{Which version of the daily RACMO data should be returned?
-The options are those defined by the user in their ".Rprofile" file; see
+The default value is 3, which means that all months \emph{AFTER} March (i.e.
+month 3) are considered as part of the following austral summer / year
+(i.e. April 1991 -- March 1992 are all in austral summer / year 1992).
+
+Swap this value accordingly: e.g. setting it as 4 means May 1991 -- April
+1992 are all austral summer / year 1992.}
+
+\item{after}{Only data that occurs after this value is returned. Cannot be
+used in conjunction with the exact values, 'before' or 'except'
+arguments.}
+
+\item{before}{Only data that occurs before this value is returned. Cannot
+be used in conjunction with the exact values, 'after' or 'except'
+arguments.}
+
+\item{except}{vector: Which data should be excluded from the SpatRaster?
+Cannot be used in conjunction with the exact values, 'after' or 'before'
+arguments.}
+
+\item{version}{Which version of the daily RACMO data should be used? The
+options are those defined by the user in their ".Rprofile" file; see
 \code{\link[=configure_polaR]{configure_polaR()}} for more information. By default, it uses the racmoD
 data that was defined first in the ".Rprofile". Ignored if 'racmoData' is
 already a SpatRaster.}
 }
 \description{
-Subset monthly RACMO data based on the austral summer. This
-function is essentially a RACMO-specific wrapper around
-\code{terrapin::subset_by_summer()}. An austral summer is defined using the
-australSplit argument.
+Subset dailly RACMO data based on the austral summer. An
+austral summer is defined using the "australSplit" argument; see that for
+an explanation. This function is essentially a wrapper around
+\code{terrapin::subset_by_summer()} for daily RACMO data.
 }
