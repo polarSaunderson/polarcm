@@ -1,5 +1,5 @@
 draw_racmo_axes <- function(x = "",
-                            crs = "racmo",
+                            crs = NULL,
                             tickKula = kulaL(4),
                             lineKula = kulaL(4),
                             interval = NULL,
@@ -24,6 +24,11 @@ draw_racmo_axes <- function(x = "",
   #' @export
 
   # Code -----------------------------------------------------------------------
+  # Handle default CRS
+  token  <- configure_polarcm()
+  # crs    <- domR::set_if_null(crs, token$defaults$grid$crs)
+  # crs    <- use_crs(crs)
+
   # Define defaults for tick mark interval
   if (crs == "racmo") {
     interval <- domR::set_if_null(interval, 10)

@@ -22,10 +22,12 @@ subset_racmoM_by_month <- function(racmoData,
 
   # Code -----------------------------------------------------------------------
   racmoData   <- read_racmoM(racmoData = racmoData, version = version)
-  racmoSubset <- terrapin::subset_by_month(x = racmoData, months = months,
-                                           after = after,
-                                           before = before, except = except,
+  racmoSubset <- terrapin::subset_by_month(x = racmoData,
+                                           months = months,
                                            excludeIncomplete = excludeIncomplete,
+                                           after = after,
+                                           before = before,
+                                           except = except,
                                            dailyResolution  = FALSE)
   return(racmoSubset)
 }

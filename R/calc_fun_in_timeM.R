@@ -65,13 +65,13 @@ calc_fun_in_timeM <- function(x,
     xData   <- terrapin::subset_by_month(x, months,
                                          excludeIncomplete = "years",
                                          dailyResolution = FALSE)
-    xDates  <- terrapin::get_terra_dates(x)
+    xDates  <- terrapin::get_date_info(x)
     periods <- unique(xDates$year)
   } else if (annual %in% 1:12) {
     xData   <- terrapin::subset_by_month(x, months,
                                          excludeIncomplete = annual,
                                          dailyResolution = FALSE)
-    xDates  <- terrapin::get_terra_dates(x)
+    xDates  <- terrapin::get_date_info(x)
     periods <- unique(xDates$summer)
   }
 

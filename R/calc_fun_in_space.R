@@ -80,7 +80,7 @@ calc_fun_in_space <- function(x,
 
   # Create as a data frame
   xVar       <- paste0(FUN, "_", terra::varnames(x)[[1]])
-  outValues  <- terrapin::get_terra_dates(x)  # create df of dates
+  outValues  <- terrapin::get_date_info(x)    # create df of dates
   outValues[[xVar]] <- fValues                # add FUN values column
 
   return(outValues)
