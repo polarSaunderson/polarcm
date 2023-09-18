@@ -7,8 +7,8 @@
 draw_racmo_axes(
   x = "",
   crs = "racmo",
-  tickKula = kulaL(4),
-  lineKula = kulaL(4),
+  tickKula = "#999999FF",
+  axisKula = "#999999FF",
   interval = NULL,
   tickLength = -0.25
 )
@@ -21,13 +21,13 @@ plotted, and will add the appropriate axes.}
 
 \item{crs}{Which crs are the axes being added to?}
 
-\item{tickKula}{Which colour should the tick marks be?}
+\item{tickKula}{What colour should the tick marks be?}
+
+\item{axisKula}{What colour should the axis lines be?}
 
 \item{interval}{numeric: The interval between tick marks, in the ?}
 
-\item{axisKula}{Which colour should the axis lines be?}
-
-\item{tck}{numeric: How long should the tick marks be?}
+\item{tickLength}{numeric: How long should the tick marks be?}
 }
 \description{
 The default terra borders for Antarctica leave a lot of white

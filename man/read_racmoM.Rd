@@ -15,9 +15,9 @@ is.}
 
 \item{version}{Which version of the monthly RACMO data should be used? The
 options are those defined by the user in their ".Rprofile" file; see
-\code{\link[=configure_polaR]{configure_polaR()}} for more information. By default, it uses the racmoM
-data that was defined first in the ".Rprofile". Ignored if 'racmoData' is
-already a SpatRaster.}
+\code{\link[=configure_polarcm]{configure_polarcm()}} for more information. By default, it uses the
+racmoM data that was defined first in the ".Rprofile". Ignored if
+'racmoData' is already a SpatRaster.}
 }
 \description{
 Read in the NetCDF files for monthly resolution RACMO data

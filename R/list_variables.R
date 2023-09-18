@@ -12,7 +12,7 @@ list_racmoM_variables <- function(print = TRUE) {
   #' @export
 
   # Code -----------------------------------------------------------------------
-  token <- configure_polacm()
+  token <- configure_polarcm()
 
   # Use available names
   varNames <- token$varNames$racmoM

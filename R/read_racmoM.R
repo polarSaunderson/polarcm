@@ -13,9 +13,9 @@ read_racmoM <- function(racmoData, version = NULL) {
   #'   is.
   #' @param version Which version of the monthly RACMO data should be used? The
   #'   options are those defined by the user in their ".Rprofile" file; see
-  #'   [configure_polaR()] for more information. By default, it uses the racmoM
-  #'   data that was defined first in the ".Rprofile". Ignored if 'racmoData' is
-  #'   already a SpatRaster.
+  #'   [configure_polarcm()] for more information. By default, it uses the
+  #'   racmoM data that was defined first in the ".Rprofile". Ignored if
+  #'   'racmoData' is already a SpatRaster.
   #'
   #' @export
 
@@ -28,7 +28,7 @@ read_racmoM <- function(racmoData, version = NULL) {
   # If not already a SpatRaster, read in the correct monthly RACMO NetCDF data
   # Prepare
   token   <- configure_polarcm()
-  version <- domR::set_if_null(version, token$defaults$racmoM)
+  version <- set_if_null(version, token$defaults$racmoM)
   varPath <- token$varPaths$racmoM[[version]][[racmoData]]
 
   # Read in data

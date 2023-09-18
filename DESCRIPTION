@@ -1,7 +1,7 @@
 Package: polarcm
 Type: Package
 Title: Interact with Data from the RACMO & MAR Regional Climate Models
-Version: 0.0.2.1
+Version: 0.0.2.2
 Authors@R: 
     person("Dominic", "Saunderson",
            role = c("aut", "cre"),
@@ -22,4 +22,5 @@ Imports:
   methods,
   stats,
   grDevices,
-  terrapin
+  terrapin,
+  graphics

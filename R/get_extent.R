@@ -151,7 +151,7 @@ get_extent <- function(extent = "",
   # Code -----------------------------------------------------------------------
   # Handle default CRS
   token  <- configure_polarcm()
-  crs    <- domR::set_if_null(crs, token$defaults$grid$crs)
+  crs    <- set_if_null(crs, token$defaults$grid$crs)
   crs    <- use_crs(crs)
 
   # We need to know what the 'extent' argument is!

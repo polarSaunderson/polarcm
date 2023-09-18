@@ -35,7 +35,7 @@ mask_to_shelf <- function(x, shelf) {
 
   # Code -----------------------------------------------------------------------
   # Identify shelf
-  dataCrs <- terra::crs(xData)
+  dataCrs <- terra::crs(x)
   shelf   <- get_shelf_outline(extent = shelf,
                                rectangularExtent = FALSE,
                                crs = dataCrs)  # shelves are in 3031; reprojects

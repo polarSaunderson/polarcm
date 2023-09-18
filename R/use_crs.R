@@ -53,7 +53,7 @@ use_crs <- function(crs = NULL) {
   # Code -----------------------------------------------------------------------
   # Prepare
   token <- configure_polarcm()
-  crs   <- domR::set_if_null(crs, token$defaults$grid$crs)
+  crs   <- set_if_null(crs, token$defaults$grid$crs)
 
   # Switch and return crs
   crs <- switch(tolower(crs),       # make case insensitivite

@@ -21,7 +21,7 @@ To return only specific ice shelves, enter their names as a vector, and
 set 'rectangularExtents' as FALSE (the default).
 
 To return any ice shelves that fall within a geographical extent, set
-'rectangularExtents' as TRUE, and follow the logic of \code{\link[=get_extents]{get_extents()}} to
+'rectangularExtents' as TRUE, and follow the logic of \code{\link[=get_extent]{get_extent()}} to
 define the geographical extent with the remaining parameters. The most
 obvious reason to do this would be to include the outline of ice shelves
 within the bounding box of the named ice shelves, but that aren't named

@@ -55,7 +55,7 @@ get_grounding_line <- function(extent = "",
   # Code -----------------------------------------------------------------------
   # Handle default CRS
   token  <- configure_polarcm()
-  crs    <- domR::set_if_null(crs, token$defaults$grid$crs)
+  crs    <- set_if_null(crs, token$defaults$grid$crs)
   crs    <- use_crs(crs)
 
   # Prepare full grounding line data

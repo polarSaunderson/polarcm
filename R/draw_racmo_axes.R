@@ -1,7 +1,7 @@
 draw_racmo_axes <- function(x = "",
                             crs = "racmo",
-                            tickKula = kulaL(4),
-                            lineKula = kulaL(4),
+                            tickKula = "#999999FF",
+                            axisKula = "#999999FF",
                             interval = NULL,
                             tickLength = -0.25) {
   #' Add a tighter border of axes around Antarctic RACMO plots
@@ -16,24 +16,25 @@ draw_racmo_axes <- function(x = "",
   #'   which is the default, it assumes that the whole continent has been
   #'   plotted, and will add the appropriate axes.
   #' @param crs Which crs are the axes being added to?
-  #' @param tickKula Which colour should the tick marks be?
-  #' @param axisKula Which colour should the axis lines be?
+  #' @param tickKula What colour should the tick marks be?
+  #' @param axisKula What colour should the axis lines be?
   #' @param interval numeric: The interval between tick marks, in the ?
-  #' @param tck numeric: How long should the tick marks be?
+  #' @param tickLength numeric: How long should the tick marks be?
+
   #'
   #' @export
 
   # Code -----------------------------------------------------------------------
   # Handle default CRS
   token  <- configure_polarcm()
-  # crs    <- domR::set_if_null(crs, token$defaults$grid$crs)
+  # crs    <- set_if_null(crs, token$defaults$grid$crs)
   # crs    <- use_crs(crs)
 
   # Define defaults for tick mark interval
   if (crs == "racmo") {
-    interval <- domR::set_if_null(interval, 10)
+    interval <- set_if_null(interval, 10)
   } else if (crs == "3031") {
-    interval <- domR::set_if_null(interval, 1000000)
+    interval <- set_if_null(interval, 1000000)
   }
 
   # The approach to determining the ticks depends on which argument is supplied
@@ -65,29 +66,29 @@ draw_racmo_axes <- function(x = "",
 
     # Add lines to the plot ---!
     # line with ticks
-    axis(1, at = xTicks, labels = NA, col.ticks = tickKula, col = lineKula, tcl = tickLength, pos = bottom)
-    axis(2, at = yTicks, labels = NA, col.ticks = tickKula, col = lineKula, tcl = tickLength, pos = left)
-    axis(3, at = xTicks, labels = NA, col.ticks = tickKula, col = lineKula, tcl = tickLength, pos = top)
-    axis(4, at = yTicks, labels = NA, col.ticks = tickKula, col = lineKula, tcl = tickLength, pos = right)
+    graphics::axis(1, at = xTicks, labels = NA, col.ticks = tickKula, col = axisKula, tcl = tickLength, pos = bottom)
+    graphics::axis(2, at = yTicks, labels = NA, col.ticks = tickKula, col = axisKula, tcl = tickLength, pos = left)
+    graphics::axis(3, at = xTicks, labels = NA, col.ticks = tickKula, col = axisKula, tcl = tickLength, pos = top)
+    graphics::axis(4, at = yTicks, labels = NA, col.ticks = tickKula, col = axisKula, tcl = tickLength, pos = right)
 
     # additional line without ticks (it goes all the way across, beyond ticks)
-    axis(1, at = c(left, right), labels = NA, col.ticks = tickKula, col = lineKula, tcl = 0, pos = bottom)
-    axis(2, at = c(top, bottom), labels = NA, col.ticks = tickKula, col = lineKula, tcl = 0, pos = left)
-    axis(3, at = c(left, right), labels = NA, col.ticks = tickKula, col = lineKula, tcl = 0, pos = top)
-    axis(4, at = c(top, bottom), labels = NA, col.ticks = tickKula, col = lineKula, tcl = 0, pos = right)
+    graphics::axis(1, at = c(left, right), labels = NA, col.ticks = tickKula, col = axisKula, tcl = 0, pos = bottom)
+    graphics::axis(2, at = c(top, bottom), labels = NA, col.ticks = tickKula, col = axisKula, tcl = 0, pos = left)
+    graphics::axis(3, at = c(left, right), labels = NA, col.ticks = tickKula, col = axisKula, tcl = 0, pos = top)
+    graphics::axis(4, at = c(top, bottom), labels = NA, col.ticks = tickKula, col = axisKula, tcl = 0, pos = right)
   } else if (x == "") {
     if (crs == "racmo") {
       # line with ticks
-      axis(1, at = seq(-30, 30, interval), labels = NA, tcl = tickLength, pos = -30.125, col.ticks = tickKula)
-      axis(2, at = seq(-20, 20, interval), labels = NA, tcl = tickLength, pos = -32.875, col.ticks = tickKula)
-      axis(3, at = seq(-30, 30, interval), labels = NA, tcl = tickLength, pos = 29.875, col.ticks = tickKula)
-      axis(4, at = seq(-20, 20, interval), labels = NA, tcl = tickLength, pos = 32.625, col.ticks = tickKula)
+      graphics::axis(1, at = seq(-30, 30, interval), labels = NA, tcl = tickLength, pos = -30.125, col.ticks = tickKula)
+      graphics::axis(2, at = seq(-20, 20, interval), labels = NA, tcl = tickLength, pos = -32.875, col.ticks = tickKula)
+      graphics::axis(3, at = seq(-30, 30, interval), labels = NA, tcl = tickLength, pos = 29.875, col.ticks = tickKula)
+      graphics::axis(4, at = seq(-20, 20, interval), labels = NA, tcl = tickLength, pos = 32.625, col.ticks = tickKula)
 
       # additional line without ticks (it goes all the way across, beyond ticks)
-      axis(1, at = c(-32.875, 32.625), labels = NA, tcl = 0, pos = -30.125, col = lineKula)
-      axis(2, at = c(-30.125, 29.875), labels = NA, tcl = 0, pos = -32.875, col = lineKula)
-      axis(3, at = c(-32.875, 32.625), labels = NA, tcl = 0, pos = 29.875, col = lineKula)
-      axis(4, at = c(-30.125, 29.875), labels = NA, tcl = 0, pos = 32.625, col = lineKula)
+      graphics::axis(1, at = c(-32.875, 32.625), labels = NA, tcl = 0, pos = -30.125, col = axisKula)
+      graphics::axis(2, at = c(-30.125, 29.875), labels = NA, tcl = 0, pos = -32.875, col = axisKula)
+      graphics::axis(3, at = c(-32.875, 32.625), labels = NA, tcl = 0, pos = 29.875, col = axisKula)
+      graphics::axis(4, at = c(-30.125, 29.875), labels = NA, tcl = 0, pos = 32.625, col = axisKula)
     } else {
       warning("Supply a raster to base the axes on!")
     }

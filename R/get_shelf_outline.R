@@ -34,7 +34,7 @@ get_shelf_outline <- function(extent = "",
   #'   set 'rectangularExtents' as FALSE (the default).
   #'
   #'   To return any ice shelves that fall within a geographical extent, set
-  #'   'rectangularExtents' as TRUE, and follow the logic of [get_extents()] to
+  #'   'rectangularExtents' as TRUE, and follow the logic of [get_extent()] to
   #'   define the geographical extent with the remaining parameters. The most
   #'   obvious reason to do this would be to include the outline of ice shelves
   #'   within the bounding box of the named ice shelves, but that aren't named
@@ -69,7 +69,7 @@ get_shelf_outline <- function(extent = "",
   # Code -----------------------------------------------------------------------
   # Handle default CRS
   token  <- configure_polarcm()
-  crs    <- domR::set_if_null(crs, token$defaults$grid$crs)
+  crs    <- set_if_null(crs, token$defaults$grid$crs)
   crs    <- use_crs(crs)
 
   # Prepare all possible ice shelves
