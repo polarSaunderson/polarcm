@@ -6,7 +6,7 @@
 \usage{
 draw_racmo_axes(
   x = "",
-  crs = NULL,
+  crs = "racmo",
   tickKula = kulaL(4),
   lineKula = kulaL(4),
   interval = NULL,

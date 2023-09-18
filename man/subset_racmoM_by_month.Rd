@@ -64,5 +64,6 @@ already a SpatRaster.}
 }
 \description{
 Subset monthly RACMO data based on the month. This function is
-just a RACMO-specific wrapper around \code{terrapin::subset_by_month()}.
+essentially wrapper around \code{terrapin::subset_by_month()} for monthly
+RACMO data.
 }

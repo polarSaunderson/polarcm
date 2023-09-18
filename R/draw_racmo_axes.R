@@ -1,5 +1,5 @@
 draw_racmo_axes <- function(x = "",
-                            crs = NULL,
+                            crs = "racmo",
                             tickKula = kulaL(4),
                             lineKula = kulaL(4),
                             interval = NULL,
@@ -44,7 +44,7 @@ draw_racmo_axes <- function(x = "",
       bbox   <- terra::ext(x)
     }
 
-    # Separate out bounding box (easier to track the left than bbox[1])
+    # Separate out bounding box (easier to track left than bbox[1])
     left   <- bbox[1]
     right  <- bbox[2]
     bottom <- bbox[3]

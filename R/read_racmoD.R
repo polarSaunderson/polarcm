@@ -38,7 +38,7 @@ read_racmoD <- function(racmoData, version = NULL) {
       suppressWarnings() # suppress issues with crs & extent, which we add below
     racmoD <- c(racmoD, iiData)
   }
-  racmoD <- terra::rast(racmoD)
+  racmoD <- terra::rast(racmoD) # from list to a SpatRaster
 
   # Explicitly add the RACMO crs & extent as they aren't always read correctly
   terra::crs(racmoD) <- use_crs(token$grids$racmoD[[version]]$crs)
