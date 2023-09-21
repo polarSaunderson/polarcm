@@ -14,7 +14,6 @@ Description: `polarcm` is a personal package for interacting with and
     ongoing work-in-progress that eases repeated processes, but should be 
     treated with caution as it is developed. It relies heavily on the `terra`
     package, and another personal package I am developing, called `terrapin`.
-    Version 0.1.0-rc1.
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
