@@ -3,8 +3,7 @@ read_racmoD <- function(racmoData, version = NULL) {
   #'
   #' @description Read in the NetCDF files for daily resolution RACMO data
   #'   (racmoD). This function returns a SpatRaster (see the `terra` package),
-  #'   and knows how to handle some different configurations of the racmoD
-  #'   `polaR` functions need.
+  #'   and can handle the necessary configurations for the racmoD data.
   #'
   #' @param racmoData The daily RACMO data to return. If a valid string, raw
   #'   daily RACMO data for the corresponding variable is read in from the

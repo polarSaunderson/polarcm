@@ -16,7 +16,7 @@ list_racmoM_variables <- function(print = TRUE) {
 
   # Use available names
   varNames <- token$varNames$racmoM
-  if (isTRUE(print)) cat("\nracmoM Variables:\n"); print(varNames)
+  if (isTRUE(print)) {cat("\nracmoM Variables:\n"); print(varNames)}
   return(invisible(varNames))
 }
 
@@ -35,7 +35,7 @@ list_racmoD_variables <- function(print = TRUE) {
 
   # Use available names
   varNames <- token$varNames$racmoD
-  if (isTRUE(print)) cat("\nracmoD Variables:\n"); print(varNames)
+  if (isTRUE(print)) {cat("\nracmoD Variables:\n"); print(varNames)}
   return(invisible(varNames))
 }
 
@@ -55,7 +55,7 @@ list_marH_variables <- function(print = TRUE) {
 
   # Use available names
   varNames <- token$varNames$marH
-  if (isTRUE(print)) cat("\nmarH Variables:\n"); print(varNames)
+  if (isTRUE(print)) {cat("\nmarH Variables:\n"); print(varNames)}
   return(invisible(varNames))
 }
 
@@ -75,7 +75,7 @@ list_marD_variables <- function(print = TRUE) {
 
   # Use available names
   varNames <- token$varNames$marD
-  if (isTRUE(print)) cat("\nmarD Variables:\n"); print(varNames)
+  if (isTRUE(print)) {cat("\nmarD Variables:\n"); print(varNames)}
   return(invisible(varNames))
 }
 
@@ -95,7 +95,7 @@ list_marM_variables <- function(print = TRUE) {
 
   # Use available names
   varNames <- token$varNames$marM
-  if (isTRUE(print)) cat("\nmarM Variables:\n"); print(varNames)
+  if (isTRUE(print)) {cat("\nmarM Variables:\n"); print(varNames)}
   return(invisible(varNames))
 }
 
