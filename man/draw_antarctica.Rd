@@ -9,43 +9,51 @@ draw_antarctica(
   sbcg = "cg",
   rectangularExtent = FALSE,
   simplify = 0,
-  crs = "racmo",
+  crs = NULL,
+  newPlot = FALSE,
   extentArgs = list(),
   ...
 )
 }
 \arguments{
 \item{extent}{Define the area within which to draw Antarctica. This
-argument is fed into \code{get_extent()}; see there for details.}
+argument is fed into \code{\link[=get_extent]{get_extent()}}; see there for details.}
 
 \item{sbcg}{"string": Which parts of Antarctica should be drawn? Options
 are:
-\itemize{
-\item shelves          "s"
-\item basins           "b"  # uses IMBIE; use "bb" for MEaSURES
-\item coasts           "c"
-\item grounding line   "g"
-}}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  * shelves          "s"
+  * basins           "b"  # uses IMBIE basins
+  * refined basins   "bb" # uses refined MEaSURES basins
+  * coasts           "c"
+  * grounding line   "g"
+}\if{html}{\out{</div>}}}
 
 \item{rectangularExtent}{BINARY: Should only the defined shelf/shelves be
 included (TRUE), or can the outlines of all shelves within the bounding
 box be included too (FALSE)?}
 
 \item{simplify}{numeric: Should the outline be simplified? Uses the
-\code{terra::simplifyGeom()} function, so this value is the tolerance - i.e.
+\code{\link[terra:simplify]{terra::simplifyGeom()}} function, so this value is the tolerance - i.e.
 nodes must be at least this far apart, defined in crs units. Larger
 numbers are coarser; 0 (default) is no simplifying.}
 
-\item{crs}{"string": Which crs should the lines be drawn in? See the
-\code{set_crs()} function}
+\item{crs}{"string": Which projection should the outlines be drawn in?
+See \code{\link[=use_crs]{use_crs()}} or \code{\link[terra:crs]{terra::crs()}}. By default (i.e. NULL), it
+will match the first RCM data defined in the ".Rprofile".}
 
-\item{extentArgs}{A list of arguments to feed into \code{get_extent()}. Only
-necessary if}
+\item{newPlot}{BINARY: If TRUE, Antarctica is drawn on an empty window; if
+FALSE (the default), it is drawn on top of the existing plot. If there is
+no existing plot, this defaults to TRUE.}
 
-\item{...}{Any arguments that can be used in \code{terra::lines()}}
+\item{extentArgs}{An optional list of arguments to feed into
+\code{\link[=get_extent]{get_extent()}}.}
+
+\item{...}{Any arguments that can be used in \code{\link[terra:lines]{terra::lines()}}.}
 }
 \description{
 Used after plotting a raster to add MEaSURES outlines. This
-function is essentialy a wrapper around \code{terra::lines()}, but lets us
-easily decide on the outlines to add, their extent, and with which crs.
+function is essentially a wrapper around \code{\link[=get_extent]{get_extent()}} and
+\code{\link[terra:lines]{terra::lines()}} that makes it quick and easy to add different outlines
+to a map.
 }

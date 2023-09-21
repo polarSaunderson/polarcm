@@ -4,24 +4,73 @@
 \alias{subset_racmoD_by_date}
 \title{Subset daily RACMO data based on specific dates}
 \usage{
-subset_racmoD_by_date(racmoData, dates = NULL, dateList = NULL)
+subset_racmoD_by_date(
+  racmoData,
+  dates = NULL,
+  periods = NULL,
+  before = NULL,
+  after = NULL,
+  except = NULL,
+  version = NULL
+)
 }
 \arguments{
 \item{racmoData}{The daily RACMO data to subset. Can be either a variable
 name, in which case raw daily RACMO data is read in; or an existing
 SpatRaster of daily RACMO data.}
 
-\item{dates}{A vector of specific dates to return. Must be in the format
-"YYYY-MM-DD".}
+\item{dates}{Which date/s to return?  Used for specific dates Input must be
+a vector of specific dates to return, with the dates formatted as
+"YYYY-MM-DD", "YYYY-Jan-DD", "DD-MM-YYYY", or "DD-Jan-YYYY".
 
-\item{dateList}{A list of vectors, with the first value in each vector
-indicating when the period begins, and the second when the period ends.}
+For example, c("2019-01-01", "03-01-2019", "2011-Mar-08") will return any
+data layers on the 1st or 3rd January 2019, and on the 8th March 2011. If
+no dates match, an empty SpatRaster is returned.
+
+\emph{NOTE:} Dates \strong{cannot} be entered in the format "MM-DD-YYYY".
+Internally, function identifies the year as the value with 4 digits, the
+month as the middle value of the string, and the day as the remaining
+part of the string.}
+
+\item{periods}{Which date/s to return? Used for extended periods rather
+than individual dates. Cannot be used in conjunction with the 'dates'
+argument.
+
+Input dates must be a vector, with the first value indicating when the
+period begins and the second when the period ends.
+
+For multiple periods, use a list of such vectors, for example:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{list(c("2019-01-01", "2019-01-03"),     # 1-3  Jan 2019
+     c("2011-03-08", "2011-03-11"))     # 8-11 Mar 2011
+}\if{html}{\out{</div>}}
+
+The above will return the layers for 1st, 2nd and 3rd of January 2019,
+and the 8th, 9th, 10th and 11th of March 2011.}
+
+\item{before}{Only data that occurs before this value is returned. Cannot
+be used in conjunction with the exact values, 'after' or 'except'
+arguments.}
+
+\item{after}{Only data that occurs after this value is returned. Cannot be
+used in conjunction with the exact values, 'before' or 'except'
+arguments.}
+
+\item{except}{vector: Which data should be excluded from the SpatRaster?
+Cannot be used in conjunction with the exact values, 'after' or 'before'
+arguments.}
+
+\item{version}{Which version of the daily RACMO data should be used? The
+options are those defined by the user in their ".Rprofile" file; see
+\code{\link[=configure_polarcm]{configure_polarcm()}} for more information. By default, it uses the
+racmoD data that was defined first in the ".Rprofile". Ignored if
+'racmoData' is already a SpatRaster.}
 }
 \description{
 Subset daily RACMO data based on specific dates. This function
-is essentially a RACMO-specific wrapper around
-\code{terrapin::subset_by_dates()}. The dates can be input either as a vector
-of specific dates using the "dates" argument; or as a list of vectors
-containing the start and end dates for longer extended periods. All dates
-need to be entered in YYYY-MM-DD format (e.g. "2019-12-31").
+is essentially a wrapper around \code{\link[terrapin:subset_by_date]{terrapin::subset_by_date()}} for daily
+RACMO data.
+
+\strong{Note:} This function is distinct to \code{\link[=subset_racmoD_by_day]{subset_racmoD_by_day()}} as it
+accounts for the full date, not just the day.
 }

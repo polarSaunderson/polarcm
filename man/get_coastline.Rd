@@ -10,26 +10,31 @@ get_coastline(
   preferType = NULL,
   useOnly = NULL,
   imbieBasins = NULL,
-  crs = "racmo",
+  crs = NULL,
   crsIn = NULL
 )
 }
 \arguments{
 \item{extent}{Define the extent used to crop the coastline. This argument
-is fed into \code{get_extent()}; see there for details of valid input.}
+is fed into \code{\link[=get_extent]{get_extent()}}; see there for details of valid input.}
 
-\item{rectangularExtent}{If 'extent' is a defined string (e.g. "Amery"), the
-'rectangularExtent' argument determines whether the actual outline is
-returned (FALSE; the default), or if a rectangular extent box
-encompassing the area is returned (TRUE). If multiple ice shelves and/or
-basins are included, the extent box will extend over all of them at once.}
+\item{rectangularExtent}{If 'extent' is a defined string (e.g. "Amery"),
+the 'rectangularExtent' argument determines whether the actual outline is
+returned (FALSE; the default), or if the rectangular extent of the
+bounding box encompassing the area is returned (TRUE). If multiple ice
+shelves and/or basins are included, the extent box will extend over all
+of them at once.}
 
-\item{preferType}{Sometimes an ice shelf and the MEaSURES basins have the
-same name; usually they both refer to the same general area, and by
-default (i.e. 'preferType' = NULL), both are combined to form a new larger
-extent encompassing both. However, for some names (e.g. "Shackleton" and
-"Drygalski"), the name refers to an ice shelf far away from the basin
-with the same name, returning an unexpected extent.
+\item{preferType}{Sometimes an ice shelf and the refined MEaSURES basins
+have the same name.
+
+Usually they both refer to the same general area, and by default (i.e.
+'preferType' = NULL), this function combines both the shelf and basin
+extents to form a new larger extent.
+
+However, for some names (e.g. "Shackleton" and "Drygalski"), the name
+refers to an ice shelf far away from the basin with the same name,
+returning an unexpected extent.
 
 This argument lets the user choose between the two types if the name is
 found in both the ice shelves and basins datasets: "shelf", "shelves",
@@ -43,30 +48,42 @@ names, but only one or the other should be included, use this argument.
 Ice shelves or basins are specified as outlined in the 'preferType'
 argument.}
 
-\item{imbieBasins}{BINARY: Should the IMBIE basins (TRUE) or the MEaSURES
-basins (FALSE) be used to define the extent? The IMBIE basins have codes
-(e.g. "A-Ap") and are larger regions; the MEaSURES basins have names
-(that can overlap with the ice shelf names), and are smaller "sub" regions.
-If NULL (the default), both are returned. This is mainly useful if there
-is a vector containing both, but only one should be used. See also
-'useOnly'. Distinct from the 'returnImbie' argument used in similar
-functions such as \code{get_shelf_outline()} and \code{get_basin_outline()}.}
+\item{imbieBasins}{BINARY: Should the IMBIE basins (TRUE) or the refined
+MEaSURES basins (FALSE) be used to define the extent? If NULL (the
+default), both the IMBIE and refined basins are returned.
 
-\item{crs}{"string": Which projection should the coastline be returned in?}
+The IMBIE basins are larger, and have codes (e.g. "A-Ap"); the refined
+MEaSURES basins are smaller, "sub" regions, and are named after glaciers
+(hence their names can overlap with ice shelf names).
 
-\item{crsIn}{"string": Which projection is the extent given in? Needs
-defining if the extent is a SpatExtent, as they do not have a crs value
-attached.}
+This argument is mainly useful if the extent is a vector containing both
+names, but only one should be used. Otherwise, just enter only IMBIE or
+refined basin names.
+
+\strong{Note:} This argument is distinct from the 'returnImbie' argument used
+in functions such as \code{\link[=get_shelf_outline]{get_shelf_outline()}} and \code{\link[=get_basin_outline]{get_basin_outline()}}.}
+
+\item{crs}{"string": Which projection should the coastline be returned in?
+See \code{\link[=use_crs]{use_crs()}} or \code{\link[terra:crs]{terra::crs()}}. By default (i.e. NULL), it
+will match the first RCM data defined in the ".Rprofile".}
+
+\item{crsIn}{"string": This only needs defining if the 'extent' argument is
+a SpatExtent, which don't store projection information. This argument
+tells the function which projection the extent was defined in.}
 }
 \description{
 This function is useful for plotting the Antarctic coastline
-(i.e. the most seaward part of the ice, either grounded or ice shelf). An
-extent is defined according to \code{get_extent()}, and the coastline that
+(i.e. the most seaward part of the ice, either grounded or ice shelf).
+The coastline is that from the MEaSURES dataset (Version 2; Mouginot et
+al., 2017).
+
+The extent is defined according to \code{\link[=get_extent]{get_extent()}}, and any coastline that
 intersects with the extent is returned. This function is mainly for use
-in the \code{draw_antarctica()} function.
+in the \code{\link[=draw_antarctica]{draw_antarctica()}} function.
 }
 \examples{
 -----------------------------------------------------------------
+\dontrun{
   # Full coastline
   t1 <- get_coastline()
   terra::plot(t1)
@@ -92,5 +109,5 @@ in the \code{draw_antarctica()} function.
 
   t6 <- get_coastline("Drygalski", preferType = "basins")
   terra::plot(t6)
-
+}
 }

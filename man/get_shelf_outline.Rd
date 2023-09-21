@@ -7,7 +7,7 @@
 get_shelf_outline(
   extent = "",
   rectangularExtent = FALSE,
-  crs = "racmo",
+  crs = NULL,
   preferType = NULL,
   useOnly = NULL,
   imbieBasins = NULL,
@@ -21,25 +21,33 @@ To return only specific ice shelves, enter their names as a vector, and
 set 'rectangularExtents' as FALSE (the default).
 
 To return any ice shelves that fall within a geographical extent, set
-'rectangularExtents' as TRUE, and follow the logic of \code{get_extents()} to
-define the geographical extent. The most obvious reason to do this would
-be to include the outline of ice shelves within the bounding box of the
-named ice shelves, but that aren't named themselves. See examples.}
+'rectangularExtents' as TRUE, and follow the logic of \code{\link[=get_extent]{get_extent()}} to
+define the geographical extent with the remaining parameters. The most
+obvious reason to do this would be to include the outline of ice shelves
+within the bounding box of the named ice shelves, but that aren't named
+themselves. See examples.}
 
-\item{rectangularExtent}{If 'extent' is a defined string (e.g. "Amery"), the
-'rectangularExtent' argument determines whether the actual outline is
-returned (FALSE; the default), or if a rectangular extent box
-encompassing the area is returned (TRUE). If multiple ice shelves and/or
-basins are included, the extent box will extend over all of them at once.}
+\item{rectangularExtent}{If 'extent' is a defined string (e.g. "Amery"),
+the 'rectangularExtent' argument determines whether the actual outline is
+returned (FALSE; the default), or if the rectangular extent of the
+bounding box encompassing the area is returned (TRUE). If multiple ice
+shelves and/or basins are included, the extent box will extend over all
+of them at once.}
 
-\item{crs}{"string": Which projection should the shelves be returned in?}
+\item{crs}{"string": Which projection should the shelves be returned in?
+See \code{\link[=use_crs]{use_crs()}} or \code{\link[terra:crs]{terra::crs()}}. By default (i.e. NULL), it
+will match the first RCM data defined in the ".Rprofile".}
 
-\item{preferType}{Sometimes an ice shelf and the MEaSURES basins have the
-same name; usually they both refer to the same general area, and by
-default (i.e. 'preferType' = NULL), both are combined to form a new larger
-extent encompassing both. However, for some names (e.g. "Shackleton" and
-"Drygalski"), the name refers to an ice shelf far away from the basin
-with the same name, returning an unexpected extent.
+\item{preferType}{Sometimes an ice shelf and the refined MEaSURES basins
+have the same name.
+
+Usually they both refer to the same general area, and by default (i.e.
+'preferType' = NULL), this function combines both the shelf and basin
+extents to form a new larger extent.
+
+However, for some names (e.g. "Shackleton" and "Drygalski"), the name
+refers to an ice shelf far away from the basin with the same name,
+returning an unexpected extent.
 
 This argument lets the user choose between the two types if the name is
 found in both the ice shelves and basins datasets: "shelf", "shelves",
@@ -53,40 +61,50 @@ names, but only one or the other should be included, use this argument.
 Ice shelves or basins are specified as outlined in the 'preferType'
 argument.}
 
-\item{imbieBasins}{BINARY: Should the IMBIE basins (TRUE) or the MEaSURES
-basins (FALSE) be used to define the extent? The IMBIE basins have codes
-(e.g. "A-Ap") and are larger regions; the MEaSURES basins have names
-(that can overlap with the ice shelf names), and are smaller "sub" regions.
-If NULL (the default), both are returned. This is mainly useful if there
-is a vector containing both, but only one should be used. See also
-'useOnly'. Distinct from the 'returnImbie' argument used in similar
-functions such as \code{get_shelf_outline()} and \code{get_basin_outline()}.}
+\item{imbieBasins}{BINARY: Should the IMBIE basins (TRUE) or the refined
+MEaSURES basins (FALSE) be used to define the extent? If NULL (the
+default), both the IMBIE and refined basins are returned.
 
-\item{crsIn}{"string": Which projection is the extent given in? Needs
-defining if the extent is a SpatExtent, as they do not have a crs value
-attached.}
+The IMBIE basins are larger, and have codes (e.g. "A-Ap"); the refined
+MEaSURES basins are smaller, "sub" regions, and are named after glaciers
+(hence their names can overlap with ice shelf names).
+
+This argument is mainly useful if the extent is a vector containing both
+names, but only one should be used. Otherwise, just enter only IMBIE or
+refined basin names.
+
+\strong{Note:} This argument is distinct from the 'returnImbie' argument used
+in functions such as \code{\link[=get_shelf_outline]{get_shelf_outline()}} and \code{\link[=get_basin_outline]{get_basin_outline()}}.}
+
+\item{crsIn}{"string": This only needs defining if the 'extent' argument is
+a SpatExtent, which don't store projection information. This argument
+tells the function which projection the extent was defined in.}
 }
 \description{
-This function is useful for plotting ice shelves in
-Antarctica. It is mainly used in the \code{crop_racmo...()} and
-\code{draw_antarctica()} functions.
+This function is useful for plotting or cropping to Antarctic
+ice shelves. It is mainly used in the \code{\link[=draw_antarctica]{draw_antarctica()}} and
+\code{\link[=crop_to_shelf]{crop_to_shelf()}} functions, but can be used separately as well.
 
-The function works in two ways.
+The function works in 2 ways.
 \enumerate{
-\item a vector of shelf names can be entered as the 'extent', and these
-shelves are simply returned from the MEaSURES ice shelf dataset. The
-names must match the dataset exactly.
-\item an extent can be defined according to \code{get_extent()}. Any shelves
+\item A vector of shelf names can be entered as the 'extent', and these
+exact ice shelves are simply returned from the MEaSURES ice shelf
+dataset. The ice shelf names must match those in the dataset exactly.
+\item An extent can be defined according to \code{\link[=get_extent]{get_extent()}}. Any shelves
 which intersect with this extent are then returned. This occurs if
 'rectangularExtent' is TRUE, and most of the remaining arguments are fed
-directly into \code{get_extent()}.
-\item an existing shelf SpatVector will be returned.
+directly into \code{\link[=get_extent]{get_extent()}}.
 }
 
-Finally, the shelves can be reprojected (set via 'crs').
+The ice shelves will be returned in the projection specified by the 'crs'
+argument.
+
+\strong{Note:} If an existing ice shelf SpatVector is entered, it will be
+returned.
 }
 \examples{
 -----------------------------------------------------------------
+\dontrun{
   # All ice shelves in Antarctica
   t1 <- get_shelf_outline()
   terra::plot(t1)
@@ -102,5 +120,5 @@ Finally, the shelves can be reprojected (set via 'crs').
   # Multiple shelves; includes intermediary shelves
   t4 <- get_shelf_outline(c("Amery", "West"), rectangularExtent = TRUE)
   terra::plot(t4)
-
+}
 }

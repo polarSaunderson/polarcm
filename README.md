@@ -14,6 +14,10 @@ The public version of this repo can be accessed at:
   https://github.com/polarSaunderson/racmoR
 
 ## To-Do
+### 2023-09-04
+- [ ] Work on examples for everything!
+- [ ] Need to correct messages in `configure_polaR`
+
 ### 2023-08-14
 - [ ] Check units in use_racmo_name
 
@@ -23,7 +27,7 @@ The public version of this repo can be accessed at:
 ### 2023-08-10
 - [ ] Test racmoD_climatology
 - [ ] Verify australSplit and removeIncomplete arguments
-- [ ] should some of these be in terrapin?
+      - [ ] should some of these be in terrapin?
 
 ### 2023-08-07
 - [ ] Sort out terrapin's remove_incomplete_x functions
@@ -34,19 +38,19 @@ The public version of this repo can be accessed at:
 ### 2023-08-05
 - [X] create_multiMonth_data_each_X; use functionals there too!
 - [X] Could calculate_racmo_in_space be a closure? No, just use a functional.
- - [X] Need to do sum_in_space at least, but sd / median / percentiles / summary
+      - [X] Need to do sum_in_space at least, but sd / median / percentiles / summary
 
 ### 2023-08-04
 - [X] improve the crop_racmo functions
- - [X] simplify - not too many options!
- - [X] separate mask_racmo functions
+      - [X] simplify - not too many options!
+      - [X] separate mask_racmo functions
 - [X] The logic of get_shelf_outline and get_basin_outline need correcting
- - [X] They look only in their own dataset; need to look through all extents, then reduce to shelves
- - [X] Will impact draw_antarctica(), and crop_racmo() functions;
- - [X] check get_extent is not doing something wrong with this
+      - [X] They look only in their own dataset; need to look through all extents, then reduce to shelves
+      - [X] Will impact draw_antarctica(), and crop_racmo() functions;
+      - [X] check get_extent is not doing something wrong with this
 - [X] Double check returnImbie in get_basin_outline; think about name and defaults too
 - [X] Are separate exactExtents and rectangularExtents arguments necessary?
- - [X] get_extent, but also draw_antarctica and get_shelf_outline etc.
+      - [X] get_extent, but also draw_antarctica and get_shelf_outline etc.
 
 ### 2023-08-03 
 - [ ] get_extent uses %notIn%

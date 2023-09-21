@@ -4,30 +4,66 @@
 \alias{subset_racmoD_by_month}
 \title{Subset daily RACMO data based on the month}
 \usage{
-subset_racmoD_by_month(racmoData, months, excludeIncomplete = FALSE)
+subset_racmoD_by_month(
+  racmoData,
+  months = NULL,
+  excludeIncomplete = 3,
+  after = NULL,
+  before = NULL,
+  except = NULL,
+  version = NULL
+)
 }
 \arguments{
 \item{racmoData}{The daily RACMO data to subset. Can be either a variable
 name, in which case raw daily RACMO data is read in; or an existing
 SpatRaster of daily RACMO data.}
 
-\item{months}{vector: Which month/s to return? Input can be the month
-number (e.g. 12) or the month name, either in full ("December",
-"december") or abbreviated ("Dec", "dec"). Multiple months can be input
-at once (e.g. c(12, 1, 2)), but do not try to mix strings and numbers in
-the vector.}
+\item{months}{Which month/s to return? Use this argument for exact matches
+(e.g. c(1:4, 8). Cannot be used in conjunction with the 'before', 'after',
+or 'except' arguments.
 
-\item{excludeIncomplete}{If the value is "years", the data is run through
-\code{terrapin::exclude_incomplete_years()}, and only months in years with all
-requested months in are returned. If the value is numeric (between 1 and
-12), the data is fed into the \code{terrapin::exclude_incomplete_summers()}
-and the value is used as the "australSplit" argument to return only
-months in austral summers that contain all requested months. If any other
-value (including the default, FALSE), all layers matching the months
-argument are returned, regardless of the summer or year.}
+\strong{Note:} This argument is fed through \code{\link[terrapin:get_months]{get_months()}}, so this argument
+can be input in different formats. For example, December can be input as:
+12, "12", "Dec", "dec", "December", or "december".}
+
+\item{excludeIncomplete}{Be careful using this argument! It can
+dramatically affect the output of this function. Please read the
+Explanation in \code{\link[terrapin:exclude_incomplete_years]{exclude_incomplete_years()}} first.
+
+If TRUE, the data is run through \code{exclude_incomplete_years()}, and
+only data from the years containing all requested months are returned.
+
+If numeric (between 1 and 12), the data is run through
+\link[terrapin]{exclude_incomplete_summers}, and the value is used as the 'australSplit'
+argument. This returns only data from the austral summers that contain
+all requested months.
+
+If any other value (including the default FALSE), the
+\code{exclude_incomplete_x} functions are skipped, and all layers matching the
+'months' argument are returned, regardless of the summer or year in which
+they occur. See the examples.}
+
+\item{after}{Only data that occurs after this value is returned. Cannot be
+used in conjunction with the exact values, 'before' or 'except'
+arguments.}
+
+\item{before}{Only data that occurs before this value is returned. Cannot
+be used in conjunction with the exact values, 'after' or 'except'
+arguments.}
+
+\item{except}{vector: Which data should be excluded from the SpatRaster?
+Cannot be used in conjunction with the exact values, 'after' or 'before'
+arguments.}
+
+\item{version}{Which version of the daily RACMO data should be used? The
+options are those defined by the user in their ".Rprofile" file; see
+\code{\link[=configure_polarcm]{configure_polarcm()}} for more information. By default, it uses the
+racmoD data that was defined first in the ".Rprofile". Ignored if
+'racmoData' is already a SpatRaster.}
 }
 \description{
 Subset daily RACMO data based on the month. This function is
-essentially a RACMO-specific wrapper around
-\code{terrapin::subset_by_month()}.
+essentially a wrapper around \code{\link[terrapin:subset_by_month]{terrapin::subset_by_month()}} for daily
+RACMO data.
 }
