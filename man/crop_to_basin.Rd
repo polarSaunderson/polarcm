@@ -2,12 +2,12 @@
 % Please edit documentation in R/crop_to_x.R
 \name{crop_to_basin}
 \alias{crop_to_basin}
-\title{Crop RACMO or MAR data to an Antarctic ice shelf}
+\title{Crop RCM data to an Antarctic ice shelf}
 \usage{
 crop_to_basin(x, basin)
 }
 \arguments{
-\item{x}{SpatRaster: The RACMO or MAR data to crop. It must be an existing
+\item{x}{SpatRaster: The RCM data to crop. It must be an existing
 SpatRaster.}
 
 \item{basin}{"string": The EXACT name of the basins to crop the 'x' to. If
@@ -15,11 +15,11 @@ a vector with multiple basins is input, non-shelf pixels in the bounding
 box between those basin are also included.}
 }
 \description{
-Spatially crop RACMO or MAR SpatRasters. The 'basin' must be
+Spatially crop RCM SpatRasters. The 'basin' must be
 an exact match for a name in the MEaSURES dataset, and can refer to
 either the IMBIE basins (e.g. "A-Ap") or the refined MEaSURES basins
 (e.g. "Dry Valleys"). Multiple basins can be used in a vector. The data
-returned is for a bounding box around the shelves; use \code{mask_to_basin()}
+returned is for a bounding box around the shelves; use \code{\link[=mask_to_basin]{mask_to_basin()}}
 for "cropping" tightly to the actual basin outline.
 }
 \examples{

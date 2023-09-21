@@ -42,6 +42,6 @@ racmoD data that was defined first in the ".Rprofile". Ignored if
 }
 \description{
 Subset daily RACMO data based on the year. This function is
-essentially a wrapper around \code{terrapin::subset_by_year()} for daily RACMO
+essentially a wrapper around \code{\link[terrapin:subset_by_year]{terrapin::subset_by_year()}} for daily RACMO
 data.
 }

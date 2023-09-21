@@ -5,37 +5,44 @@ calc_fun_in_timeM <- function(x,
   #' Calculate RCM values across multiple months each year / austral summer
   #'
   #' @description Often, it is necessary to look at RCM values across multiple
-  #'   months each year / summer. For example, what is the total JJA
+  #'   months each year / austral summer. For example, what is the total JJA
   #'   precipitation each year? Or what is the average wind speed in DJF each
-  #'   summer? This function takes the input RCM data, and creates new
-  #'   SpatRasters based on the requested 'months' and the 'FUN' (function)
-  #'   arguments, accounting for whether the months should be split into
-  #'   calendar years or austral summers / years.
+  #'   summer?
   #'
-  #'   The following examples further illustrates this function.
+  #'   The `calc_fun_in_timeM` function takes the input SpatRaster, and creates
+  #'   a new SpatRaster, which has new layers that are calculated using the
+  #'   'months' and 'FUN' (function) arguments. The [calc_fun_australM()] and
+  #'   [calc_fun_annualM()] are simple wrappers around [calc_fun_in_timeM()]
+  #'   that differ only in how the months are split up, either into calendar
+  #'   years (`annualM`) or austral summers / years (`australM`). Only the
+  #'   "month" part of the date for each input layer is considered.
+  #'
+  #'   The following examples further illustrate these 2 functions.
   #'
   #'   ## Example 1 - Annual Winter (JJA) total precipitation
-  #'   Take a monthly RACMO dataset of precipitation, including all months
-  #'   each year from 1979--2018 (i.e. 12 months * 40 years = 480 layers). Set
-  #'   'months' as c(6, 7, 8) (i.e. JJA), and FUN as "sum". The returned
-  #'   SpatRaster will contain 40 layers, with each one being that year's total
-  #'   JJA precipitation. The date of each returned layer is the date of the
-  #'   first of the constituent layers that it was computed from. Only layers
-  #'   with the same units are processed together, and only years when all
-  #'   requested months are available are returned.
+  #'
+  #'   Take a RACMO dataset of monthly precipitation, including all months each
+  #'   year from 1979--2018 (i.e. 12 months * 40 years = 480 layers). Set
+  #'   'months' as c(6, 7, 8) (i.e. JJA), and 'FUN' as "sum". The returned
+  #'   SpatRaster will contain 40 layers, with each one being a year's total JJA
+  #'   precipitation. The date of each returned layer is the date of the first
+  #'   of the constituent layers that it was computed from. Only layers with the
+  #'   same units are processed together, and only years when all requested
+  #'   months are available are returned.
   #'
   #'   ## Example 2 - Austral Summer (DJF) mean wind speed
-  #'   Take a monthly MAR dataset of average monthly wind speeds, including
-  #'   all months each year from 1979--2018 (i.e. 12 months * 40 years = 480
-  #'   layers). Set 'months' as c(12, 1, 2) (i.e. DJF), FUN as "mean" and annual
-  #'   as 3. The returned SpatRaster will contain 40 layers, with each one being
-  #'   that summers's average DJF wind speed. The date of each returned layer is
-  #'   the date of the first of constituent layers that it was computed from.
-  #'   Only layers with the same units are processed together, and only austral
+  #'
+  #'   Take a MAR dataset of monthly-averaged wind speeds, including all months
+  #'   each year from 1979--2018 (i.e. 12 months * 40 years = 480 layers). Set
+  #'   'months' as c(12, 1, 2) (i.e. DJF), 'FUN' as "mean" and 'annual' as 3.
+  #'   The returned SpatRaster will contain 40 layers, with each one being a
+  #'   summer's average DJF wind speed. The date of each returned layer is the
+  #'   date of the first of constituent layers that it was computed from. Only
+  #'   layers with the same units are processed together, and only austral
   #'   summers / years when all requested months are available are returned.
   #'
-  #' @param x SpatRaster: The RACMO or MAR data to use with 'FUN'. It must be
-  #'   an existing SpatRaster.
+  #' @param x SpatRaster: The RCM data to use with 'FUN'. It must be an existing
+  #'   SpatRaster.
   #' @param months vector: Which month/s to include? Input can be the month
   #'   number (e.g. 12) or the month name, either in full ("December",
   #'   "december") or abbreviated ("Dec", "dec"). Multiple months can be input
@@ -92,10 +99,10 @@ calc_fun_in_timeM <- function(x,
 
       # Add units, names and a date (lost in terra::app)
       terra::time(iiFun) <- terra::time(iiData)[[1]]
-      names(iiFun) <- gsub("height=0",
-                           paste(paste0(funName, "-", incMonths),
+      names(iiFun) <- gsub("height=0",                            # replace this
+                           paste(paste0(funName, "-", incMonths), # with this
                                  ii, sep = "-"),
-                           names(iiData)[[1]])
+                           names(iiData)[[1]])                    # in this
       # Store outside the loop
       xCubud[[which(periods == ii)]] <- iiFun
     }
@@ -117,22 +124,7 @@ calc_fun_annualM <- function(x,
                              ...) {
   #' Calculate RCM values over multiple months each year
   #'
-  #' @description Often, it is necessary to look at RCM values across multiple
-  #'   months each year. For example, what is the total JJA precipitation each
-  #'   year? Or what is the average wind speed in SON? This function takes the
-  #'   input RCM data, and creates new SpatRasters based on the requested
-  #'   'months' and the 'FUN' (function) arguments.
-  #'
-  #'   The following example further illustrates this function. Take a monthly
-  #'   RACMO dataset of precipitation, including all months each year from
-  #'   1979--2018 (i.e. 12 months * 40 years = 480 layers). Set 'months' as c(6,
-  #'   7, 8) (i.e. JJA), and FUN as "sum". The returned SpatRaster will contain
-  #'   40 layers, with each one being that year's total JJA precipitation. The
-  #'   date of each returned layer is date of the first of the constituent
-  #'   layers that it was computed from. Only layers with the same units are
-  #'   processed together, and only years when all requested months are
-  #'   available are returned.
-  #'
+  #' @inherit calc_fun_in_timeM description
   #' @inheritParams calc_fun_in_timeM
   #'
   #' @seealso calc_fun_australM
@@ -150,25 +142,9 @@ calc_fun_australM <- function(x,
                               FUN,
                               australSplit = 3,
                               ...) {
-  #' Calculate RCM values over multiple months each austral summer / year
+  #' Calculate RCM values over multiple months each austral summer
   #'
-  #' @description Often, it is necessary to look at RCM values across multiple
-  #'   months, but across austral summers / years. For example, what is the
-  #'   total DJF precipitation each austral year / summer? Or what is the
-  #'   average wind speed in DJF? This function takes the input RCM data, and
-  #'   creates new SpatRasters based on the requested 'months' and the 'FUN'
-  #'   (function) arguments.
-  #'
-  #'   The following example further illustrates this function. Take a monthly
-  #'   RACMO dataset of average monthly wind speeds, including all months each
-  #'   year from 1979--2018 (i.e. 12 months * 40 years = 480 layers). Set
-  #'   'months' as c(12, 1, 2) (i.e. DJF), and FUN as "mean". The returned
-  #'   SpatRaster will contain 40 layers, with each one being that austral
-  #'   summers's average DJF wind speed. The date of each returned layer is the
-  #'   date of the first of the constituent layers that it was computed from.
-  #'   Only layers with the same units are processed together, and only austral
-  #'   years when all requested months are available are returned.
-  #'
+  #' @inherit calc_fun_in_timeM description
   #' @inheritParams calc_fun_in_timeM
   #' @param australSplit numeric: Which is the last month included in an austral
   #'   summer before the new austral year begins? The default value is 3, which

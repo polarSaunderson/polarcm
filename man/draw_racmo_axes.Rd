@@ -33,5 +33,5 @@ plotted, and will add the appropriate axes.}
 The default terra borders for Antarctica leave a lot of white
 space around the continent. This function draws axes that are tighter to
 the coastline of the raster. This function should be called straight
-after using terra::plot(x, axes = FALSE).
+after using \code{terra::plot(x, axes = FALSE)}.
 }

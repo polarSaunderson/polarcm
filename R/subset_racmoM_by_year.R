@@ -8,7 +8,7 @@ subset_racmoM_by_year <- function(racmoData,
   #' Subset monthly RACMO data based on the year
   #'
   #' @description Subset monthly RACMO data using based on year. This function
-  #'   is essentially just a wrapper around `terrapin::subset_by_year()` for
+  #'   is essentially just a wrapper around [terrapin::subset_by_year()] for
   #'   monthly RACMO data.
   #'
   #' @inheritParams subset_racmoM_by_month

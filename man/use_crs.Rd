@@ -10,8 +10,8 @@ use_crs(crs = NULL)
 \item{crs}{"string": Which crs to return? See the "Options" section below
 for a list of available projections. If none of those names are matched,
 the string will be fed in as is, and assumed to be an alternative valid
-crs definition. Defaults to match whichever RCM data was listed first
-in the ".Rprofile" file (matches using the dataset's 'src').}
+crs definition. The default is to match whichever RCM data was listed
+first in the ".Rprofile" file (match based on the dataset's 'src').}
 }
 \description{
 RCM projections do not have standard EPSG codes, and usually
@@ -28,37 +28,28 @@ These can be viewed with a command such as
 \code{ncdf4::ncatt_get(nc, "rotated_pole")}.
 }
 
-\subsection{MAR}{
-
-The default MAR crs is based on EPSG:3031 (taken from the description of
-this \href{https://doi.org/10.5281/zenodo.2547638}{Zenodo dataset}, but it
-appears that it is in kilometres, not metres as a standard EPSG:3031
-would be. This is very much to be finished off with the correct datasets!
-}
-
 \subsection{Projection Options}{
 
 Options are:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{  - "racmo"             Antarctic wide
-  - "racmoAA"           Antarctic wide (as above, just more explicit!)
-  - "racmoAP"           Antarctic Peninsula
-  - "mar"               Who knows at the moment?!
-  - "stereo"            Antarctic Polar Stereographic EPSG:[3031](https://epsg.io/3031)
-  - "lambertEqual"      Lambert Equal Area Equidistant (EPSG: [102020](https://epsg.io/102020))
-  - "ortho"             Orthographic South Pole (EPSG: [102037](https://epsg.io/102037))
-  - "WGS84" / "ERA5"    WGS84 GPS System (EPSG: [4326](https://epsg.io/4326))
-  - "stereoAus"         Australian Antarctic Polar Stereographic (EPSG: [3032](https://epsg.io/3032))
-  - "lambertAus"        Australian Antarctic Lambert (EPSG: [3033](https://epsg.io/3033))
-  - "ease2"             NSIDC EASE-Grid 2.0 South (EPSG: [6932](https://epsg.io.6932))
+  - "stereo"            Antarctic Polar Stereographic (EPSG:3031)
+  - "lambertEqual"      Lambert Equal Area Equidistant (EPSG: 102020)
+  - "ortho"             Orthographic South Pole (EPSG: 102037)
+  - "WGS84" / "ERA5"    WGS84 GPS System (EPSG: 4326)
+  - "stereoAus"         Australian Antarctic Polar Stereographic (EPSG: 3032)
+  - "lambertAus"        Australian Antarctic Lambert (EPSG: 3033)
+  - "ease2"             NSIDC EASE-Grid 2.0 South (EPSG: 6932)
 }\if{html}{\out{</div>}}
 
 These crs definitions are stored in \code{.polarEnv$grids$crs}.
 For more information on RCM projections, see here:
-\url{https://gitlab.tudelft.nl/slhermitte/manuals/blob/master/RACMO_reproject.md}
-For more information on the non-RCM EPSG codes, follow the links; those
-pages are particularly good for showing the extent where the projection
-has been created for.
+\url{https://gitlab.tudelft.nl/slhermitte/manuals/blob/master/RACMO_reproject.md}.
+
+For more information on the non-RCM EPSG codes, visit a site such as
+\url{https://epsg.io}, which is particularly good for showing the extent
+where each projection is best suited for use. Add the EPSG code directly
+to the end of that web address: \url{https://epsg.io/4326}.
 }
 }
 

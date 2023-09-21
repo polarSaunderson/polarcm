@@ -7,7 +7,7 @@
 crop_to_shelf(x, shelf)
 }
 \arguments{
-\item{x}{SpatRaster: The RACMO or MAR data to crop. It must be an existing
+\item{x}{SpatRaster: The RCM data to crop. It must be an existing
 SpatRaster.}
 
 \item{shelf}{"string": The EXACT name of the ice shelves to crop 'x' to. If
@@ -15,11 +15,10 @@ a vector with multiple shelves is input, non-shelf pixels in the bounding
 box between those shelves are also included.}
 }
 \description{
-Spatially crop RACMO or MAR SpatRasters. The 'shelf' must be
-an exact match for a name in the MEaSURES dataset. Multiple shelves can
-be used in a vector. The data returned is for a bounding box around the
-shelves; use \code{mask_to_shelf()} for "cropping" tightly to the actual shelf
-outline.
+Spatially crop RCM SpatRasters. The 'shelf' must be an exact
+match for a name in the MEaSURES dataset. Multiple shelves can be used in
+a vector. The data returned is for a bounding box around the shelves; use
+\code{\link[=mask_to_shelf]{mask_to_shelf()}} for "cropping" tightly to the actual shelf outline.
 }
 \examples{
 -----------------------------------------------------------------

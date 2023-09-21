@@ -9,7 +9,7 @@ draw_racmo_axes <- function(x = "",
   #' @description The default terra borders for Antarctica leave a lot of white
   #'   space around the continent. This function draws axes that are tighter to
   #'   the coastline of the raster. This function should be called straight
-  #'   after using terra::plot(x, axes = FALSE).
+  #'   after using `terra::plot(x, axes = FALSE)`.
   #'
   #' @param x SpatRaster: Which data has been plotted? Supply the SpatRaster to
   #'   correctly align the axes with the extent; if an empty string is supplied,
@@ -20,7 +20,6 @@ draw_racmo_axes <- function(x = "",
   #' @param axisKula What colour should the axis lines be?
   #' @param interval numeric: The interval between tick marks, in the ?
   #' @param tickLength numeric: How long should the tick marks be?
-
   #'
   #' @export
 

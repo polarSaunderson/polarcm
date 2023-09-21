@@ -20,8 +20,8 @@ get_coastline <- function(extent = "",
   #'   is fed into [get_extent()]; see there for details of valid input.
   #'
   #' @param crs "string": Which projection should the coastline be returned in?
-  #'   See `use_crs()` or `terra::crs()`. By default (i.e. NULL), it will match
-  #'   the first RCM data defined in the ".Rprofile".
+  #'   See [polarcm::use_crs()] or [terra::crs()]. By default (i.e. NULL), it
+  #'   will match the first RCM data defined in the ".Rprofile".
   #'
   #' @inheritParams get_extent
   #'

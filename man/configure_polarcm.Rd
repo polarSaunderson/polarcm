@@ -8,138 +8,155 @@ configure_polarcm(refresh = FALSE)
 }
 \arguments{
 \item{refresh}{BINARY: Should \code{polarcm} be configured again? Mainly for
-developers and forces \code{polarcm} to run the configuration again. It sets the
-existing \code{.polarEnv} as an empty list, and then sources the ".Rprofile"
-again. By default, 'refresh' is FALSE, because it is usually not
-necessary to reconfigure the package very often at all -  after the first
-call in a session, we usually just want it to return what has already
-stored in the \code{.polarEnv} and reconfiguring would unnecessarily slow it
-down.}
+developers and forces \code{polarcm} to run the configuration again. It sets
+the existing \code{.polarEnv} as an empty list, and then sources your
+".Rprofile" again.
+
+By default, 'refresh' is FALSE. It is usually unnecessary to reconfigure
+the package at all in a session. Usually we just want to run it once
+at the start of each R session, and after that first call, we only want
+it to return information that has already stored in the \code{.polarEnv}.}
 }
 \description{
-Please read the Instructions below!
+Please \strong{read} this \emph{AND} the Instructions section below!
 
-\code{polarcm} functions need to know where certain datasets are on your system
-to work - the \code{configure_polarcm()} function helps by creating the
+\code{polarcm} functions need to know where certain datasets are on your
+system to work. The \code{\link[=configure_polarcm]{configure_polarcm()}} function helps by creating the
 required paths and datasets in a hidden environment (\code{.polarEnv}) that
-the other functions can access. The \code{configure_polarcm} function therefore
-needs to be called before any \code{polarcm} functions are used (which is
-automatically done as part of most \code{polarcm} functions). The necessary
-datasets \emph{must} already be saved and accessible on your system (see
-"Accessing Datasets"); any datasets that are not available need to be
-defined as NULL and will be ignored, with predictable consequences -
-functions that try to call them won't work!).
+the other functions can access. The \code{\link[=configure_polarcm]{configure_polarcm()}} function
+therefore needs to be called before any \code{polarcm} functions are used
+(this is automatically done as part of most \code{polarcm} functions).
+
+\strong{IMPORTANT}:
+The necessary datasets \emph{must} already be saved and accessible on your
+system (see "Accessing Datasets" below). Any datasets that are not
+available need to be defined as NULL and will be ignored, with
+predictable consequences - functions that try to call them won't work!
 }
 \section{Instructions}{
-This function must be called before using any \code{polarcm} functions (once
-per R session). The raw data paths need to be defined in an ".Rprofile"
-file. The ".Rprofile" file is simply a file called ".Rprofile" that runs
+This function must be called before using any \code{polarcm} functions. It
+needs to be run once at the start of every new R session. This is usually
+done automatically as part of most \code{polarcm} functions.
+
+The raw data paths need to be defined in an ".Rprofile" file. The
+".Rprofile" file is simply a file called ".Rprofile" that runs
 automatically when R starts a new session.
 
-The ".Rprofile" file should be in either:
-\enumerate{
-\item the current working directory (\code{\link[=getwd]{getwd()}}); or
-\item the user's home directory (\code{Sys.getenv("HOME")}); or
-\item the R installation (\code{\link[=R.home]{R.home()}}).
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   The ".Rprofile" file should be located in either:
+      1) the current working directory ([getwd()]); or
+      2) the user's home directory (`Sys.getenv("HOME")`); or
+      3) the R installation ([R.home()]).
+}\if{html}{\out{</div>}}
 
 For more information on ".Rprofile" files, see Section 2.4 of
 \url{https://csgillespie.github.io/efficientR/set-up.html}.
+\subsection{Code to Copy}{
 
-The following code should be copied and pasted into the ".Rprofile" file.
-This code lets \code{polarcm} know where to find the datasets on your system,
-and also which dataset it is. You must adjust the paths to match your
-directory structure:
-\itemize{
-\item \code{.polarEnv$rawDataPath} must be relative to your current working
-directory;
-\item all other paths must be relative to the "rawDataPath" directory.
-\item If the data is not available (or you don't want it accessible), the
-path must be set as NULL (see racmoD example).
-}
-
-See "Defining Datasets" below for more information on modifying the
-following code block.
+The following code should be copied and pasted into your ".Rprofile"
+file, with the necessary modifications to the filepaths (explained
+below):
 
 \if{html}{\out{<div class="sourceCode R">}}\preformatted{  # polarcm ========================================================================
   if(!exists(".polarEnv")) .polarEnv <- new.env()       # hidden polarcm environment
 
-  ## Raw Data Path ---------------------------------------------------------------
+  ## Raw Data Path -----------------------------------------------------------------
   .polarEnv$rawDataPath     <- "../../Data/"            # relative to working dir
 
-  ## MEaSURES Data Path ----------------------------------------------------------
+  ## MEaSURES Data Path ------------------------------------------------------------
   .polarEnv$MEaSURES        <- "MEaSURES Boundaries/"   # relative to rawDataPath
 
-  ## Monthly RACMO Data Paths ----------------------------------------------------
+  ## Monthly RACMO Data Paths ------------------------------------------------------
   .polarEnv$rcm$racmoM$rp3  <- list("dir" = RACMO/RACMO2.3p3_CON_ANT27_monthly/",
                                     "src" = "10.5281/zenodo.5512076")
 
-  ## Daily RACMO Data Paths ------------------------------------------------------
+  ## Daily RACMO Data Paths --------------------------------------------------------
   .polarEnv$rcm$racmoD      <- NULL      # no racmoD data
 
-  ## RCM Datasets ----------------------------------------------------------------
-  .polarEnv$rcm$marM        <- NULL      # no marM data
-  .polarEnv$rcm$marD        <- NULL      # no marD data
-  .polarEnv$rcm$marH        <- NULL      # no marH (hourly) data
+  ## Other RCM Datasets ------------------------------------------------------------
+  # Coming soon!
 
 }\if{html}{\out{</div>}}
+
+Once in your ".Rprofile", the above code block lets \code{polarcm} know where
+to find the datasets on your system, and also to identify which dataset
+it is (via its doi). You must adjust the paths to match your directory
+structure as follows:
+\itemize{
+\item \code{.polarEnv$rawDataPath} must be relative to your current working
+directory;
+\item all other paths must be relative to the "rawDataPath" directory;
+\item if the data is not available (or you don't want it accessible), the
+path must be set as NULL (see racmoD example).
+}
+
+See "Defining Datasets" below for more information on modifying the
+above code block.
+}
 }
 
 \section{Accessing Datasets}{
-\code{polarcm} \strong{DOES NOT} download data for you. Follow the doi links on this
-page to find data on Zenodo and download the data you want to use first.
+\code{polarcm} \strong{DOES NOT} download data for you. Follow the doi links on
+this page to find data on Zenodo and download the data you want to use
+first.
 
-\code{polarcm} has been created to handle some commonly-used, openly-accessible
-RACMO and MAR datasets shared on Zenodo (see "Zenodo RCM Datasets"). Some
-functions will also work with other versions of the data, or perhaps even
-output from other RCMs, if you \strong{really} want to try it.
+\code{polarcm} has been created to handle some commonly-used,
+openly-accessible RACMO and MAR datasets shared on Zenodo (see "Zenodo
+RCM Datasets"). Some functions will also work with other versions of the
+data, or perhaps even output from other RCMs, if you \strong{really} want to
+try it. Be particularly wary of data projections in such cases.
 
 However, there is no standard way to share MAR or RACMO output (or any
 other RCM output). The lack of standardisation means that a lot of the
-ease of using \code{polarcm} comes from background wrangling of the datasets to
-get the data into the structure that \code{polarcm} expects. For example, some
-authors distribute the data with each file storing a different variable,
-whilst others store all variables in a single file, but create separate
-files for each year or month. \code{polarcm} works best when data is organised
-by variable.
+ease of using \code{polarcm} comes from background wrangling of the datasets
+to get the data into the structure that \code{polarcm} expects. For example,
+some authors distribute the data with each file storing a different
+variable, whilst others store all variables in a single file, but create
+separate files for each year or month. \code{polarcm} works best when data is
+organised by variable.
 
 As noted, \code{polarcm} handles these differences as well as it can do in the
 background, but the package has only been set up for certain datasets
-\emph{so far}. The following subsections list the datasets that \code{polarcm} knows
-what to do with. These datasts are all openly available on Zenodo, and
-need to be identified in the ".Rprofile" file by their doi (see
-"Defining Datasets").
-\subsection{MEaSURES Data}{
+\emph{so far}. Future versions of the package will continue to build on these
+if there is demand.
 
-\code{polarcm} bases the spatial aspects (e.g. using shelf outlines or grounding
-line) on MEaSURES data. The MEaSURES data (Version 2; Mouginot et al.,
-2017) needs to be downloaded first, from here:
+The following subsections list the datasets that \code{polarcm} knows what to
+do with. These datasets are all openly available on Zenodo, and need to
+be  identified in the ".Rprofile" file by their doi (see "Defining
+Datasets").
+\subsection{MEaSURES Dataset}{
+
+\code{polarcm} bases the spatial aspects (e.g. using shelf outlines or
+grounding line) on MEaSURES data, Version 2 (Mouginot et al., 2017).
+This dataset needs to be downloaded first, from:
+\url{https://doi.org/10.5067/AXE4121732AD}
 }
 
 \subsection{Zenodo RCM Datasets}{
 \subsection{RACMO Data}{
 \itemize{
 \item \verb{[r01_dt]}  RACMO2.3p3 Monthly Data Antarctica   \url{https://doi.org/10.5281/zenodo.5512076}
-\item \verb{[r02_dt]}  RACMO2.3p2 Monthly Data Antarctica   \url{https://doi.org/10.5281/zenodo.7760490}
-\item \verb{[r03_dt]}  RACMO2.3p2 Monthly Data AA Peninsula \url{https://doi.org/10.5281/zenodo.7961732}
+\item \verb{[r02_dt]}  RACMO2.3p2 Monthly Data Antarctica   IN PROGRESS!
 }
 }
 
 \subsection{MAR Data}{
 \itemize{
-\item \verb{[m01_dt]}  MARv3.11 3-Hourly Melt AA Peninsula  \url{https://doi.org/10.5281/zenodo.6347190}
+\item Coming soon!
 }
 
-\emph{Note:} The Zenodo doi's listed resolve to the latest version of the
-dataset on Zenodo; it is assumed that any versions of the datasets shared
-using the same Zenodo dataset will be set up in the same way. Let me know
-if this is not the case.
+\emph{Note:} The Zenodo doi's listed here resolve to the latest version of the
+dataset on Zenodo. It is assumed that any versions of the datasets shared
+on the same Zenodo will be set up in the same way. Let me know if this is
+not the case.
 
-\emph{Note:} If multiple datasets are included, the first one will be used as
-the default in functions concerned with the projections. For example, in
-\code{\link[=draw_antarctica]{draw_antarctica()}}, the default projection will match the projection of
-the first dataset included here. The crs projection parameters can be
-overwritten when necessary.
+\emph{Note:} If multiple datasets are included, the first one (i.e. the
+closest to the top of the ".Rprofile") will be used as the default in
+functions, particularly important for those concerned with data
+projections.
+
+For example, in \code{\link[=draw_antarctica]{draw_antarctica()}}, the default projection will match
+the projection of the first dataset included in the ".Rprofile". The crs
+projection parameters can be overwritten when necessary.
 
 \emph{Note:} If multiple datasets are added to the same section (e.g. there is
 both RACMO2.3p2 and RACMO2.3p3 monthly data), the first one defined will
@@ -150,7 +167,8 @@ below).
 
 \emph{Note:} It is okay to choose your own name for the directory containing
 these datasets (as long as they are defined in ".Rprofile"), but the file
-names for the NetCDFs should be the same as those on Zenodo.
+names for the NetCDFs and the MEaSURES dataset should be the same as
+those that were downloaded.
 
 \emph{Note:} Ideally, there will become a standardised way of distributing
 such polar RCM data in future, but if you are aware of any other openly
@@ -170,20 +188,21 @@ dataset type:
                                      "src" = <doiCode>)
 }\if{html}{\out{</div>}}
 
-\verb{<type>} Some functions need to know whether this is RACMO or MAR data,
+\verb{<type>}
+Some functions need to know whether this is RACMO or MAR data,
 and whether it is monthly, daily, or hourly data. Currently, the options
-are:
-racmoM    Monthly RACMO
-racmoD    Daily RACMO
-marM      Monthly MAR
-marD      Daily MAR
-marH      Hourly MAR
+for MAR data are under development, so only racmoM and racmoD are usable:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  racmoM    Monthly RACMO
+  racmoD    Daily RACMO
+}\if{html}{\out{</div>}}
 
 All of these options \strong{must} be included in the ".Rprofile" even if the
 dataset is not available or not wanted. In which case, just set the value
 as NULL (e.g. \code{.polarEnv$rcm$marM <- NULL}).
 
-\verb{<name>} How do you want to refer to this dataset in your code? For
+\verb{<name>}
+How do you want to refer to this dataset in your code? For
 example, when reading in data, which is more your style?:
 
 \if{html}{\out{<div class="sourceCode R">}}\preformatted{   read_racmoM(var = "snowmelt", ver = "rp2")
@@ -191,63 +210,76 @@ example, when reading in data, which is more your style?:
    read_racmoM(var = "snowmelt", ver = "_anyOtherName.You.WANT_2uSE")
 }\if{html}{\out{</div>}}
 
-\verb{<dataDirectory>} Where are the NetCDFs stored on your system? Must be a
+\verb{<dataDirectory>}
+Where are the NetCDFs stored on your system? Must be a
 relative path compared to the "Data/" directory as defined in the
 ".Rprofile" file as ".polarEnv$rawDataPath".
 
-\verb{<doiCode>} Which dataset is this? As explained above, there is no
+\verb{<doiCode>}
+Which dataset is this? As explained above, there is no
 standard way to distribute these datasets so we need to explicitly tell
 \code{polarcm} what dataset we are giving it. We do this using the doi of the
 download page. For example, for the monthly RACMO2.3p3 data above
-(r01_dt, with doi "https://doi.org/10.5281/zenodo.5512076"), the
-\if{html}{\out{<doiCode>}} must be "10.5281/zenodo.5512076". If the data has not been
-shared, but you know it is in EXACTLY the same format (e.g. organisation
-of data files, crs, extent), you can just add the respective \if{html}{\out{<doiCode>}}.
+(\code{r01_dt}, with doi "https://doi.org/10.5281/zenodo.5512076"), the
+\verb{<doiCode>} must be "10.5281/zenodo.5512076".
+
+If the data has not been shared publicly with a doi, but you know FOR
+CERTAIN that it is in EXACTLY the same format (e.g. organisation of data
+files, crs, extent), as one that has been configured, you should be able
+to just add the \verb{<doiCode>} of the corresponding dataset. Be cautious.
 \subsection{Directory Structure}{
 
 This function assumes that all raw data is stored in a "Data/" directory
-(i.e. what we define in ".Rprofile" using '.polarEnv$rawDataPath').
-Separate subdirectories are then expected for the MEaSURES data and any
-RACMO or MAR datasets. These can be either separate directories for each
-dataset (e.g. the RACMO Monthly examples below) or further nested (e.g.
-the MAR Monthly examples below). Whichever way, make sure that the path
-in the "dir" points to the dataset.
+(defined in ".Rprofile" using \code{.polarEnv$rawDataPath}). Separate
+subdirectories are then expected for the MEaSURES dataset and any RCM
+datasets.
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{Data/
-| - - MEaSURES Boundaries/
-|     | - Basins_Antarctica/
-|         | - Basins_Antarctica_v02.shp
-|
-| - - RACMO2.3p3 Monthly/
-|     | - albedo.nc
-|     | - swsd.nc
-|
-| - - RACMO2.3p2 Monthly/
-|     | - albedo.nc
-|     | - swsd.nc
-|
-| - - MAR Monthly/
-|     | - MARv3.11/
-|     |   | - 2015.nc
-|     |   | - 2016.nc
-|     | - MARv3.12/
-|         | - 2011.nc
-|
-| - - MAR Daily/
-|     | - 1980.nc
-|     | - 1981.nc
+These subdirectories can either be separate directories for each dataset
+(e.g. the RACMO Monthly examples below) or further nested (e.g. the MAR
+Monthly examples below). Whichever way, make sure that the path in the
+"dir" part of the ".Rprofile" points to the directory containing the
+datasets.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  Data/
+  | - MEaSURES Boundaries/
+  |   | - Basins_Antarctica/
+  |       | - Basins_Antarctica_v02.shp
+  |
+  | - RACMO2.3p3_Monthly_ANT27_CON/
+  |   | - snowmelt_monthlyS_ANT27_CONSettings_197901_201812.nc
+  |   | - swsd...file.nc
+  |
+  | - RACMO2.3p2 Monthly/
+  |   | - snowmelt...file.nc
+  |   | - swsd...file.nc
+  |
+  | - MAR Monthly/
+  |   | - MARv3.11/
+  |   |   | - 2015_file.nc
+  |   |   | - 2016_file.nc
+  |   | - MARv3.12/
+  |       | - 2011_file.nc
+  |
+  | - MAR Daily/
+  |   | - 1980_file.nc
+  |   | - 1981_file.nc
 }\if{html}{\out{</div>}}
 
-\emph{!!!REMEMBER!!!}
+\emph{!!!}  \emph{REMEMBER}  \emph{!!!}
 
-The data must have already been downloaded before
-trying to use \code{polarcm} - the package \emph{does not} try to find and download
-data for you. If any datasets are not available, set their path as
-\code{NULL}. NULLs will restrict the capabilities of the racmoR package in
-expected ways - for example, if no daily RACMO data is available, the
-racmoD functions will fail. However, that may not be an issue. The
-MEaSURES data is used for any location-based calculations or subsetting,
-and for drawing borders.
+The data \strong{must} have already been downloaded before trying to use
+\code{polarcm}!
+
+The package \emph{does not} try to find and/or download data for
+you.
+
+If any datasets are not available, set their path as \code{NULL}. NULLs
+will restrict the capabilities of the racmoR package in expected ways -
+for example, if no daily RACMO data is available, the racmoD functions
+will fail. However, that may not be an issue.
+
+The MEaSURES data is necessary for any location-based calculations or
+subsetting, and for drawing borders.
 }
 }
 

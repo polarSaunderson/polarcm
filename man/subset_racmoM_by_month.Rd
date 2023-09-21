@@ -64,6 +64,6 @@ racmoM data that was defined first in the ".Rprofile". Ignored if
 }
 \description{
 Subset monthly RACMO data based on the month. This function is
-essentially wrapper around \code{terrapin::subset_by_month()} for monthly
+essentially wrapper around \code{\link[terrapin:subset_by_month]{terrapin::subset_by_month()}} for monthly
 RACMO data.
 }

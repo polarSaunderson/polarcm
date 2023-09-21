@@ -8,7 +8,7 @@ subset_racmoD_by_year <- function(racmoData,
   #' Subset daily RACMO data based on the year
   #'
   #' @description Subset daily RACMO data based on the year. This function is
-  #'   essentially a wrapper around `terrapin::subset_by_year()` for daily RACMO
+  #'   essentially a wrapper around [terrapin::subset_by_year()] for daily RACMO
   #'   data.
   #'
   #' @inheritParams subset_racmoD_by_day

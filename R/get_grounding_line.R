@@ -20,8 +20,8 @@ get_grounding_line <- function(extent = "",
   #'   input.
   #'
   #' @param crs "string": Which projection should the grounding line be returned
-  #'   in? See `use_crs()` or `terra::crs()`. By default (i.e. NULL), it will
-  #'   match the first RCM data defined in the ".Rprofile".
+  #'   in? See [polarcm::use_crs()] or [terra::crs()]. By default (i.e. NULL),
+  #'   it will match the first RCM data defined in the ".Rprofile".
   #'
   #' @inheritParams get_extent
   #'

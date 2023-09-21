@@ -14,33 +14,39 @@ draw_antarctica <- function(extent = "",
   #'   to a map.
   #'
   #' @param extent Define the area within which to draw Antarctica. This
-  #'   argument is fed into `get_extent()`; see there for details.
+  #'   argument is fed into [get_extent()]; see there for details.
   #'
   #' @param sbcg "string": Which parts of Antarctica should be drawn? Options
-  #'   are: * shelves          "s" * basins           "b"  # uses IMBIE; use
-  #'   "bb" for MEaSURES * coasts           "c" * grounding line   "g"
+  #'   are:
+  #'   ```
+  #'     * shelves          "s"
+  #'     * basins           "b"  # uses IMBIE basins
+  #'     * refined basins   "bb" # uses refined MEaSURES basins
+  #'     * coasts           "c"
+  #'     * grounding line   "g"
+  #'   ```
   #'
   #' @param rectangularExtent BINARY: Should only the defined shelf/shelves be
   #'   included (TRUE), or can the outlines of all shelves within the bounding
   #'   box be included too (FALSE)?
   #'
   #' @param simplify numeric: Should the outline be simplified? Uses the
-  #'   `terra::simplifyGeom()` function, so this value is the tolerance - i.e.
+  #'   [terra::simplifyGeom()] function, so this value is the tolerance - i.e.
   #'   nodes must be at least this far apart, defined in crs units. Larger
   #'   numbers are coarser; 0 (default) is no simplifying.
   #'
   #' @param crs "string": Which projection should the outlines be drawn in?
-  #'   See `use_crs()` or `terra::crs()`. By default (i.e. NULL), it will match
-  #'   the first RCM data defined in the ".Rprofile".
+  #'   See [polarcm::use_crs()] or [terra::crs()]. By default (i.e. NULL), it
+  #'   will match the first RCM data defined in the ".Rprofile".
   #'
   #' @param newPlot BINARY: If TRUE, Antarctica is drawn on an empty window; if
   #'   FALSE (the default), it is drawn on top of the existing plot. If there is
   #'   no existing plot, this defaults to TRUE.
   #'
-  #' @param extentArgs A list of arguments to feed into `get_extent()`. Only
-  #'   necessary if
+  #' @param extentArgs An optional list of arguments to feed into
+  #'   [get_extent()].
   #'
-  #' @param ... Any arguments that can be used in `terra::lines()`
+  #' @param ... Any arguments that can be used in [terra::lines()].
   #'
   #' @export
 

@@ -60,7 +60,7 @@ get_extent <- function(extent = "",
   #'   refined basin names.
   #'
   #'   **Note:** This argument is distinct from the 'returnImbie' argument used
-  #'   in functions such as `get_shelf_outline()` and `get_basin_outline()`.
+  #'   in functions such as [get_shelf_outline()] and [get_basin_outline()].
   #'
   #' @param preferType Sometimes an ice shelf and the refined MEaSURES basins
   #'   have the same name.
@@ -86,8 +86,8 @@ get_extent <- function(extent = "",
   #'   argument.
   #'
   #' @param crs "string": Which crs should the extent be returned in? See
-  #'   `use_crs()` or `terra::crs()`. By default (i.e. NULL), it will match the
-  #'   first RCM data defined in the ".Rprofile".
+  #'   [polarcm::use_crs()] or [terra::crs()]. By default (i.e. NULL), it will
+  #'   match the first RCM data defined in the ".Rprofile".
   #'
   #' @param crsIn "string": This only needs defining if the 'extent' argument is
   #'   a SpatExtent, which don't store projection information. This argument
@@ -246,52 +246,3 @@ get_extent <- function(extent = "",
 
   return(xBounds)
 }
-
-
-
-# EXAMPLES TO BUILD IN & DOCUMENT PROPERLY
-# # All of Antarctica
-# terra::plot(get_extent(""), main = "t1")
-# terra::lines(get_extent("", rectangularExtent = TRUE), col = "red", lwd = 2)
-#
-# # Single shelf
-# terra::plot(get_extent("Amery"), main = "t2")
-# terra::lines(get_extent("Amery", rectangularExtent = TRUE), col = "red", lwd = 2)
-#
-# # Single basin - IMBIE Basin Names
-# terra::plot(get_extent("A-Ap"), main = "t3")
-# terra::lines(get_extent("A-Ap", rectangularExtent = TRUE), col = "red", lwd = 2)
-#
-# # Single basin - MEaSURES Basin Names
-# terra::plot(get_extent("Vincennes_Bay"), main = "t4")
-# terra::lines(get_extent("Vincennes_Bay", rectangularExtent = TRUE), col = "red", lwd = 2)
-#
-# # Some names appear as both a basin and a shelf
-# terra::plot(get_extent("Shackleton"), main = "t5")
-# terra::lines(get_extent("Shackleton", rectangularExtent = TRUE), col = "red", lwd = 2)
-#
-# # Use preferType for a shelf or basin preference if name is duplicated
-# terra::plot(get_extent("Shackleton"), main = "t6")
-# terra::lines(get_extent("Shackleton", preferType = "shelves"), col = "red", lwd = 2)
-# terra::lines(get_extent("Shackleton", preferType = "basins"), col = "blue", lwd = 2)
-#
-# # Define extent using multiple shelves
-# terra::plot(get_extent(c("Amery", "West")), main = "t7")
-# terra::lines(get_extent(c("Amery", "West"), rectangularExtent = TRUE), col = "red", lwd = 2)
-#
-# # Define extent using multiple shelves and basins together
-# terra::plot(get_extent(c("Amery", "West", "Publications")), main = "t8")
-# terra::lines(get_extent(c("Amery", "West", "Publications"), rectangularExtent = TRUE), col = "red", lwd = 2)
-#
-# # Use only shelves or basins if both are in the vector
-# terra::plot(get_extent(c("Amery", "West", "Publications")), main = "t9")
-# terra::lines(get_extent(c("Amery", "West", "Publications"), useOnly = "shelves"), col = "red")
-# terra::lines(get_extent(c("Amery", "West", "Publications"), useOnly = "basins"), col = "blue")
-#
-# # Basins names are defined according to IMBIE or MEaSURES by default
-# terra::plot(get_extent(c("A-Ap", "Vincennes_Bay", "Dry Valleys")), main = "t10")
-#
-# # Use only IMBIE or MEaSURES basins if both are in the vector
-# terra::plot(get_extent(c("A-Ap", "Vincennes_Bay", "Dry Valleys")), main = "t11")
-# terra::lines(get_extent(c("A-Ap", "Vincennes_Bay", "Dry Valleys"), imbieBasins = TRUE), col = "red")
-# terra::lines(get_extent(c("A-Ap", "Vincennes_Bay", "Dry Valleys"), imbieBasins = FALSE), col = "blue")

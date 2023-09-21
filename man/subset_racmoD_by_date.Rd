@@ -68,7 +68,7 @@ racmoD data that was defined first in the ".Rprofile". Ignored if
 }
 \description{
 Subset daily RACMO data based on specific dates. This function
-is essentially a wrapper around \code{terrapin::subset_by_dates()} for daily
+is essentially a wrapper around \code{\link[terrapin:subset_by_date]{terrapin::subset_by_date()}} for daily
 RACMO data.
 
 \strong{Note:} This function is distinct to \code{\link[=subset_racmoD_by_day]{subset_racmoD_by_day()}} as it

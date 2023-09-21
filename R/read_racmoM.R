@@ -3,8 +3,7 @@ read_racmoM <- function(racmoData, version = NULL) {
   #'
   #' @description Read in the NetCDF files for monthly resolution RACMO data
   #'   (racmoM). This function returns a SpatRaster (see the `terra` package),
-  #'   and knows how to handle some different configurations of the racmoM
-  #'   `polaR` functions need.
+  #'   and can handle the necessary configurations for the racmoM data.
   #'
   #' @param racmoData The monthly RACMO data to return. If a valid string, raw
   #'   monthly RACMO data for the corresponding variable is read in from the

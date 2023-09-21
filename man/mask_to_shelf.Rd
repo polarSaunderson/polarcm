@@ -2,24 +2,24 @@
 % Please edit documentation in R/mask_to_x.R
 \name{mask_to_shelf}
 \alias{mask_to_shelf}
-\title{Mask RACMO or MAR data to an Antarctic ice shelf}
+\title{Mask RCM data to an Antarctic ice shelf}
 \usage{
 mask_to_shelf(x, shelf)
 }
 \arguments{
-\item{x}{SpatRaster: The RACMO or MAR data to mask. It must be an existing
+\item{x}{SpatRaster: The RCM data to mask. It must be an existing
 SpatRaster.}
 
 \item{shelf}{"string": The EXACT name of the ice shelves to mask 'x' to. If
 multiple are used, non-shelf pixels in the bounding box are masked out.}
 }
 \description{
-Spatially mask RACMO or MAR SpatRasters. The 'shelf' must be
-an exact match for a name in the MEaSURES dataset. Multiple shelves can
-be used in a vector.
+Spatially mask RCM SpatRasters. The 'shelf' must be an exact
+match for a name in the MEaSURES dataset. Multiple shelves can be used in
+a vector.
 
 The data returned is "masked" to the actual shelf outline, meaning the
-surrounding pixels are given a value of NA; use \code{crop_to_shelf()} for the
+surrounding pixels are given a value of NA; use \code{\link[=crop_to_shelf]{crop_to_shelf()}} for the
 rectangular bounding box.
 }
 \examples{

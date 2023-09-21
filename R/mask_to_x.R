@@ -1,15 +1,15 @@
 mask_to_shelf <- function(x, shelf) {
-  #' Mask RACMO or MAR data to an Antarctic ice shelf
+  #' Mask RCM data to an Antarctic ice shelf
   #'
-  #' @description Spatially mask RACMO or MAR SpatRasters. The 'shelf' must be
-  #'   an exact match for a name in the MEaSURES dataset. Multiple shelves can
-  #'   be used in a vector.
+  #' @description Spatially mask RCM SpatRasters. The 'shelf' must be an exact
+  #'   match for a name in the MEaSURES dataset. Multiple shelves can be used in
+  #'   a vector.
   #'
   #'   The data returned is "masked" to the actual shelf outline, meaning the
-  #'   surrounding pixels are given a value of NA; use `crop_to_shelf()` for the
+  #'   surrounding pixels are given a value of NA; use [crop_to_shelf()] for the
   #'   rectangular bounding box.
   #'
-  #' @param x SpatRaster: The RACMO or MAR data to mask. It must be an existing
+  #' @param x SpatRaster: The RCM data to mask. It must be an existing
   #'   SpatRaster.
   #' @param shelf "string": The EXACT name of the ice shelves to mask 'x' to. If
   #'   multiple are used, non-shelf pixels in the bounding box are masked out.
@@ -55,18 +55,18 @@ mask_to_shelf <- function(x, shelf) {
 
 
 mask_to_basin <- function(x, basin) {
-  #' Mask RACMO or MAR data to an Antarctic basin
+  #' Mask RCM data to an Antarctic basin
   #'
-  #' @description Spatially mask RACMO or MAR SpatRasters. The 'basin' must be
-  #'   an exact match for a basin name in the MEaSURES dataset, and can refer to
-  #'   either the IMBIE basins (e.g. "A-Ap") or the refined MEaSURES basins
-  #'   (e.g. "Dry Valleys"). Multiple basins can be used in a vector.
+  #' @description Spatially mask RCM SpatRasters. The 'basin' must be an exact
+  #'   match for a basin name in the MEaSURES dataset, and can refer to either
+  #'   the IMBIE basins (e.g. "A-Ap") or the refined MEaSURES basins (e.g. "Dry
+  #'   Valleys"). Multiple basins can be used in a vector.
   #'
   #'   The data returned is "masked" to the actual basin outline, meaning the
-  #'   surrounding pixels are given a value of NA; use `crop_to_basin()` for the
+  #'   surrounding pixels are given a value of NA; use [crop_to_basin()] for the
   #'   rectangular bounding box.
   #'
-  #' @param x SpatRaster: The RACMO or MAR data to mask. It must be an existing
+  #' @param x SpatRaster: The RCM data to mask. It must be an existing
   #'   SpatRaster.
   #' @param basin "string": The EXACT name of the basins to mask 'x' to. If
   #'   multiple are used, non-basins pixels in the bounding box are also masked

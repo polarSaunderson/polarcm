@@ -42,10 +42,10 @@ racmoD data that was defined first in the ".Rprofile". Ignored if
 }
 \description{
 Subset daily RACMO data based on the day of the month. This
-function is essentially a wrapper around \code{terrapin::subset_by_day()} for
+function is essentially a wrapper around \code{\link[terrapin:subset_by_day]{terrapin::subset_by_day()}} for
 daily RACMO data.
 
 \strong{Note:} This function is distinct to \code{\link[=subset_racmoD_by_date]{subset_racmoD_by_date()}} as it
-accounts for only the part of the date, not the full date. There is no
-accounting for the month or year.
+accounts for only the day part of the date, not the full date (i.e. it
+ignores the month and year).
 }

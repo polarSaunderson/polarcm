@@ -22,6 +22,5 @@ racmoM data that was defined first in the ".Rprofile". Ignored if
 \description{
 Read in the NetCDF files for monthly resolution RACMO data
 (racmoM). This function returns a SpatRaster (see the \code{terra} package),
-and knows how to handle some different configurations of the racmoM
-\code{polaR} functions need.
+and can handle the necessary configurations for the racmoM data.
 }

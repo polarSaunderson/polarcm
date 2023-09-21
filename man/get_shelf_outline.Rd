@@ -35,8 +35,8 @@ shelves and/or basins are included, the extent box will extend over all
 of them at once.}
 
 \item{crs}{"string": Which projection should the shelves be returned in?
-See \code{use_crs()} or \code{terra::crs()}. By default (i.e. NULL), it will match
-the first RCM data defined in the ".Rprofile".}
+See \code{\link[=use_crs]{use_crs()}} or \code{\link[terra:crs]{terra::crs()}}. By default (i.e. NULL), it
+will match the first RCM data defined in the ".Rprofile".}
 
 \item{preferType}{Sometimes an ice shelf and the refined MEaSURES basins
 have the same name.
@@ -74,7 +74,7 @@ names, but only one should be used. Otherwise, just enter only IMBIE or
 refined basin names.
 
 \strong{Note:} This argument is distinct from the 'returnImbie' argument used
-in functions such as \code{get_shelf_outline()} and \code{get_basin_outline()}.}
+in functions such as \code{\link[=get_shelf_outline]{get_shelf_outline()}} and \code{\link[=get_basin_outline]{get_basin_outline()}}.}
 
 \item{crsIn}{"string": This only needs defining if the 'extent' argument is
 a SpatExtent, which don't store projection information. This argument

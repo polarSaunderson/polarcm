@@ -57,5 +57,5 @@ racmoD data that was defined first in the ".Rprofile". Ignored if
 Subset dailly RACMO data based on the austral summer. An
 austral summer is defined using the "australSplit" argument; see that for
 an explanation. This function is essentially a wrapper around
-\code{terrapin::subset_by_summer()} for daily RACMO data.
+\code{\link[terrapin:subset_by_summer]{terrapin::subset_by_summer()}} for daily RACMO data.
 }

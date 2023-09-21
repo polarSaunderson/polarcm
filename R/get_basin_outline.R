@@ -26,7 +26,7 @@ get_basin_outline <- function(extent = "",
   #'   2) An extent can be defined according to [get_extent()]. Any basins which
   #'   intersect with this extent (and match the 'returnImbie' argument) are
   #'   then returned. This occurs if 'rectangularExtent' is TRUE, and most of
-  #'   the remaining arguments are fed directly into `get_extent()`.
+  #'   the remaining arguments are fed directly into [get_extent()].
   #'
   #'   The basins will be returned in the projection specified by the 'crs'
   #'   argument.
@@ -40,7 +40,7 @@ get_basin_outline <- function(extent = "",
   #'   'rectangularExtents' as FALSE (the default).
   #'
   #'   To return any basins that fall within a geographical extent, set
-  #'   'rectangularExtents' as TRUE, and follow the logic of `get_extents()` to
+  #'   'rectangularExtents' as TRUE, and follow the logic of [get_extent()] to
   #'   define the geographical extent with the remaining parameters. The most
   #'   obvious reason to do this would be to include the outline of basins
   #'   within the bounding box of the named basins, but that aren't named
@@ -53,12 +53,12 @@ get_basin_outline <- function(extent = "",
   #'   refined basins, set this as FALSE.
   #'
   #'   **Note:** This argument is distinct to the 'useOnly' and 'imbieBasins'
-  #'   arguments, which are fed in `get_extent()` to define the initial extent
+  #'   arguments, which are fed in [get_extent()] to define the initial extent
   #'   to search for basins in.
   #'
   #' @param crs "string": Which projection should the basins be returned in?
-  #'   See `use_crs()` or `terra::crs()`. By default (i.e. NULL), it will match
-  #'   the first RCM data defined in the ".Rprofile".
+  #'   See [polarcm::use_crs()] or [terra::crs()]. By default (i.e. NULL), it
+  #'   will match the first RCM data defined in the ".Rprofile".
   #'
   #' @inheritParams get_extent
   #'
@@ -137,78 +137,3 @@ get_basin_outline <- function(extent = "",
   basins   <- terra::project(basins, use_crs(crs))
   return(basins)
 }
-
-
-# TESTING - uncomment a "tst" and the print + plot lines
-
-# # Blank = All of Antarctica
-# tst <- get_basin_outline("")
-#
-# # Named
-# tst <- get_basin_outline("A-Ap", rectangularExtent = TRUE)
-# tst <- get_basin_outline("A-Ap", rectangularExtent = FALSE)
-# tst <- get_basin_outline(c("A-Ap", "Vincennes_Bay"), rectangularExtent = TRUE)
-# tst <- get_basin_outline(c("A-Ap", "Vincennes_Bay"), rectangularExtent = FALSE)
-#
-# # SpatVector (run another one first)
-# tst <- get_basin_outline(tst, rectangularExtent = TRUE)
-# tst <- get_basin_outline(tst, rectangularExtent = FALSE)
-#
-# # SpatExtent
-# tst <- get_basin_outline(terra::ext(-10, 10, 8, 18),
-#                          crsIn = use_crs("racmo"),
-#                          rectangularExtent = FALSE)
-#
-# # SpatRaster
-#
-#
-#
-# print(tst)
-# terra::plot(tst)
-
-# =============================================================================!
-# SCRAP CODE
-
-
-#
-#   # Search for exact basin names
-#   if (isFALSE(rectangularExtent)) {
-#     if (extent[[1]] != "") {
-#       basins <- basins[basins$NAME %in% extent]
-#     }
-#   } else {
-#   # Define the required extent to search for basins within
-#     extent <- get_extent(extent = extent,
-#                          rectangularExtent = rectangularExtent,
-#                          preferType = preferType,
-#                          useOnly = useOnly,
-#                          imbieBasins = imbieBasins,
-#                          crs = use_crs("stereo"), # return 3031 to match basins
-#                          crsIn = crsIn)
-#
-#     # Establish which basins intersect with the extent
-#     basins <- terra::intersect(basins, extent)
-#   }
-#
-#   # Reproject
-#   basins   <- terra::project(basins, use_crs(crs))
-#
-#   return(basins)
-# }
-
-
-# EXAMPLES : THESE NEED TO BE BUILT INTO THE DOCUMENTATION
-# t1 <- "A-Ap"
-#
-# # Compare returnImbie argument
-# get_basin_outline(t1) |> terra::plot(col = "black")
-# get_basin_outline(t1, FALSE, returnImbie = NULL) |>
-#   terra::lines(col = "red", lwd = 2)
-#
-# get_basin_outline(t1) |> terra::plot(col = "black")
-# get_basin_outline(t1, FALSE, returnImbie = TRUE) |>
-#   terra::lines(col = "red", lwd = 2)
-#
-# get_basin_outline(t1) |> terra::plot(col = "black")
-# get_basin_outline(t1, FALSE, returnImbie = FALSE) |>
-#   terra::lines(col = "red", lwd = 2)

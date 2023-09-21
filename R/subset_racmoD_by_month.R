@@ -9,7 +9,7 @@ subset_racmoD_by_month <- function(racmoData,
   #' Subset daily RACMO data based on the month
   #'
   #' @description Subset daily RACMO data based on the month. This function is
-  #'   essentially a wrapper around `terrapin::subset_by_month()` for daily
+  #'   essentially a wrapper around [terrapin::subset_by_month()] for daily
   #'   RACMO data.
   #'
   #' @param racmoData The daily RACMO data to subset. Can be either a variable

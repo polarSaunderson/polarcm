@@ -22,7 +22,7 @@ To return only specific basins, enter their names as a vector, and set
 'rectangularExtents' as FALSE (the default).
 
 To return any basins that fall within a geographical extent, set
-'rectangularExtents' as TRUE, and follow the logic of \code{get_extents()} to
+'rectangularExtents' as TRUE, and follow the logic of \code{\link[=get_extent]{get_extent()}} to
 define the geographical extent with the remaining parameters. The most
 obvious reason to do this would be to include the outline of basins
 within the bounding box of the named basins, but that aren't named
@@ -42,12 +42,12 @@ To return only the IMBIE basins, set this as TRUE. To return the MEaSURES
 refined basins, set this as FALSE.
 
 \strong{Note:} This argument is distinct to the 'useOnly' and 'imbieBasins'
-arguments, which are fed in \code{get_extent()} to define the initial extent
+arguments, which are fed in \code{\link[=get_extent]{get_extent()}} to define the initial extent
 to search for basins in.}
 
 \item{crs}{"string": Which projection should the basins be returned in?
-See \code{use_crs()} or \code{terra::crs()}. By default (i.e. NULL), it will match
-the first RCM data defined in the ".Rprofile".}
+See \code{\link[=use_crs]{use_crs()}} or \code{\link[terra:crs]{terra::crs()}}. By default (i.e. NULL), it
+will match the first RCM data defined in the ".Rprofile".}
 
 \item{preferType}{Sometimes an ice shelf and the refined MEaSURES basins
 have the same name.
@@ -85,7 +85,7 @@ names, but only one should be used. Otherwise, just enter only IMBIE or
 refined basin names.
 
 \strong{Note:} This argument is distinct from the 'returnImbie' argument used
-in functions such as \code{get_shelf_outline()} and \code{get_basin_outline()}.}
+in functions such as \code{\link[=get_shelf_outline]{get_shelf_outline()}} and \code{\link[=get_basin_outline]{get_basin_outline()}}.}
 
 \item{crsIn}{"string": This only needs defining if the 'extent' argument is
 a SpatExtent, which don't store projection information. This argument
@@ -109,7 +109,7 @@ exactly.
 \item An extent can be defined according to \code{\link[=get_extent]{get_extent()}}. Any basins which
 intersect with this extent (and match the 'returnImbie' argument) are
 then returned. This occurs if 'rectangularExtent' is TRUE, and most of
-the remaining arguments are fed directly into \code{get_extent()}.
+the remaining arguments are fed directly into \code{\link[=get_extent]{get_extent()}}.
 }
 
 The basins will be returned in the projection specified by the 'crs'

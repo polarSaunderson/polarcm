@@ -2,12 +2,12 @@
 % Please edit documentation in R/mask_to_x.R
 \name{mask_to_basin}
 \alias{mask_to_basin}
-\title{Mask RACMO or MAR data to an Antarctic basin}
+\title{Mask RCM data to an Antarctic basin}
 \usage{
 mask_to_basin(x, basin)
 }
 \arguments{
-\item{x}{SpatRaster: The RACMO or MAR data to mask. It must be an existing
+\item{x}{SpatRaster: The RCM data to mask. It must be an existing
 SpatRaster.}
 
 \item{basin}{"string": The EXACT name of the basins to mask 'x' to. If
@@ -15,13 +15,13 @@ multiple are used, non-basins pixels in the bounding box are also masked
 out.}
 }
 \description{
-Spatially mask RACMO or MAR SpatRasters. The 'basin' must be
-an exact match for a basin name in the MEaSURES dataset, and can refer to
-either the IMBIE basins (e.g. "A-Ap") or the refined MEaSURES basins
-(e.g. "Dry Valleys"). Multiple basins can be used in a vector.
+Spatially mask RCM SpatRasters. The 'basin' must be an exact
+match for a basin name in the MEaSURES dataset, and can refer to either
+the IMBIE basins (e.g. "A-Ap") or the refined MEaSURES basins (e.g. "Dry
+Valleys"). Multiple basins can be used in a vector.
 
 The data returned is "masked" to the actual basin outline, meaning the
-surrounding pixels are given a value of NA; use \code{crop_to_basin()} for the
+surrounding pixels are given a value of NA; use \code{\link[=crop_to_basin]{crop_to_basin()}} for the
 rectangular bounding box.
 }
 \examples{
