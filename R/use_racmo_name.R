@@ -1,4 +1,6 @@
 use_racmo_name <- function(racmoVars,
+                           before = NULL,
+                           after = NULL,
                            originalUnits = TRUE,
                            monthlyData = FALSE,
                            shortName = TRUE) {
@@ -33,8 +35,9 @@ use_racmo_name <- function(racmoVars,
   #'   used over the full name (e.g. "Precipitation", "Surface Mass Balance")?
   #'   If set as NULL, no variable name is used, and only the units are
   #'   returned.
-  #'
-  #' @export
+  #' @param before,after Text to add before and/or the variable name / unit.
+  #'   Order is fixed as before, variable name, units, after.
+
 
   # Code -----------------------------------------------------------------------
   # Preallocate & loop to handle if multiple racmoVars
@@ -197,7 +200,60 @@ use_racmo_name <- function(racmoVars,
     }
 
     # Create final name
-    racmoName <- bquote(.(nameBit)~.(unitBit))
+    # All 4 bnua
+    if (!is.null(before) & nameBit != "" & unitBit != "" & !is.null(after)) {
+      racmoName <- bquote(.(before)~.(nameBit)~.(unitBit)~.(after))
+
+    # 3 of them - there should be: bnu, bna, bua, nua
+    # bnu
+    } else if (!is.null(before) & nameBit != "" & unitBit != "") {
+      racmoName <- bquote(.(before)~.(nameBit)~.(unitBit))
+    # bna
+    } else if (!is.null(before) & nameBit != "" & !is.null(after)) {
+      racmoName <- bquote(.(before)~.(nameBit)~.(after))
+    # bua
+    } else if (!is.null(before) & unitBit != "" & !is.null(after)) {
+      racmoName <- bquote(.(before)~.(unitBit)~.(after))
+    # nua
+    } else if (nameBit != "" & unitBit != "" & !is.null(after)) {
+      racmoName <- bquote(.(nameBit)~.(unitBit)~.(after))
+
+    # 2 of them - there should be: bn, bu, ba, nu, na, ua
+    # bn
+    } else if (!is.null(before) & nameBit != "") {
+      racmoName <- bquote(.(before)~.(nameBit))
+    # bu
+    } else if (!is.null(before) & unitBit != "") {
+      racmoName <- bquote(.(before)~.(unitBit))
+    # ba
+    } else if (!is.null(before) & !is.null(after)) {
+      racmoName <- bquote(.(before)~.(after))
+    # nu
+    } else if ( nameBit != "" & unitBit != "") {
+      racmoName <- bquote(.(nameBit)~.(unitBit))
+    # na
+    } else if ( nameBit != "" & !is.null(after)) {
+      racmoName <- bquote(.(nameBit)~.(after))
+    # ua
+    } else if ( unitBit != "" & !is.null(after)) {
+      racmoName <- bquote(.(unitBit)~.(after))
+
+    # 1 of them - there should be: b, n, u, a
+    # b
+    } else if (!is.null(before)) {
+      racmoName <- bquote(before)
+    # n
+    } else if (nameBit != "") {
+      racmoName <- bquote(nameBit)
+    # b
+    } else if (unitBit != "") {
+      racmoName <- bquote(unitBit)
+    # a
+    } else if (!is.null(after)) {
+      racmoName <- bquote(after)
+    }
+
+    # Store
     nameList[[iiVar]] <- racmoName
   }
 

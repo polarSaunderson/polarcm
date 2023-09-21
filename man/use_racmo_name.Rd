@@ -6,6 +6,8 @@
 \usage{
 use_racmo_name(
   racmoVars,
+  before = NULL,
+  after = NULL,
   originalUnits = TRUE,
   monthlyData = FALSE,
   shortName = TRUE
@@ -15,6 +17,9 @@ use_racmo_name(
 \item{racmoVars}{Which RACMO variable to use? Use the short name code. If a
 vector with multiple racmoVars is provided, a list of expressions is
 returned.}
+
+\item{before, after}{Text to add before and/or the variable name / unit.
+Order is fixed as before, variable name, units, after.}
 
 \item{originalUnits}{Should the same units as the dataset be used (TRUE;
 default)? Often this makes the most sense, but some of the variables are
