@@ -38,8 +38,6 @@ calc_racmoD_climatology <- function(racmoData,
   #'   there are multiple values in the 'FUN' vector (i.e. multiple functions
   #'   will be applied), the "..." arguments will be fed to all of the
   #'   functions.
-  #'
-  #' @export
 
   # Code -----------------------------------------------------------------------
   # RACMO Data
