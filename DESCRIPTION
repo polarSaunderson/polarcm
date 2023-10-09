@@ -1,7 +1,7 @@
 Package: polarcm
 Type: Package
 Title: Interact with Data from the RACMO & MAR Regional Climate Models
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     person("Dominic", "Saunderson",
            role = c("aut", "cre"),
@@ -13,7 +13,8 @@ Description: `polarcm` is a personal package for interacting with and
     expanded to handle other RACMO versions and MAR data. The package is an 
     ongoing work-in-progress that eases repeated processes, but should be 
     treated with caution as it is developed. It relies heavily on the `terra`
-    package, and another personal package I am developing, called `terrapin`.
+    package, and another personal package I am developing, called `terrapin`. 
+    Version 0.1.2-rc1.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -25,4 +26,4 @@ Imports:
   grDevices,
   terrapin
 Remotes: 
-  polarSaunderson/terrapin@v0.1.0
+  polarSaunderson/terrapin
