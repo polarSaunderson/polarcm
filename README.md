@@ -38,7 +38,7 @@ Version 2 of the dataset can be downloaded here:
 
 ## Instructions
 This package is currently a personal package, so it is not available on CRAN.
-To download this package directly from GitHub, you'll need to use the "devtools" package. 
+To download this package directly from GitHub, you'll need to use the "devtools" package.
 It's easiest to do this within RStudio.
 
 1) Install the [devtools](https://github.com/hadley/devtools) and [terra](https://rspatial.org) packages from CRAN: 
