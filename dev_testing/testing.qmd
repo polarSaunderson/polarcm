@@ -1,0 +1,1180 @@
+```{r}
+devtools::load_all("../../terrapin/")
+devtools::load_all("../../domR/")
+devtools::load_all("../../kulaR/")
+```
+
+```{r}
+# Prepare
+fresh("")
+devtools::load_all()
+define_racmo_globals("../../../../../Data/")
+
+# Necessary data
+x <- subset_racmoM_by_summer("precip", 1991:1994) |>
+  subset_racmoM_by_month(c(11, 12, 1, 2))
+
+y <- get_shelf_outline("Shackleton")
+
+z1 <- average_racmo_in_space(x, y, 0.5)
+z1 <- calc_racmo_in_space(x, y, "mean", minArea = 0.5, na.rm = FALSE)
+z2 <- calc_racmo_in_space(x, y, "mean", minArea = 0.5, na.rm = TRUE)
+# z3 <- calc_racmo_in_space(x, y, "sd", 0.5)
+z1
+z2
+z3
+```
+
+
+
+```{r}
+apply(z, 2, mean)
+```
+
+
+```{r}
+tFunc <- function(x, FUN) {
+  z <- FUN(x)
+  funName <- as.character(substitute(FUN))
+  return(z)
+}
+
+x <- c(1, 2, 3, 4, 5)
+y <- mean
+
+c1 <- mean(x)
+t1 <- tFunc(x, mean)
+
+c1
+t1
+
+```
+
+
+
+
+```{r}
+# Necessary data
+dt <- subset_racmoM_by_summer("precip", 1991) |>
+  subset_racmoM_by_month(12)
+```
+
+```{r}
+xCrop <- crop_racmo_to_basin(dt, "A-Ap")
+terra::plot(xCrop)
+draw_antarctica(xCrop)
+
+xMask <- mask_racmo_to_basin(dt, "A-Ap")
+terra::plot(xMask)
+draw_antarctica(xMask)
+
+xCrop2 <- crop_racmo_to_basin(dt, c("A-Ap", "Dry Valleys"))
+terra::plot(xCrop2)
+draw_antarctica(xCrop2)
+
+xMask2 <- mask_racmo_to_basin(dt, c("A-Ap", "Dry Valleys"))
+terra::plot(xMask2)
+draw_antarctica(xMask2)
+```
+
+
+
+```{r}
+xCrop <- crop_racmo_to_shelf(dt, "Shackleton")
+terra::plot(xCrop)
+draw_antarctica(xCrop)
+
+xMask <- mask_racmo_to_shelf(dt, "Shackleton")
+terra::plot(xMask)
+draw_antarctica(xMask)
+
+xCrop2 <- crop_racmo_to_shelf(dt, c("Amery", "Shackleton"))
+terra::plot(xCrop2)
+draw_antarctica(xCrop2)
+
+xMask2 <- mask_racmo_to_shelf(dt, c("Amery", "Shackleton"))
+terra::plot(xMask2)
+draw_antarctica(xMask2)
+
+```
+
+
+
+
+
+
+
+
+
+
+```{r}
+inList <- sTst[[1]]
+for (ii in c("b", "bb", "s", "c", "g")) {
+  inList$sbcg <- ii
+  terra::plot(dt, main = ii)
+  do.call(draw_antarctica, inList)
+}
+```
+
+
+```{r}
+sTst <- list("s1" = list("extent" = ""),
+             "s2" = list("extent" = "Amery"),
+             "s3" = list("extent" = c("Amery", "West"), "rectangularExtent" = TRUE),
+             "s4" = list("extent" = c("Amery", "West"), "rectangularExtent" = FALSE),
+             "s5" = list("extent" = c("Amery", "A-Ap", "West"), 
+                         "rectangularExtent" = TRUE),
+             "s6" = list("extent" = c("Amery", "A-Ap", "West"), 
+                         "rectangularExtent" = FALSE),
+             "s7" = list("extent" = c("Amery", "A-Ap", "West"), 
+                         "rectangularExtent" = TRUE, "useOnly" = "basins"),
+             "s8" = list("extent" = c("Amery", "A-Ap", "West"), 
+                         "rectangularExtent" = TRUE, "useOnly" = "shelves"),
+             "s9" = list("extent" = c("Amery", "A-Ap", "West", "Leppard"),
+                          "rectangularExtent" = TRUE, "imbieBasins" = NULL),
+             "s10" = list("extent" = c("Amery", "A-Ap", "West", "Leppard"),
+                          "rectangularExtent" = TRUE, "imbieBasins" = TRUE),
+             "s11" = list("extent" = c("Amery", "A-Ap", "West", "Leppard"),
+                          "rectangularExtent" = TRUE, "imbieBasins" = FALSE))
+```
+
+
+```{r}
+bTst <- list("b1" = list("extent" = ""),
+             "b2" = list("extent" = "Dry Valleys"),
+             "b3" = list("extent" = c("A-Ap", "Dry Valleys"),
+                         "rectangularExtent" = FALSE),
+             "b4" = list("extent" = c("A-Ap", "Dry Valleys"), 
+                         "rectangularExtent" = TRUE),
+             "b9" = list("extent" = c("Amery", "A-Ap", "West", "Leppard"),
+                         "rectangularExtent" = TRUE, "returnImbie" = TRUE),
+             "b12" = list("extent" = c("Amery", "A-Ap", "West", "Leppard"),
+                         "rectangularExtent" = TRUE, "returnImbie" = FALSE),
+             "b13" = list("extent" = c("Amery", "A-Ap", "West", "Leppard"),
+                         "rectangularExtent" = TRUE, "returnImbie" = NULL))
+
+# tt <- sTst
+tt <- bTst
+
+for (ii in seq_along(tt)) {
+  print(ii)
+  iiLines <- do.call(get_basin_outline, tt[[ii]])
+  terra::plot(iiLines, col = "red", main = names(tt)[ii])
+  cat(ii, "done \n")
+}
+```
+
+```{r}
+draw_antarctica("", "")
+```
+
+
+
+```{r}
+t1 <- list(get_coastline(""),
+           get_coastline("Amery"),
+           get_coastline(c("Amery", "West"), rectangularExtent = TRUE),
+           get_coastline(c("Amery", "West"), rectangularExtent = FALSE),
+           get_coastline(c("Amery", "A-Ap", "West"), rectangularExtent = TRUE),
+           get_coastline(c("Amery", "A-Ap", "West"), 
+                         rectangularExtent = TRUE, useOnly = "basins"),
+           get_coastline(c("Amery", "A-Ap", "West"), 
+                         rectangularExtent = TRUE, useOnly = "shelves"),
+           get_coastline(c("Amery", "A-Ap", "West", "Vincennes_Bay"), 
+                         rectangularExtent = TRUE, imbieBasins = FALSE))
+
+for (ii in seq_along(t1)) {
+  terra::plot(t1[[ii]])
+}
+
+```
+
+
+
+
+```{r}
+# terra::plot(dt)
+# draw_antarctica()
+
+terra::plot(dt)
+draw_antarctica("Amery", "cg")
+
+terra::plot(dt)
+draw_antarctica("Shackleton", "cg",extentArgs = list("preferType" = "shelves"))
+
+terra::plot(dt)
+draw_antarctica("Shackleton", "cg", extentArgs = list("preferType" = "basins"))
+```
+
+
+```{r}
+terra::plot(dt)
+draw_antarctica(c("A-Ap", "West", "Baudouin"), "c", 
+                extentArgs = list("returnOnly" = "shelves"))
+draw_antarctica(c("A-Ap", "West", "Baudouin"), "c", 
+                extentArgs = list("returnOnly" = "shelves",
+                                  "rectangularExtent" = FALSE), col = "red")
+terra::plot(dt)
+draw_antarctica(c("A-Ap", "West", "Baudouin"), "c", 
+                extentArgs = list("returnOnly" = "shelves"))
+draw_antarctica(c("A-Ap", "West", "Baudouin"), "c", FALSE,
+                extentArgs = list("returnOnly" = "shelves"), col = "red")
+```
+
+
+```{r}
+terra::plot(dt)
+draw_antarctica(c("A-Ap", "West", "Baudouin"), "c", 
+                extentArgs = list("returnOnly" = "basins"), col = "black")
+draw_antarctica(c("A-Ap", "West", "Baudouin"), "c", 
+                extentArgs = list("returnOnly" = "basins",
+                                  "rectangularExtent" = FALSE), col = "red")
+
+terra::plot(dt)
+draw_antarctica(c("A-Ap", "West", "Baudouin"), "c")
+draw_antarctica(c("A-Ap", "West", "Baudouin"),
+                extentArgs = list("rectangularExtent" = FALSE),
+                "c", col = "red")
+
+
+
+# terra::plot(dt)
+# draw_antarctica(c("Baudouin"), "b", extentArgs = list("exactExtents" = FALSE, "returnOnly" = "shelves"))
+
+```
+
+
+```{r}
+nrow(get_coastline("Shackleton", preferType = "shelves")) # |> terra::plot()
+```
+
+
+```{r}
+# Single basins
+t1 <- "A-Ap"
+get_basin_outline(t1) |> terra::plot(col = "black")
+get_basin_outline(t1, FALSE) |>
+  terra::lines(col = "red", lwd = 2)
+
+get_basin_outline(t1) |> terra::plot(col = "black")
+get_basin_outline(t1, FALSE, imbieBasins = TRUE) |>
+  terra::lines(col = "red", lwd = 2)
+
+get_basin_outline(t1) |> terra::plot(col = "black")
+get_basin_outline(t1, FALSE, imbieBasins = FALSE) |>
+  terra::lines(col = "red", lwd = 2)
+```
+
+
+```{r}
+# Prepare
+fresh("")
+devtools::load_all()
+define_racmo_globals("../../../../../Data/")
+t1 <- "Amery"
+
+# get_basin_outline(t1) |> terra::plot(col = "black")
+get_basin_outline(t1, FALSE, returnImbie = NULL) |>
+  terra::plot(col = "red", lwd = 2)
+
+# get_basin_outline(t1) |> terra::plot(col = "black")
+get_basin_outline(t1, FALSE, returnImbie = TRUE) |>
+  terra::plot(col = "red", lwd = 2)
+
+# get_basin_outline(t1) |> terra::plot(col = "black")
+get_basin_outline(t1, FALSE, returnImbie = FALSE) |>
+  terra::plot(col = "red", lwd = 2)
+
+```
+
+
+```{r}
+extent <- get_extent(extent = t1,
+                     rectangularExtent = FALSE,
+                     preferType = NULL,
+                     returnOnly = NULL,
+                     imbieBasins = FALSE,
+                     crs = use_crs("stereo"), # return 3031 to match shelves
+                     crsIn = NULL)
+
+
+terra::plot(extent)
+```
+
+
+```{r}
+t2 <- "Shackleton"
+get_basin_outline(t2) |> terra::plot(col = "black")
+get_basin_outline(t2, FALSE, returnOnly = "shelves") |> 
+  terra::lines(col = "red", lwd = 2)
+
+# Multiple shelves
+t3 <- c("Amery", "West")
+get_basin_outline(t3) |> terra::plot(col = "black")
+get_basin_outline(t3, FALSE) |> terra::lines(col = "red", lwd = 2)
+
+# Be careful with names still
+t3 <- "Drygalski"
+get_basin_outline(t3) |> terra::plot(col = "black")
+get_basin_outline(t3, FALSE) |> terra::lines(col = "red", lwd = 2)
+get_basin_outline(t3, FALSE) |> terra::plot()
+
+# Shelves can be used to define the extent, and basins returned
+t4 <- "Amery"
+get_basin_outline(t4, FALSE) |> terra::plot()
+
+```
+
+
+```{r}
+# Single shelves
+t1 <- "Getz"
+get_shelf_outline(t1) |> terra::plot(col = "black")
+get_shelf_outline(t1, FALSE, returnOnly = "shelves") |> 
+  terra::lines(col = "red", lwd = 2)
+
+t2 <- "Shackleton"
+get_shelf_outline(t2) |> terra::plot(col = "black")
+get_shelf_outline(t2, FALSE, returnOnly = "shelves") |> 
+  terra::lines(col = "red", lwd = 2)
+
+# Multiple shelves
+t3 <- c("Amery", "West")
+get_shelf_outline(t3) |> terra::plot(col = "black")
+get_shelf_outline(t3, FALSE) |> terra::lines(col = "red", lwd = 2)
+
+# Be careful with names still
+t3 <- "Drygalski"
+get_shelf_outline(t3) |> terra::plot(col = "black")
+get_shelf_outline(t3, FALSE) |> terra::lines(col = "red", lwd = 2)
+get_shelf_outline(t3, FALSE) |> terra::plot()
+
+# Basins can be used to define the extent, and shelves returned
+t4 <- "A-Ap"
+get_shelf_outline(t4, FALSE) |> terra::plot()
+
+```
+
+
+```{r}
+terra::plot(get_coastline(""))
+terra::plot(get_coastline("Amery"))
+
+```
+
+
+```{r}
+tst <- function(x, ...) {
+  lipsis <- list(...)
+  if ("hi" %notIn% names(lipsis)) {
+    print("notIn")
+  } else {
+    print("in")
+  }
+  
+  
+  
+  
+  
+  # print(exists("lips"))
+
+  # if (!exists("lips$hi"))
+  
+  # inSides <- if(set_if_null(lips$hi, 3)
+  
+  # print(inSides)
+  
+
+  # print(lips)
+  
+}
+
+# args(tst) |> print()
+tst(2, "hi" = 1, "bye" = 2)
+tst(2, "hi" = NULL, "bye" = 2)
+tst(2, "bye" = 2)
+
+```
+
+
+
+```{r}
+# All of Antarctica
+terra::plot(get_extent(""), main = "t1")
+terra::lines(get_extent("", rectangularExtent = TRUE), col = "red", lwd = 2)
+
+# Single shelf
+terra::plot(get_extent("Amery"), main = "t2")
+terra::lines(get_extent("Amery", rectangularExtent = TRUE), col = "red", lwd = 2)
+
+# Single basin - IMBIE Basin Names
+terra::plot(get_extent("A-Ap"), main = "t3")
+terra::lines(get_extent("A-Ap", rectangularExtent = TRUE), col = "red", lwd = 2)
+
+# Single basin - MEaSURES Basin Names
+terra::plot(get_extent("Vincennes_Bay"), main = "t4")
+terra::lines(get_extent("Vincennes_Bay", rectangularExtent = TRUE), col = "red", lwd = 2)
+
+# If the name appears as both a basin and a shelf
+terra::plot(get_extent("Shackleton"), main = "t5")
+terra::lines(get_extent("Shackleton", rectangularExtent = TRUE), col = "red", lwd = 2)
+
+# shelf or basin preference if both names
+terra::plot(get_extent("Shackleton"), main = "t6")
+terra::lines(get_extent("Shackleton", preferType = "shelves"), col = "red", lwd = 2)
+terra::lines(get_extent("Shackleton", preferType = "basins"), col = "blue", lwd = 2)
+
+# multiple shelves
+terra::plot(get_extent(c("Amery", "West")), main = "t7")
+terra::lines(get_extent(c("Amery", "West"), rectangularExtent = TRUE), col = "red", lwd = 2)
+
+# multiple shelves and basins
+terra::plot(get_extent(c("Amery", "West", "Publications")), main = "t8")
+terra::lines(get_extent(c("Amery", "West", "Publications"), rectangularExtent = TRUE), col = "red", lwd = 2)
+
+# Return only shelves or basins if both are in the vector
+terra::plot(get_extent(c("Amery", "West", "Publications")), main = "t9")
+terra::lines(get_extent(c("Amery", "West", "Publications"), returnOnly = "shelves"), col = "red")
+terra::lines(get_extent(c("Amery", "West", "Publications"), returnOnly = "basins"), col = "blue")
+
+# Basins names are defined according to IMBIE or MEaSURES by default
+terra::plot(get_extent(c("A-Ap", "Vincennes_Bay", "Dry Valleys")), main = "t10")
+
+# Use only IMBIE or MEaSURES basins if both are in the vector
+terra::plot(get_extent(c("A-Ap", "Vincennes_Bay", "Dry Valleys")), main = "t11")
+terra::lines(get_extent(c("A-Ap", "Vincennes_Bay", "Dry Valleys"), imbieBasins = TRUE), col = "red")
+terra::lines(get_extent(c("A-Ap", "Vincennes_Bay", "Dry Valleys"), imbieBasins = FALSE), col = "blue")
+
+```
+
+
+```{r}
+terra::plot(get_extent("Shackleton"), main = "t5")
+terra::plot(get_extent("Shackleton", rectangularExtent = TRUE), main = "t6")
+
+terra::plot(get_extent("Shackleton", preferType = "basins"), main = "t7")
+terra::plot(get_extent("Shackleton", rectangularExtent = TRUE, preferType = "basins"), main = "t8")
+
+terra::plot(get_extent("Shackleton", preferType = "shelves"), main = "t9")
+terra::plot(get_extent("Shackleton", rectangularExtent = TRUE, preferType = "shelves"), main = "t10")
+
+```
+
+
+```{r}
+t1 <- get_coastline("")
+
+t1 <- get_coastline("Amery", rectangularExtent = FALSE)
+terra::plot(t1)
+
+t2 <- get_coastline("Amery", rectangularExtent = TRUE)
+terra::plot(t2)
+
+t3 <- get_coastline(c("Amery", "Shackleton"), rectangularExtent = TRUE)
+terra::plot(t3)
+
+t4 <- get_coastline(c("Amery", "Shackleton"), rectangularExtent = FALSE)
+terra::plot(t4)
+```
+
+
+```{r}
+t4 <- get_coastline(c("Amery", "Shackleton"), preferType = "shelves")
+terra::plot(t4)
+
+t5 <- get_coastline(c("Amery", "Shackleton"), preferType = "basins")
+terra::plot(t5)
+
+t6 <- get_coastline(c("Amery", "Shackleton"), returnOnly = "shelves")
+terra::plot(t6)
+
+# t7 <- get_coastline(c("Amery", "Shackleton"), returnOnly = "basins")
+# terra::plot(t7)
+
+
+t8 <- get_coastline(c("Amery", "Shackleton"), preferType = "basins", imbieBasins = FALSE)
+terra::plot(t8)
+
+t9 <- get_coastline(c("Amery", "Shackleton"), preferType = "basins", imbieBasins = TRUE)
+terra::plot(t9)
+
+```
+
+
+```{r}
+# Prepare
+# fresh("")
+devtools::load_all()
+define_racmo_globals("../../../../../Data/")
+
+terra::plot(dt)
+draw_antarctica("", "c")
+get_basin_outline("Shackleton") |> terra::lines(col = "red")
+
+# draw_antarctica("Shackleton", "b", col = "red")
+```
+
+
+
+
+```{r}
+# Testing
+terra::plot(dt)
+draw_antarctica("", "s")
+
+terra::plot(dt)
+draw_antarctica("", "b")
+
+terra::plot(dt)
+draw_antarctica("", "bb")
+
+terra::plot(dt)
+draw_antarctica("", "c")
+
+terra::plot(dt)
+draw_antarctica("", "g")
+
+```
+
+
+```{r}
+# Function testing
+t1 <- crop_racmo(dt, v1, TRUE)
+terra::plot(t1, main = "t1; TRUE", col = kulaD(10))
+terra::lines(get_extent(v1))
+
+t2 <- crop_racmo(dt, v1, FALSE)
+terra::plot(t2, main = "t2; FALSE", col = kulaD(10))
+terra::lines(get_extent(v1))
+
+t3 <- crop_racmoM_to_shelf(dt, v1, TRUE)
+terra::plot(t3, main = "t3; TRUE", col = kulaD(10))
+terra::lines(get_extent(v1))
+
+t4 <- crop_racmoM_to_shelf(dt, v1, FALSE)
+terra::plot(t4, main = "t4; FALSE", col = kulaD(10))
+terra::lines(get_extent(v1))
+```
+
+```{r}
+# Code -----------------------------------------------------------------------
+extent       <- get_extent(v1, rectangularExtent = rectangularExtent)
+  croppedRacmo <- terra::crop(racmoData, extent, snap = "out")
+
+  if (isFALSE(rectangularExtent)) {
+    croppedRacmo <- terra::mask(croppedRacmo, extent, touches = !rectangularExtent)
+    print("here")
+  return(croppedRacmo)
+```
+
+
+
+```{r}
+# Function testing
+t1 <- crop_racmo_2(dt, "Amery", TRUE)
+terra::plot(t1, main = "t1", col = kulaD(10))
+terra::lines(v1)
+
+# terra::mask(t1, "Amery", touches = TRUE) |> terra::plot()
+# terra::mask(t1, "Amery", touches = FALSE) |> terra::plot()
+
+t2 <- crop_racmo_2(dt, "Amery", FALSE)
+terra::plot(t2, main = "t2", col = kulaD(10))
+terra::lines(v1)
+
+```
+
+```{r}
+terra::plot(get_extent("Amery", rectangularExtent = TRUE))
+terra::plot(get_extent("Amery", rectangularExtent = FALSE))
+```
+
+
+
+```{r}
+# Full Extent
+t1 <- crop_racmo(dt, "")
+terra::plot(t1, main = "t1")
+
+# Amery only
+t2 <- crop_racmo(dt, "Amery")
+terra::plot(t2, main = "t2")
+
+# 2 x shelves
+t3 <- crop_racmo(dt, c("Amery", "West"), rectangularExtent = TRUE)
+terra::plot(t3, main = "t3")
+
+
+# 2 x shelves
+t4 <- crop_racmo(dt, c("Amery", "West"), rectangularExtent = FALSE)
+terra::plot(t4, main = "t4")
+
+
+```
+
+
+
+```{r}
+v1 <- get_extent("Amery")
+
+t1 <- terra::crop(dt, v1)
+terra::plot(t1, main = "t1", col = kulaD(10))
+terra::lines(v1)
+
+t2 <- terra::crop(dt, v1, snap = "out")
+terra::plot(t2, main = "t2", col = kulaD(10))
+terra::lines(v1)
+
+t3 <- terra::crop(dt, v1, mask = TRUE, snap = "near")
+terra::plot(t3, main = "t3", col = kulaD(10))
+terra::lines(v1)
+
+t4 <- terra::crop(dt, v1, mask = TRUE, snap = "in")
+terra::plot(t4, main = "t4", col = kulaD(10))
+terra::lines(v1)
+
+t5 <- terra::crop(dt, v1, mask = TRUE, snap = "out")
+terra::plot(t5, main = "t5", col = kulaD(10))
+terra::lines(v1)
+
+
+t6 <- terra::mask(t2, v1, touches = TRUE)
+terra::plot(t6, main = "t6", col = kulaD(10))
+terra::lines(v1)
+
+t7 <- terra::mask(t2, v1, touches = FALSE)
+terra::plot(t7, main = "t7", col = kulaD(10))
+terra::lines(v1)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+x <- "helOO boO"
+
+y <- tolower(x)
+y <- strsplit(y, " ")[[1]]
+y <- paste(toupper(substring(y, 1, 1)), substring(y, 2), sep = "", collapse = " ")
+y
+```
+
+
+```{r}
+xx <- "A"
+
+yy <- switch(xx, 
+             "aa" = , "A" = , "a" = 1,
+             "b" = 2)
+
+yy
+```
+
+```{r}
+set_racmo_globals <- function(rawDataPath = "../../../../../Data/",
+                              racmoM      = "RACMO/RACMO2.3p3_CON_ANT27_monthly/",
+                              racmoD      = "RACMO/RACMO2.3p3_CON_ANT27_daily/",
+                              MEaSURES    = "MEaSURES Boundaries/") {
+  #' Define and provide access to global RACMO datasets and variables
+  #'
+  #' @description racmoR functions need to know where certain datasets are. This
+  #'   function helps access these datasets by adding their paths to the global
+  #'   environment (as an object called "racmoInfo"). The function should be
+  #'   called at the start of a session. The datasets must already be saved and
+  #'   accessible. As racmoR expands, this function could also set different
+  #'   variables that are necessary between projects.
+  #'
+  #' @param rawDataPath "string": The relative path to the folder where raw data
+  #'   is stored. The approach taken here assumes that all raw data is held in a
+  #'   "Data" directory containing subfolders for the "RACMO/racmoM",
+  #'   "RACMO/racmoD" and "MEaSURES" datasets.
+  #' @param racmoM "string": The name of the subfolder containing the raw
+  #'   monthly RACMO NetCDF files. Set as NULL if no daily data is necessary /
+  #'   available; if so, "racmoM" functions will not be available.
+  #' @param racmoD "string": The name of the subfolder containing the raw daily
+  #'   RACMO NetCDF files. Set as NULL if no daily data is necessary /
+  #'   available; if so, "racmoD" functions will not be available.
+  #' @param MEaSURES "string": The name of the subfolder containing the raw
+  #'   MEaSURES data; necessary for cropping for example. Set as NULL if no
+  #'   MEaSURES data is necessary / available; if so, any functions with a
+  #'   spatial aspect will not be available (e.g. "crop_racmo_to_x",
+  #'   "draw_antarctica").
+  #'
+  #' @export
+  
+  # Code -----------------------------------------------------------------------
+  # if (isTRUE(exists("racmoInfo", envir = .GlobalEnv))) {
+    # token <- get("racmoInfo", envir = .GlobalEnv)
+    # return(token)
+  # }
+  
+  # Only run beyond here if the function hasn't been called yet
+
+  # Create a token to hold all the info
+  token <- list()
+  # Daily Data
+  if (!is.null(racmoD)) {
+    token$rawPath_racmoD <- paste0(rawDataPath, racmoD)
+  }
+  
+  # Monthly Data
+  if (!is.null(racmoM)) {
+    rawRacmoM      <- paste0(rawDataPath, racmoM)
+    rawNamesRacmoM <- list.files(rawRacmoM, ".nc")
+    rawPathsRacmoM <- list.files(rawRacmoM, ".nc", full.names = TRUE) # only NetCDFs
+
+    x1 <- strsplit(rawNamesRacmoM, "_")
+    x2 <- matrix(NA, ncol = 2, nrow = length(rawNamesRacmoM))
+    x3 <- matrix(NA, ncol = length(rawNamesRacmoM), nrow = 1)
+    
+    for (ii in seq_along(rawNamesRacmoM)) {
+      x2[ii, 1] <- x1[[ii]][1]
+      x2[ii, 2] <- rawPathsRacmoM[ii]
+      x3[1, ii] <- rawPathsRacmoM[ii]
+      colnames(x3)[ii] <- x1[[ii]][1]
+    }
+    # x2 <- unlist(x1)
+  }
+  
+  # print(rawPathsRacmoM)
+  print(as.data.frame(x2))
+  print(as.data.frame(x3))
+  
+  
+}
+  
+set_racmo_globals()
+
+```
+
+
+```{r}
+rawDataPath = "../../../../../Data/"
+racmoM      = "RACMO/RACMO2.3p3_CON_ANT27_monthly/"
+
+if (!is.null(racmoM)) {
+  rawRacmoM      <- paste0(rawDataPath, racmoM)
+  rawNamesRacmoM <- list.files(rawRacmoM, ".nc")
+  rawPathsRacmoM <- list.files(rawRacmoM, ".nc", full.names = TRUE) # only NetCDFs
+
+  x1 <- strsplit(rawNamesRacmoM, "_")
+  x2 <- matrix(NA, ncol = 2, nrow = length(rawNamesRacmoM))
+  x3 <- matrix(NA, ncol = length(rawNamesRacmoM), nrow = 1) |>
+    `colnames<-`(seq_along(rawNamesRacmoM))
+  
+  for (ii in seq_along(rawNamesRacmoM)) {
+    x2[ii, 1] <- x1[[ii]][1]
+    x2[ii, 2] <- rawPathsRacmoM[ii]
+    x3[1, ii] <- rawPathsRacmoM[ii]
+    colnames(x3)[ii] <- x1[[ii]][1]
+  }
+  
+  x3 <- as.data.frame(x3)
+}
+
+# print(rawPathsRacmoM)
+print(as.data.frame(x2))
+print(as.data.frame(x3))
+```
+
+
+
+```{r}
+MEaSURES    <- "MEaSURES Boundaries/"
+rawMeasures <- paste0(rawDataPath, MEaSURES)
+
+# rawMeasures
+
+tt <- list()
+
+tt[c("t1", "t2", "t3", "t4", "t5")] <- paste0(rawMeasures, 
+       c("shelves", "basinsAA", "basinIMBIE", "coastline", "groundingLine"), "/",
+       c("IceShelf", "Basins", "Basins_IMBIE", "Coastline", "GroundingLine"), "_",
+       "Antarctica_v02.shp"))
+
+
+tt
+```
+
+```{r}
+define_racmo_globals("../../../../../Data/")
+```
+
+
+```{r}
+rawDataPath <- "../../../../../Data/"
+racmoM      <- "RACMO/RACMO2.3p3_CON_ANT27_monthly/"
+racmoD      <- "RACMO/RACMO2.3p3_CON_ANT27_daily/"
+MEaSURES    <- "MEaSURES Boundaries/"
+
+rawMeasures <- paste0(rawDataPath, MEaSURES)
+tt <- (paste0(rawMeasures, "shelves/IceShelf", "_Antarctica_v02.shp"))
+tt
+
+t1 <- terra::vect(tt)
+t1
+```
+
+
+
+```{r}
+# tt <- racmoInfo$rawPath_racmoD
+tt <- terra::rast("../../../../../Data/RACMO/RACMO2.3p3_CON_ANT27_daily/senf_daily-1979.ANT27_CONsettings.nc", subds = "senf")
+
+tt
+```
+
+```{r}
+racmoData <- "precip"
+racmo79  <- terra::rast(get_racmoD_file_path(racmoData, 1979),
+                        subds = racmoData) #|> suppressWarnings()
+
+
+```
+
+```{r}
+tt <- read_racmoD_data("precip")
+tt
+```
+
+```{r}
+rawRacmoM <- list.files(paste0(racmoInfo$rawPaths$rawDataPath, racmoInfo$rawPaths$racmoMPath), ".nc")
+# rawNames  <- list.files(rawRacmoM, ".nc")        # file names (for variables)
+splitM    <- strsplit(rawRacmoM, "_")
+
+rawNames
+```
+```{r}
+define_racmo_globals("../../../../../Data/")
+
+print(data.frame("monthlyVariables" = names(racmoInfo$rawPath_racmoM)))
+```
+
+```{r}
+rr <- list.files(racmoInfo$rawPath_racmoD ,"daily") |>
+  strsplit("_")
+
+lapply(rr,'[', 1) |> unlist() |> unique()
+```
+
+```{r}
+  racmoSplits <- list.files(racmoInfo$rawPath_racmoD ,"daily") |>
+    strsplit("_")
+  racmoVars <- data.frame("dailyVariables" = lapply(racmoSplits,'[', 1) |> 
+                            unlist() |> unique())
+  
+  racmoVars
+```
+
+```{r}
+rawDataPath <- "../../../../../Data/"
+racmoM      <- "RACMO/RACMO2.3p3_CON_ANT27_monthly/"
+racmoD      <- "RACMO/RACMO2.3p3_CON_ANT27_daily/"
+MEaSURES    <- "MEaSURES Boundaries/"
+
+rawDir    <- paste0(rawDataPath, racmoM)   # path to racmoM directory
+rawPaths  <- list.files(rawDir, ".nc",
+                        full.names = TRUE) # only NetCDFs (full paths)
+rawNames  <- list.files(rawDir, ".nc") |> strsplit("_") |> 
+  lapply('[', 1) |> 
+  unlist() |>
+  unique()
+
+mm <- data.frame(matrix(rawPaths, nrow = 1)) |> `colnames<-`(rawNames)
+
+# rawNames
+# rawDir
+# rawPaths
+mm
+
+
+```
+
+
+
+```{r}
+rawDir   <- racmoInfo$rawPath_racmoD
+rawNames <- list.files(rawDir, ".nc") |>
+  strsplit("_") |>
+  lapply('[', 1) |>
+  unlist() |>
+  unique()
+rawNames
+
+```
+
+```{r}
+rm(list = "racmoInfo")
+define_racmo_globals("../../../../../Data/")
+```
+
+```{r}
+devtools::load_all("../../terrapin/")
+devtools::load_all("../../domR/")
+```
+
+
+```{r}
+devtools::load_all()
+cat("\n")
+rm(list = "racmoInfo")
+define_racmo_globals("../../../../../Data/")
+
+t1 <- subset_racmoM_by_summer("precip", c(1980:1984))
+terrapin::get_terra_dates(t1)
+
+t2 <- subset_racmoM_by_month(t1, c(11, 12, 1, 2))
+terrapin::get_terra_dates(t2)
+```
+
+
+```{r}
+t2 <- read_racmoM_data("precip") |>
+  subset_racmoM_by_month("December")
+t2
+
+t3 <- read_racmoM_data("precip")
+t3 <- subset_racmoM_by_month(t3, 12)
+t3
+
+```
+
+
+```{r}
+t1 <- subset_racmoM_by_year("precip", 1991)
+t1
+t2 <- read_racmoM_data("precip") |>
+  subset_racmoM_by_year(1991)
+t2
+
+t3 <- read_racmoM_data("precip")
+t3 <- subset_racmoM_by_year(t3, 1991)
+t3
+```
+
+```{r}
+racmoInfo <- define_racmo_globals()
+racmoVars <- data.frame("placeholder")
+# if (length(racmoInfo$racmoVars$racmoD) > 0) {
+  racmoVars <- data.frame("Daily"   = racmoInfo$racmoVars$racmoD,
+                          "Monthly" = racmoInfo$racmoVars$racmoM)
+  
+  # racmoD <- racmoInfo$racmoVars$racmoD
+  # racmoM <- racmoInfo$racmoVars$racmoM
+# }
+racmoVarrs
+```
+
+
+```{r}
+# tt <- read_racmoM_data("snowmelt")
+# t2 <- read_racmoD_data("precip")
+list_racmoD_variables()
+list_racmoM_variables()
+```
+
+```{r}
+devtools::load_all("../../domR/")
+devtools::load_all("../../terrapin/")
+```
+
+
+```{r}
+fresh("")
+devtools::load_all()
+cat("\n")
+rm(list = "racmoInfo")
+define_racmo_globals("../../../../../Data/")
+
+t1 <- get_coastline()
+terra::plot(t1)
+
+t2 <- get_coastline("Amery")
+terra::plot(t2)
+
+t3 <- get_coastline(c("Amery", "West"))
+terra::plot(t3)
+
+t4 <- get_coastline("Drygalski", preferType = NULL)
+terra::plot(t4)
+
+t5 <- get_coastline("Drygalski", preferType = "shelves")
+terra::plot(t5)
+
+t6 <- get_coastline("Drygalski", preferType = "basins")
+terra::plot(t6)
+```
+
+
+```{r}
+fresh("")
+devtools::load_all()
+cat("\n")
+# rm(list = "racmoInfo")
+define_racmo_globals("../../../../../Data/")
+
+# Multiple shelves & basins; returnOnly basins
+# no Shackleton, Amery & West shelves
+t11 <- get_extent(c("Amery", "Shackleton", "West", "Vincennes_Bay"), imbieBasins = FALSE,
+                 returnOnly = "basins")
+terra::plot(t11)
+
+t12 <- get_extent(c("Amery", "Shackleton", "West", "A-Ap"), 
+                  imbieBasins = TRUE,
+                  returnOnly = "basins")
+terra::plot(t12)
+
+t13 <- get_extent(c("Amery", "Shackleton", "West", "A-Ap"), 
+                  imbieBasins = TRUE,
+                  preferType = "basins")
+terra::plot(t13)
+
+t14 <- get_extent(c("Amery", "Shackleton", "West", "A-Ap"), 
+                  imbieBasins = NULL,
+                  preferType = "basins")
+terra::plot(t14)
+```
+
+
+```{r}
+fresh("")
+devtools::load_all()
+cat("\n")
+# rm(list = "racmoInfo")
+define_racmo_globals("../../../../../Data/")
+
+# t2 <- get_shelf_outline("A-Ap")
+t2 <- get_shelf_outline("Dry Valleys")
+terra::plot(t2)
+```
+
+
+```{r}
+t1 <- get_basin_outline(imbieBasins = TRUE)
+terra::plot(t1, main = "t1")
+
+t2 <- get_basin_outline(imbieBasins = FALSE)
+terra::plot(t2, main = "t2")
+
+t3 <- get_basin_outline(imbieBasins = NULL)
+terra::plot(t3, main = "t3")
+```
+
+
+```{r}
+t3 <- get_basin_outline("A-Ap", imbieBasins = TRUE)
+terra::plot(t3, main = "t3")
+
+t4 <- get_basin_outline("Vincennes_Bay", imbieBasins = FALSE)
+terra::plot(t4, main = "t4")
+
+t4 <- get_basin_outline("A-Ap", imbieBasins = FALSE)
+terra::plot(t4, main = "t4")
+
+t5 <- get_basin_outline("A-Ap", imbieBasins = TRUE)
+terra::plot(t5, main = "t5")
+```
+
+
+```{r}
+t3 <- get_basin_outline(c("Amery", "West"))
+terra::plot(t3)
+
+t4 <- get_basin_outline(c("Amery", "West"), exactExtents = FALSE)
+terra::plot(t4)
+```
+
+
+```{r}
+fresh("")
+devtools::load_all()
+cat("\n")
+rm(list = "racmoInfo")
+define_racmo_globals("../../../../../Data/")
+t1 <- get_shelf_outline()
+terra::plot(t1)
+
+t2 <- get_shelf_outline("Amery")
+terra::plot(t2)
+
+t3 <- get_shelf_outline(c("Amery", "West"))
+terra::plot(t3)
+
+t4 <- get_shelf_outline(c("Amery", "West"), exactExtents = FALSE)
+terra::plot(t4)
+```
+
+```{r}
+fresh("")
+devtools::load_all()
+cat("\n")
+rm(list = "racmoInfo")
+define_racmo_globals("../../../../../Data/")
+t1 <- get_shelf_outline()
+terra::plot(t1)
+
+t2 <- get_grounding_line("Amery")
+terra::plot(t2)
+
+t3 <- get_grounding_line(c("Amery", "West"))
+terra::plot(t3)
+
+t4 <- get_grounding_line("Drygalski", preferType = NULL)
+terra::plot(t4)
+
+t5 <- get_grounding_line("Drygalski", preferType = "shelves")
+terra::plot(t5)
+
+t6 <- get_grounding_line("Drygalski", preferType = "basins")
+terra::plot(t6)
+```
+
+
+
+
+```{r}
+t1 <- get_extent("")
+terra::plot(t1)
+
+t2 <- get_extent("Amery")
+terra::plot(t2)
+
+t3 <- get_extent("Shackleton")
+terra::plot(t3)
+
+t4 <- get_extent("Shackleton", preferType = "shelf")
+terra::plot(t4)
+
+t5 <- get_extent("Shackleton", preferType = "basin")
+terra::plot(t5)
+
+t6 <- get_extent("Shackleton", rectangularExtent = TRUE)
+terra::plot(t6)
+
+t7 <- get_extent(c("Amery", "Shackleton", "West", "Dry Valleys"), preferType = "NULL")
+terra::plot(t7)
+
+t8 <- get_extent(c("Amery", "Shackleton", "West", "Dry Valleys"), preferType = "shelf")
+terra::plot(t8)
+
+t9 <- get_extent(c("Amery", "Shackleton", "West", "Dry Valleys"), returnOnly = "shelf")
+terra::plot(t9)
+
+t10 <- get_extent(c("Amery", "Shackleton", "West", "Dry Valleys"), returnOnly = "basins")
+terra::plot(t10)
+
+```
+

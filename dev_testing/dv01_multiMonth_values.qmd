@@ -1,0 +1,127 @@
+# Other Personal Packages
+```{r}
+devtools::load_all("../../terrapin/")
+
+# terrapin::get_terra_dates(xx)
+x2 <- terrapin::remove_incomplete_years(xx)
+# terrapin::get_terra_dates(x2) 
+
+print_line()
+print(terra::time(xx))
+print_line()
+print(terra::time(x2))
+```
+
+```{r}
+xx <- read_racmoD_data("smb")
+```
+
+
+```{r}
+dc <- c()
+for (ii in 1:4) dc <- c(dc, ii + (365 * 1:5)); dc <- sort(dc)
+dc
+
+x2 <- terra::subset(xx, dc)
+get_terra_dates(x2)
+x3 <- terrapin::remove_incomplete_years(x2)
+get_terra_dates(x3)
+```
+
+
+```{r}
+xDates <- get_terra_dates(x2)
+xYears <- xDates$year |> unique()
+
+xDays <- paste(sprintf("%02d", xDates$month),
+               sprintf("%02d", xDates$day),
+               sep = "-") |> unique() |> sort()
+xYears
+xDays
+
+for (ii in xYears) {
+  iiData <- xDates[which(xDates$year == ii), ]
+  iiDays <- paste(sprintf("%02d", iiData$month),
+                  sprintf("%02d", iiData$day),
+                  sep = "-") |> unique() |> sort()
+  print(iiDays)
+  
+  # if (length(iiData))
+  # print(iiData)
+  # print_line()
+}
+```
+
+
+
+
+```{r}
+# devtools::load_all("../../domR/")
+# devtools::load_all("../../kulaR/")
+```
+
+```{r}
+devtools::load_all()
+define_racmo_globals("../../../../../Data/")
+
+xx <- read_racmoD_data("smb") |>
+  terra::subset(sort(dc))
+  # terra::subset(1:800)
+  # terra::subset(1:450)
+
+terrapin::get_terra_dates(xx)
+
+t1 <- create_racmoD_climatology(xx, "mean", removeIncomplete = "years")
+t1
+# terrapin::get_terra_dates(t1)
+```
+
+
+
+```{r}
+x <- read_racmoM_data("precip")
+x <- terra::subset(x, c(31:90))
+x2 <- read_racmoM_data(x)
+```
+
+
+```{r}
+names(x)[[1]] |> strsplit("_") |> lapply('[', 1) |> unlist()
+
+```
+
+```{r}
+list(rep(terra::rast(), 3))
+```
+
+
+
+```{r}
+x4 <- calc_austral_multiMonth_data(x, c(11, 12, 1), "median")
+x5 <- calc_austral_multiMonth_data_2(x, c(11, 12, 1), "median")
+
+```
+
+
+```{r}
+x2 <- calc_annual_multiMonth_data(x, c(6, 7, 8), "median")
+x3 <- calc_annual_multiMonth_data_2(x, c(6, 7, 8), "median")
+```
+
+
+```{r}
+# x4 <- calc_multiMonth_data_each_year(x, c(6, 7, 8), "median")
+# x5 <- calc_multiMonth_data_each_(x, c(6, 7, 8), "median")
+
+
+names(x2)
+terra::time(x2)
+terra::units(x2)
+terra::varnames(x2)
+terra::longnames(x2)
+```
+
+```{r}
+terra::plot(x2)
+```
+

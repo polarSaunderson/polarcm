@@ -1,0 +1,63 @@
+```{r}
+devtools::load_all("../")
+devtools::load_all("../../domR/")
+devtools::load_all("../../terrapin/")
+```
+
+```{r}
+racmoR::define_racmo_globals("../../../../../Data/")
+x <- racmoR::read_racmoD_data("precip")
+
+xSubsetY <- subset_racmoD_by_year(x, 1980:1983) |>
+  subset_racmoD_by_month(c(12, 1)) |>
+  subset_racmoD_by_day(1:4)
+
+xSubsetY <- terra::subset(xSubsetY, 1:30)
+
+xDatesY <- terrapin::get_terra_dates(xSubsetY, FALSE)
+print(xDatesY)
+
+xSubsetS <- subset_racmoD_by_summer(x, 1980:1983, australSplit = 3) |>
+  subset_racmoD_by_month(c(12, 1), excludeIncomplete = 3) |>
+  subset_racmoD_by_day(1:4)
+
+xSubsetS <- terra::subset(xSubsetS, 1:30)
+
+xDatesS <- terrapin::get_terra_dates(xSubsetS, 3)
+print(xDatesS)
+
+```
+
+```{r}
+devtools::load_all("../../terrapin/")
+devtools::load_all("../")
+cat("\n")
+xShelfY <- crop_racmo_to_shelf(xSubsetY, "Shackleton")
+xShelfS <- crop_racmo_to_shelf(xSubsetS, "Shackleton")
+
+meanY  <- create_racmoD_climatology(xShelfY, "mean")
+domR::print_line()
+terrapin::get_terra_dates(meanY$mean)
+terra::plot(meanY$mean)
+
+meanS  <- create_racmoD_climatology(xShelfS, "mean", excludeIncomplete = 3)
+domR::print_line()
+terrapin::get_terra_dates(meanS$mean)
+terra::plot(meanS$mean)
+```
+
+
+```{r}
+meanX2  <- create_racmoD_climatology(xShelf, "mean", TRUE)
+domR::print_line()
+# terrapin::get_terra_dates(meanX2$mean)
+# terra::plot(meanX2$mean)
+
+
+meanX3  <- create_racmoD_climatology(xShelf, "mean", 3)
+domR::print_line()
+# terrapin::get_terra_dates(meanX3$mean)
+terra::plot(meanX3$mean)
+
+```
+

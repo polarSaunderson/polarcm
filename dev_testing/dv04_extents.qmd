@@ -1,0 +1,49 @@
+# Set-Up
+```{r}
+devtools::load_all("../racmoR/")
+devtools::load_all("../terrapin/")
+devtools::load_all("../domR/")
+rr <- racmoR::read_racmoM_data("snowmelt")[[1]]
+```
+
+```{r}
+devtools::load_all("../racmoR/")
+
+terra::plot(rr)
+racmoR::draw_antarctica()
+terra::plot(rr)
+racmoR::draw_antarctica(sbcg = "s")
+terra::plot(rr)
+racmoR::draw_antarctica(sbcg = "b")
+terra::plot(rr)
+racmoR::draw_antarctica(sbcg = "bb")
+terra::plot(rr)
+racmoR::draw_antarctica(sbcg = "c")
+terra::plot(rr)
+racmoR::draw_antarctica(sbcg = "g")
+```
+
+```{r}
+devtools::load_all("../racmoR/")
+extentArgs <- list()
+extentArgs$crs    <- "racmo"
+# extentArgs$extent <- ""
+# extentArgs$extent <- rr
+# extentArgs$extent <- t1
+# extentArgs$extent <- "Amery"
+extentArgs$extent <- terra::ext(x = c(-5, 5, -10, 0))
+extentArgs$crsIn  <- "racmo"
+
+t1 <- do.call(get_shelf_outline, args = extentArgs)
+terra::plot(t1)
+```
+
+```{r}
+t2 <- terra::project(t1, use_crs("racmo"))
+terra::plot(t2)
+```
+
+```{r}
+use_crs("racmo")
+```
+

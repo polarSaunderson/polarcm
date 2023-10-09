@@ -1,0 +1,184 @@
+# Read Data
+The purpose of this notebook is to figure out and test the different read_data
+functions. For example, we will have read_racmoM, read_racmoD, read_marM, 
+read_marD, and read_marH.
+We will focus on the RACMO ones for now as the MAR data is still a bit unclear.
+
+# Prep
+```{r}
+devtools::load_all("../terrapin/")
+devtools::load_all("../racmoR/")
+devtools::load_all("../domR/")    # %notIn% and set_if_null()
+configure_polaR(TRUE)
+```
+
+```{r}
+tt <- read_racmoD("precip")
+```
+
+```{r}
+tt
+```
+
+
+```{r}
+precipFiles <- token$varPaths$racmoD$rp3$precip
+t2 <- terra::rast(precipFiles, subds = "precip")
+
+```
+
+```{r}
+t2
+print_line()
+tt
+```
+
+
+
+```{r}
+token <- configure_polaR(TRUE)
+token$grids$
+# token$varPaths$racmoD$rp3
+# token$grids$
+# token$ext$
+```
+
+
+
+```{r}
+read_racmoM <- function(variable, version = NULL) {
+  #' Read in monthly RACMO data from file
+  #'
+  #' @description Read in the NetCDF files for monthly resolution RACMO data
+  #'   (racmoM). This function returns a SpatRaster (see the `terra` package),
+  #'   but knows how to handle some different configurations of the racmoM
+  #'   polaR` functions need
+  #'
+  #' @param variable If a valid string is input, the monthly RACMO data for that
+  #'   variable is returned as a SPatRaster from the corresponding NetCDF
+  #'   file/s. Use [list_racmoM_variables()] to see the valid variables. If a
+  #'   SpatRaster is entered, it is simply returned as it is.
+  #' @param version Which version of the monthly RACMO data should be returned?
+  #'   The options are those defined by the user in their ".Rprofile" file; see
+  #'   [configure_polaR()] for more information. By default, it uses the racmoM
+  #'   data that was defined first in the .Rprofile". Ignored if variable is
+  #'   already a SpatRaster.
+  #'
+  #' @export
+  
+  # Code -----------------------------------------------------------------------
+  # If already a SpatRaster, it is returned.
+  # If note already a SpatRaster, read in the correct monthly RACMO NetCDF data
+  if ("SpatRaster" %notIn% methods::is(variable)) {
+    # Prepare
+    token   <- configure_polaR()
+    version <- domR::set_if_null(version, token$defaults$racmoM)
+    varPath <- token$varPaths$racmoM[[version]][[variable]]
+    
+    # Read in data
+    racmoM <- terra::rast(varPath, subds = variable)
+    
+    # Explicitly add the RACMO crs & extent? Previously weren't read correctly
+    # terra::crs(racmoM) <- use_crs("racmo")
+    # terra::ext(racmoM) <- terra::ext()
+  } else {
+    racmoM <- variable    # Simply returning the input
+  }
+  return(racmoM)
+}
+```
+
+## Example - does this actually do what I think it does?
+```{r}
+rp2 <- read_racmoM(variable = "precip", version = "rp2") |>
+  subset_racmoM_by_summer(summers = 1980:2018) |>
+  subset_racmoM_by_month(c(11, 12, 1, 2)) |>
+  crop_racmo_to_shelf(shelf = "Shackleton")
+
+rp3 <- read_racmoM(variable = "precip", version = "rp3") |>
+  subset_racmoM_by_summer(summers = 1980:2018) |>
+  subset_racmoM_by_month(c(11, 12, 1, 2)) |>
+  crop_racmo_to_shelf(shelf = "Shackleton")
+```
+
+```{r}
+terra::plot(rp2[[1:4]])
+terra::plot(rp3[[1:4]])
+
+diff <- rp3 - rp2
+
+terra::plot(diff[[1:4]])
+```
+
+
+```{r}
+shelves <- token$measures$iceShelves
+shelf1  <- shelves[shelves$NAME %in% "Shackleton"]
+terra::plot(shelf1)
+
+
+
+```
+
+```{r}
+apPath <- "../../../../Data/RACMO/RACMO2.3p2_XPEN055_monthly/precip_monthlyS_XPEN055_ERA5-3H_RACMO2.3p2_201601_202212.nc" 
+
+ap <- terra::rast(apPath, subds = "precip")
+ap
+terra::crs(ap)
+```
+
+
+
+```{r}
+racmoApCrs <- paste("+proj=ob_tran",
+                    "+o_proj=latlon",
+                    "+o_lat_p=-180.0 +lon_0=30.0",
+                    "-m 57.295779506")
+
+terra::crs(ap) <- use_crs(racmoApCrs)
+terra::plot(ap[[1]])
+
+draw_antarctica(crs = racmoApCrs)
+```
+
+```{r}
+nc <- RNetCDF::open.nc(apPath)
+# print(RNetCDF::var.get.nc(nc, "rlon"))
+# print(RNetCDF::var.inq.nc(nc, "rotated_pole", proj4_params"))
+# RNetCDF::att.get.nc(nc, "rotated_pole")
+RNetCDF::(nc)
+RNetCDF::close.nc(nc)
+```
+
+```{r}
+devtools::load_all()
+```
+
+
+```{r}
+configure_polaR(TRUE)
+.polarEnv$varPaths$racmoD$rp3$precip
+```
+
+
+```{r}
+rp2mPath <- .polarEnv$varPaths$racmoM$rp2$precip
+rp3mPath <- .polarEnv$varPaths$racmoM$rp3$precip
+rp3dPath <- .polarEnv$varPaths$racmoD$rp3$precip[[1]]
+
+crsPath <- rp3dPath
+
+nc <- ncdf4::nc_open(crsPath)
+ncdf4::ncatt_get(nc, "rotated_pole")
+ncdf4::nc_close(nc)
+```
+
+
+
+```{r}
+nc <- RNetCDF::open.nc(apPath)
+RNetCDF::print.nc(nc)
+RNetCDF::close.nc(nc)
+```
+

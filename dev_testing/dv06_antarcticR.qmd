@@ -1,0 +1,332 @@
+```{r}
+devtools::load_all("../domR/")
+devtools::load_all("../terrapin/")
+devtools::load_all("../racmoR/")
+```
+
+
+```{r}
+configure_polaR <- function() {
+  # Check if the .Rprofile has been prepared configuration
+  if (!exists(".polaR")) {
+    stop("\nType ?configure_polaR and read the Instructions section.")
+  } else if (isTRUE(.polaR$configured)) {
+    token <- as.list(.polaR)
+    return(invisible(token))
+  } else {
+    message("Configuring polaR...")
+  }
+  
+  # Create a token list to hold all the information
+  token <- list()
+  
+  # Add basic raw data path & folder
+  rawDataPath      <- .polaR$rawDataPath
+  token$dirPaths   <- list("rawData" = rawDataPath)
+  token$dirFolders <- list("rawData" = basename(rawDataPath))
+
+  # Define defaults
+  token$defaults$marD   <- domR::set_if_null(.polaR$defaults$marD, 
+                                                   names(.polaR$marD)[[1]])
+  token$defaults$marM   <- domR::set_if_null(.polaR$defaults$marM, 
+                                                   names(.polaR$marM)[[1]])
+  token$defaults$racmoD <- domR::set_if_null(.polaR$defaults$racmoD, 
+                                                   names(.polaR$racmoD)[[1]])
+  token$defaults$racmoM <- domR::set_if_null(.polaR$defaults$racmoM, 
+                                                   names(.polaR$racmoM)[[1]])
+  message("  The polaR defaults have been succesfully configured.")
+  
+  # MEaSURES Datasets ----------------------------------------------------------
+  if (!is.null(.polaR$MEaSURES)) {
+    # Basic path & directory
+    rawDir <- paste0(rawDataPath, .polaR$MEaSURES)
+    token$dirPaths$MEaSURES   <- rawDir
+    token$dirFolders$MEaSURES <- basename(rawDir)
+  
+    # Antarctic Coastline
+    coast <- paste0(rawDir,
+                    "Coastline_Antarctica/Coastline_Antarctica_v02.shp")
+    if (file.exists(coast)) {
+      token$measures$coastline <- terra::vect(coast)
+    } else {warning("Cannot access the coastline in the MEaSURES dataset! ",
+                    "   Expected filename:\n  ", coast, "\n\n")}
+  
+    # Antarctic Grounding Line
+    GL <- paste0(rawDir,
+                 "GroundingLine_Antarctica/GroundingLine_Antarctica_v02.shp")
+    if (file.exists(GL)) {
+      token$measures$groundingLine <- terra::vect(GL)
+    } else {warning("Cannot access the grounding line in the MEaSURES dataset! ",
+                    "   Expected filename:\n  ", GL, "\n\n")}
+  
+    # Antarctic Ice Shelves
+    shelves <- paste0(rawDir,
+                      "IceShelf_Antarctica/IceShelf_Antarctica_v02.shp")
+    if (file.exists(shelves)) {
+      token$measures$iceShelves <- terra::vect(shelves)
+    } else {warning("Cannot access ice shelves in the MEaSURES dataset! ",
+                    "   Expected filename:\n  ", shelves, "\n\n")}
+  
+    # IMBIE Basins (e.g. A-Ap)
+    imbie <- paste0(rawDir,
+                    "Basins_IMBIE_Antarctica/Basins_IMBIE_Antarctica_v02.shp")
+    if (file.exists(imbie)) {
+      token$measures$imbieBasins <- terra::vect(imbie)
+    } else {warning("Cannot access IMBIE Basins in the MEaSURES dataset! ",
+                    "   Expected filename:\n  ", imbie, "\n\n")}
+  
+    # Refined Basins (e.g. Vincennes_Bay)
+    basins <- paste0(rawDir,
+                     "Basins_Antarctica/Basins_Antarctica_v02.shp")
+    if (file.exists(basins)) {
+      token$measures$refinedBasins <- terra::vect(basins)
+    } else {warning("Cannot access Basins in the MEaSURES dataset! ",
+                    "   Expected filename:\n  ", basins, "\n\n")}
+  
+    # Keep vector of MEaSURES data
+    token$datasets$MEaSURES <- names(token$measures)
+    message("  The MEaSURES dataset has been succesfully configured.")
+  }
+  
+  # racmoM Datasets ------------------------------------------------------------
+  if (!is.null(.polaR$racmoM)) {
+    for (ii in names(.polaR$racmoM)) {
+      iiRawDir <- paste0(rawDataPath, .polaR$racmoM[[ii]]$dir)
+      iiSrc    <- .polaR$racmoM[[ii]]$src
+      
+      token$dirPaths[[paste0("racmoM_", ii)]]   <- iiRawDir
+      token$dirFolders[[paste0("racmoM_", ii)]] <- basename(iiRawDir)
+      
+      if (iiSrc %in% c("10.5281/zenodo.5512076", "10.5281/zenodo.7760490")) {
+        
+        # Get variable names
+        iiVarPaths <- list.files(iiRawDir, pattern = ".nc",  # only NetCDF files
+                                 full.names = TRUE)          # get full paths
+        
+        # Get variable names
+        iiVarNames <- basename(iiVarPaths) |>
+          strsplit("_") |>
+          lapply('[', 1) |>
+          unlist()
+        
+        # Store as a named list for "$" access
+        token$varPaths$racmoM[[ii]] <- setNames(as.list(iiVarPaths), iiVarNames)
+        token$varNames$racmoM[[ii]] <- iiVarNames
+        
+        message("  The ", ii, " racmoM dataset has been succesfully configured.")
+      } else if (iiSrc %in% c("10.5281/zenodo.7961732")) {
+        # print("Antarctic Peninsula")
+        iiVarPaths <- list.files(iiRawDir, pattern = ".nc",  # only NetCDF files
+                                 full.names = TRUE)          # get full paths
+        
+        # Get variable names
+        iiVarNames <- basename(iiVarPaths) |>
+          strsplit("_") |>
+          lapply('[', 1) |>
+          unlist()
+        
+        warning("A decision needs to be made on the ", ii, " dataset!\n")
+    
+      } else {
+        warning("  We don't recognise the src of the racmoM '", ii, "' dataset.", 
+                "\n  Type ?configure_antarctica and read the instructions.\n")
+      }
+    }
+  }
+
+  # racmoD Datasets ------------------------------------------------------------
+  if (!is.null(.polaR$racmoD)) {
+    for (ii in names(.polaR$racmoD)) {
+      iiRawDir <- paste0(rawDataPath, .polaR$racmoD[[ii]]$dir)
+      iiSrc    <- .polaR$racmoD[[ii]]$src
+  
+      token$dirPaths[[paste0("racmoD_", ii)]]   <- iiRawDir
+      token$dirFolders[[paste0("racmoD_", ii)]] <- basename(iiRawDir)
+  
+      if (iiSrc %in% c("10.5281/zenodo.5512076")) {
+        iiVarPaths <- list.files(iiRawDir, ".nc")
+    
+        iiVarNames <- strsplit(iiVarPaths, "_") |>
+          lapply('[', 1) |>
+          unlist() |>
+          unique()
+
+        token$varNames$racmoD[[ii]] <- iiVarNames
+        
+        for (jj in iiVarNames) {
+          jjFiles <- list.files(iiRawDir, pattern = paste0(jj, ".+nc"))
+          token$varPaths$racmoD[[ii]][[jj]] <- jjFiles
+        }
+        message("  The ", ii, " racmoD dataset has been successfully configured.")
+      } else {
+        warning("  We don't recognise the src of the racmoD '", ii, "' dataset.", 
+                "\n  Type ?configure_antarctica and read the instructions.\n")
+      }
+    }
+  }
+
+  # marH Datasets --------------------------------------------------------------
+  if (!is.null(.polaR$marH)) {
+    for (ii in names(.polaR$marH)) {
+      iiRawDir <- paste0(rawDataPath, .polaR$marH[[ii]]$dir)
+      iiSrc <- .polaR$marH[[ii]]$src
+      
+      token$dirPaths[[paste0("marD_", ii)]]   <- iiRawDir
+      token$dirFolders[[paste0("marD_", ii)]] <- basename(iiRawDir)
+      
+      if (iiSrc %in% c("10.5281/zenodo.6347190")) {
+        iiVarPaths <- list.files(iiRawDir, ".nc",
+                                 full.names = TRUE)
+        
+        iiVarNames <- basename(iiVarPaths) |>
+          strsplit("_") |>
+          lapply('[', 2) |>
+          unlist() |>
+          unique()
+        
+        token$varNames$marH[[ii]] <- iiVarNames
+        
+        for (jj in iiVarNames) {
+          jjFiles <- list.files(iiRawDir, pattern = paste0(jj, ".+nc"))
+          token$varPaths$marH[[ii]][[jj]] <- jjFiles
+        }
+          
+        message("  The ", ii, " marH dataset has been successfully configured.")
+      } else {
+        warning("  We don't recognise the src of the marH '", ii, "' dataset.", 
+                "\n  Type ?configure_antarctica and read the instructions.\n")
+      }
+    }
+  }
+  
+  # Define CRS
+  token$crs$racmo <- use_crs("racmo")
+  token$crs$mar <- use_crs("mar")
+
+  # Confirm Configuration
+  token$configured <- TRUE
+  
+  # alt name options: .polaR  .antarcticR   .antarcticaR  .Rcm  .maRacmo .racmoR
+  
+  # Create as a hidden .polaR environment
+  detach(.polaR)                             # remove existing from .Rprofile
+  list2env(x = token, envir = .polaR)         # create new environment
+  attach(.polaR)                              # attach new
+  
+  return(invisible(token))                    # return as a list
+}
+
+tt <- configure_polaR()
+
+```
+
+```{r}
+cat_list(tt$varNames)
+```
+
+
+
+# marD Datasets ----------------------------------------------------------------
+```{r}
+token <- list()
+# cat_list(token)
+
+```
+
+
+```{r}
+token$varPaths$marD$marMelt
+```
+
+
+```{r}
+tt <- terra::rast(iiVarPaths[[1]])
+terra::varnames(tt)
+```
+
+
+
+```{r}
+ttPath <- 
+tt <- rast(ttPath)
+clok     <- strptime("1980-01-01", format = "%Y-%m-%d", tz = "GMT")
+newTimes <- clok + (terra::time(tt) * 60 * 60)
+terra::time(tt) <- newTimes
+
+# clok + ( (9920) * 3 * 60 * 60)
+```
+
+```{r}
+get_terra_dates(tt)
+```
+
+
+
+```{r}
+tt <- terra::rast(ttPath)
+terra::nlyr(tt)
+```
+
+
+```{r}
+devtools::load_all("../terrapin/")
+```
+
+```{r}
+terra::time()
+```
+
+
+
+```{r}
+terra::plot(tt[[1]])
+9920 / 8 / 31 / 40    # 31
+```
+
+```{r}
+ttPath <- "../../../../Data/MAR/MARv3.11_AP_3H_Melt/MAR_ME_1980_2019_01.nc"
+
+# tt <- terra::rast(ttPath)
+# terra::time(tt)
+```
+
+```{r}
+365*8
+```
+
+
+```{r}
+token <- list()
+
+# 
+
+cat_list(token)
+```
+
+
+```{r}
+    iiVarPaths <- list.files(iiRawDir, pattern = ".nc",    # only NetCDF files
+                             full.names = TRUE)            # get full paths
+    
+    # Get variable names
+    iiVarNames <- basename(iiVarPaths) |>
+      strsplit("_") |>
+      lapply('[', 1) |>
+      unlist()
+    
+    iiVarNames
+```
+
+
+```{r}
+list.files(iiRawDir)
+tt <- terra::rast(list.files(iiRawDir, full.names = TRUE)[1], subds = "precip")
+tt
+
+```
+
+
+```{r}
+cat_list(token)
+```
+

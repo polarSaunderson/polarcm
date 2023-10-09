@@ -1,0 +1,470 @@
+# Purpose
+The point here is to see what I can do about different ways that RACMO data is stored.
+I think that this is going to be a bit of a mess really, because there doesn't seem to be any standards.
+But let's see.
+We are going to look at RACMO2.3p2 data (van Wessem, 2023) and RACMO2.3p3 data (van Dalum, 2021).
+
+## Basic File Structure Environment Configuration
+```{r}
+ee <- new.env()
+ee$racmoM$r2p2 <- "../../../../Data/RACMO/RACMO2.3p2_ANT27_ERA5-3H/"
+ee$racmoM$r2p3 <- "../../../../Data/RACMO/RACMO2.3p3_CON_ANT27_monthly/"
+ee$racmoD$r2p3 <- "../../../../Data/RACMO/RACMO2.3p3_CON_ANT27_daily/"
+print(as.list(ee))
+```
+
+```{r}
+list.files(ee$racmoM$r2p3)
+print_line()
+list.files(ee$racmoM$r2p2)
+```
+
+# look at R2.3p2 Data
+```{r}
+p3path <- paste0(ee$racmoM$r2p2, "lwsd_monthlyS_ANT27_ERA5-3H_RACMO2.3p2_197901_202212.nc")
+terra::describe(p3path)
+```
+
+
+```{r}
+lwsdp2 <- terra::rast(p3path)
+terra::varnames(lwsdp2) # we'll need to ignore "dir"
+terra::longnames(lwsdp2)
+```
+
+# Dates
+```{r}
+p3data <- terra::rast(p3path, subds = "lwsd")
+get_terra_dates(p3data)
+
+```
+
+
+```{r}
+# racmoR::read_racmoM_data("lwsd", "rp3") # expected usage
+```
+
+```{r}
+fresh("")
+devtools::load_all("../domR/")
+devtools::load_all("../racmoR/")
+devtools::load_all("../terrapin/")
+```
+
+# Read from .Rprofile
+```{r}
+# Create token to hold all the information
+token <- list()
+
+rawDataPath <- .racmoR$rawDataPath
+
+# Define Defaults
+token$defaults$marD   <- domR::set_if_null(.racmoR$defaults$marD, 
+                                             names(.racmoR$marD)[[1]])
+token$defaults$marM   <- domR::set_if_null(.racmoR$defaults$marM, 
+                                             names(.racmoR$marM)[[1]])
+token$defaults$racmoM <- domR::set_if_null(.racmoR$defaults$racmoD, 
+                                             names(.racmoR$racmoD)[[1]])
+token$defaults$racmoD <- domR::set_if_null(.racmoR$defaults$racmoD,
+                                             names(.racmoR$racmoD)[[1]])
+```
+
+# Basic Paths
+```{r}
+# Add basic raw data path and file
+token$dirFolders <- list("rawData" = basename(rawDataPath))
+token$dirPaths   <- list("rawData" = rawDataPath)
+
+# Add a list of all data we have     ############ move down when MEaSURES exists
+token$datasets <- list("MEaSURES" = NULL,
+                       "racmoM"   = names(.racmoR$racmoM),
+                       "racmoD"   = names(.racmoR$racmoD),
+                       "marD"     = names(.racmoR$marD),
+                       "marM"     = names(.racmoR$marM))
+
+# Data Paths ===================================================================
+
+```
+
+# MEaSURES
+```{r}
+if (!is.null(.racmoR$MEaSURES)) {
+  # Basic path & directory
+  rawDir <- paste0(rawDataPath, .racmoR$MEaSURES)
+  token$dirPaths$MEaSURES   <- rawDir
+  token$dirFolders$MEaSURES <- basename(rawDir)
+  
+  # Antarctic Coastline
+  coast <- paste0(rawDir,
+                  "Coastline_Antarctica/Coastline_Antarctica_v02.shp")
+  if (file.exists(coast)) {
+    token$measures$coastline <- terra::vect(coast)
+  } else {warning("Cannot access the coastline in the MEaSURES dataset! ",
+                  "Expected filename:\n  ", coast, "\n\n")}
+
+  # Antarctic Grounding Line
+  GL <- paste0(rawDir,
+               "GroundingLine_Antarctica/GroundingLine_Antarctica_v02.shp")
+  if (file.exists(GL)) {
+    token$measures$groundingLine <- terra::vect(GL)
+  } else {warning("Cannot access the grounding line in the MEaSURES dataset! ",
+                  "Expected filename:\n  ", GL, "\n\n")}
+
+  # Antarctic Ice Shelves
+  shelves <- paste0(rawDir,
+                    "IceShelf_Antarctica/IceShelf_Antarctica_v02.shp")
+  if (file.exists(shelves)) {
+    token$measures$iceShelves <- terra::vect(shelves)
+  } else {warning("Cannot access ice shelves in the MEaSURES dataset! ",
+                  "Expected filename:\n  ", shelves, "\n\n")}
+  
+  # IMBIE Basins (e.g. A-Ap)
+  imbie <- paste0(rawDir,
+                  "Basins_IMBIE_Antarctica/Basins_IMBIE_Antarctica_v02.shp")
+  if (file.exists(imbie)) {
+    token$measures$imbieBasins <- terra::vect(imbie)
+  } else {warning("Cannot access IMBIE Basins in the MEaSURES dataset! ",
+                  "Expected filename:\n  ", imbie, "\n\n")}
+
+  # Refined Basins (e.g. Vincennes_Bay)
+  basins <- paste0(rawDir,
+                   "Basins_Antarctica/Basins_Antarctica_v02.shp")
+  if (file.exists(basins)) {
+    token$measures$refinedBasins <- terra::vect(basins)
+  } else {warning("Cannot access Basins in the MEaSURES dataset! ",
+                  "Expected filename:\n  ", basins, "\n\n")}
+
+  # Keep vector of MEaSURES data
+  token$datasets$MEaSURES <- names(token$measures)
+}
+```
+
+# racmoM
+```{r}
+if (!is.null(.racmoR$racmoM)) {
+  for (ii in names(.racmoR$racmoM)) {
+    # Basic path & directory
+    iiRawDir <- paste0(rawDataPath, .racmoR$racmoM[[ii]])
+    # token$dirPaths$racmoM[[ii]]   <- iiRawDir             # path to directory
+    # token$dirFolders$racmoM[[ii]] <- basename(iiRawDir)   # directory name
+
+    token$dirPaths[[paste0("racmoM_", ii)]]   <- iiRawDir             # path to directory
+    token$dirFolders[[paste0("racmoM_", ii)]] <- basename(iiRawDir)   # directory name
+
+        
+    # Get variables' full paths
+    iiVarPaths <- list.files(iiRawDir, ".nc",           # only NetCDFs
+                             full.names = TRUE)         # get full paths
+    
+    # Get variable names
+    iiVarNames <- basename(iiVarPaths) |>             
+      strsplit("_") |>
+      lapply('[', 1) |>
+      unlist()
+
+    # Store as a named list for "$" access
+    token$varPaths$racmoM[[ii]] <- setNames(as.list(iiVarPaths), iiVarNames)
+    
+    # Keep a vector of variables names
+    token$vars$racmoM[[ii]] <- iiVarNames
+  }
+}
+```
+
+# racmoD
+```{r}
+for (ii in names(.racmoR$racmoD)) {
+  iiRawDir <- paste0(rawDataPath, .racmoR$racmoD[[ii]])
+  token$dirPaths[[paste0("racmoD_", ii)]] <- iiRawDir
+  token$dirFolders[[paste0("racmoD_", ii)]] <- basename(iiRawDir)
+  
+  # All file paths for ii version of racmoD
+  iiVarPaths <- list.files(iiRawDir, ".nc")
+  
+  iiVarNames <- strsplit(iiVarPaths, "_") |>
+    lapply('[', 1) |>
+    unlist() |>
+    unique()
+  
+  for (jj in iiVarNames) {
+    jjFiles <- list.files(iiRawDir, pattern = paste0(jj, ".+nc"))
+    token$varPaths$racmoD[[ii]][[jj]] <- paste0(iiRawDir, jjFiles)
+  }
+  
+  token$vars$racmoD[[ii]] <- iiVarNames
+}
+```
+
+
+
+# marD
+```{r}
+for (ii in names(.racmoR$marD)) {
+  iiRawDir <- paste0(rawDataPath, .racmoR$marD[[ii]])
+  token$dirPaths[[paste0("marD_", ii)]] <- iiRawDir
+  token$dirFolders[[paste0("marD_", ii)]] <- basename(iiRawDir)
+  
+  iiPaths <- list.files(iiRawDir, ".nc",
+                           full.names = TRUE)
+  iiPaths <- iiPaths[!grepl("grid", iiPaths)] # not the grid, just vars
+
+  for (jj in iiPaths) {
+    jjRast <- terra::rast(jj)
+    jjVars <- terra::varnames(jjRast)
+    
+    for (kk in jjVars) {
+      token$varPaths$marD[[ii]][[kk]] <- c(token$varPaths$marD[[ii]][[kk]], jj)
+    }
+  }
+}
+```
+
+```{r}
+token$varPaths$marD$m31$za #<- NULL
+```
+
+# read marD_data
+But this is not in order??
+All of the MAR data is stored in odd ways!
+```{r}
+newRast <- terra::rast()
+
+for (ii in (token$varPaths$marD$m31$snf)) {
+  iiRast  <- terra::rast(ii, subds = "snf")
+  newRast <- c(newRast, iiRast)
+}
+```
+
+```{r}
+devtools::load_all("../terrapin/")
+```
+
+```{r}
+nn <- get_terra_dates(newRast)
+# sort(nn)
+print(nn)
+```
+
+
+
+```{r}
+# token$varPaths$racmoM[[ii]] <- setNames(as.list(iiVarPaths), iiVarNames)
+# 
+token$varPaths$marD[[ii]] <- setNames(as.list(iiPaths))
+
+```
+
+```{r}
+# tt <- terra::rast(iiVarPaths[[2]])
+# terra::varnames(tt)
+```
+
+
+```{r}
+tt <- terra::sds(c(iiVarPaths[[2]], iiVarPaths[[3]]))
+terra::varnames(tt)
+terra::longnames(tt)
+names(tt)
+```
+
+
+
+```{r}
+terra::rast(iiVarPaths[[2]], subds = "snf")
+```
+
+
+```{r}
+s <- terra::rast(ncols = 5, nrows = 5, nlyrs = 3)
+x <- s
+names(s)
+names(s) <- c("a", "b", "c")
+names(s)
+names(x)
+print_line()
+
+x <- s
+terra::set.names(s, c("e", "f", "g"))
+names(s)
+names(x)
+```
+
+
+
+
+```{r}
+list.files("../../../../Data/MAR/MAR-ERA-Interim/", pattern = "^[^grid]")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+(token$varPaths$racmoD$rp3$refreeze)
+```
+
+
+```{r}
+racmoDvars <- strsplit(iiVarPaths, "_") |>
+  lapply('[', 1) |>
+  unlist() |>
+  unique()
+```
+
+
+```{r}
+for (ii in 1:2) {
+  ii <- racmoDvars[[ii]]
+  iiFiles <- list.files(iiRawDir, pattern = paste0(ii, ".+nc"))
+  token$varPaths$racmoD$rp3[[ii]] <- iiFiles
+}  
+  
+cat_list(token$varPaths$racmoD)
+
+```
+
+
+
+```{r}
+cat_list(token)
+```
+
+
+
+
+```{r}
+devtools::load_all("../domR/")
+cat_list(token)
+```
+
+
+
+```{r}
+token$defaults
+```
+
+
+
+```{r}
+read_racmoM <- function(variable, version = NULL) {
+  if ("SpatRaster" %notIn% methods::is(variable)) {
+    version <- domR::set_if_null(version, token$defaults$racmoM)
+    racmoM  <- terra::rast(token$varPaths$racmoM[[version]][[variable]],
+                           subds = variable)
+  
+    # Explicitly add the RACMO crs & extent as they're not always read correctly
+    terra::crs(racmoM) <- use_crs("racmo")
+    terra::ext(racmoM) <- terra::ext(c(-32.875, 32.625, -30.125, 29.875))
+  } else {
+    racmoM <- variable
+  }
+  return(racmoM)
+}
+```
+
+
+```{r}
+rp3 <- read_racmoM("precip", "rp3")
+rp2 <- read_racmoM("precip", "rp2")
+```
+
+```{r}
+rp3s <- racmoR::subset_racmoM_by_summer(rp3, 1980:2018) |>
+  racmoR::subset_racmoM_by_month(c("Jun", "Jul", "Aug"))
+rp2s <- racmoR::subset_racmoM_by_summer(rp2, 1980:2018) |>
+  racmoR::subset_racmoM_by_month(c(6, 7, 8))
+```
+
+```{r}
+rp2s
+print_line()
+rp3s
+```
+
+```{r}
+shelf <- get_shelf_outline("Shackleton")
+
+rp2Mean <- racmoR::calc_racmo_in_space(racmoData = rp2s, extent = shelf, FUN = "mean", minArea = 0.5)
+rp3Mean <- racmoR::calc_racmo_in_space(racmoData = rp3s, extent = shelf, FUN = "mean", minArea = 0.5)
+```
+
+```{r}
+devtools::load_all("../racmoR/")
+```
+
+```{r}
+devtools::load_all("../domR/")
+```
+
+```{r}
+racmoR::configure_racmoR()
+```
+
+```{r}
+racmoR::draw_antarctica()
+```
+
+```{r}
+devtools::load_all("../racmoR/")
+```
+
+```{r}
+configure_racmoR()
+```
+
+
+```{r}
+get_extent(extent = "", rectangularExtent = FALSE, crs = "racmo")
+
+
+```
+
+
+
+
+
+
+
+
+```{r}
+apPath1 <- "../../../../Data/RACMO/RACMO2.3p2_XPEN055_monthly/precip_monthlyS_XPEN055_ERA5-3H_RACMO2.3p2_201601_202212.nc"
+
+t1 <- terra::rast(apPath1, subds = "precip")
+```
+
+```{r}
+apPath2 <- "../../../../Data/RACMO/RACMO2.3p2_XPEN055_monthly/precip_monthlyS_XPEN055_ERAINx_RACMO2.3p2_197901_201908.nc"
+
+t2 <- terra::rast(apPath2, subds = "precip")
+```
+
+
+```{r}
+t2
+```
+
+
+```{r}
+terra::plot(t1[[1]])
+terra::plot(t2[[1]])
+```
+

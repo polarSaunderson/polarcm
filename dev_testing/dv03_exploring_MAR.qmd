@@ -1,0 +1,142 @@
+This is so far based on the Will2019 MAR dataset.
+- [ ] also check out the MAR data here: https://zenodo.org/record/5024965
+
+# Prep
+```{r}
+fresh("")
+devtools::load_all("../racmoR/")
+devtools::load_all("../terrapin/")
+devtools::load_all("../domR/")    # for %notIn%
+```
+
+# Look at the grid
+```{r}
+marGridPath <- "../../../../Data/MAR/MAR-ERA-Interim/MAR-ant35km-grid.nc"
+marGrid <- terra::rast(marGridPath)
+terra::plot(marGrid)
+```
+```{r}
+marCrs <- "+proj=stere +lat_0=-70.5 +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=km +no_defs=True"
+
+marCrs <- "+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=km +no_defs +type=crs"
+
+# marCrs <- "epsg:3031"
+terra::crs(marGrid) <- marCrs
+
+terra::plot(marGrid$ICE)
+racmoR::draw_antarctica(crs = marCrs, sbcg = "s")
+
+```
+
+```{r}
+terra::crs(marGrid)
+```
+
+
+# Issue with projection of get_shelf_outline
+```{r}
+devtools::load_all("../racmoR/")
+tt <- get_shelf_outline("Shackleton", crs = use_crs("racmo"), extent = "", rectangularExtent = FALSE)
+terra::plot(tt)
+
+terra::plot(racmoR::read_racmoM_data("snowmelt")[[1]])
+draw_antarctica(sbcg = "s")
+```
+
+# Trying to figure out the MARS CRS
+```{r}
+terra::crs(marGrid)   # nothing
+
+# marCrs <- "+proj=stere +lat_0=70.5 +lon_0=-40 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs=True" # copied from marutils, but it seems to be northern
+
+# attempts at just guessing... horrific!
+marCrs <- "+proj=stere +lat_0=-70.5 +lon_0=0 +k=1 +x_0=0 +y_0=2e6 +datum=WGS84 +units=km +no_defs=True"
+
+terra::plot(terra::project(.racmoR$measures$coastline, marCrs))
+terra::plot(marGrid$GROUND, add = TRUE)
+# racmoR::draw_antarctica()
+```
+## Using RNetCDF to find the MAR CRS - nope!
+```{r}
+nc <- RNetCDF::open.nc(marGridPath)
+RNetCDF::print.nc(nc)
+RNetCDF::close.nc(nc)
+```
+
+## Using ncdf4 to find the MAR CRS - nope!
+```{r}
+nc <- ncdf4::nc_open(marGridPath)
+ncdf4::nc_close(nc)
+```
+
+# MAR Variables
+```{r}
+path1 <- "../../../../Data/MAR/MAR-ERA-Interim/MAR-ERA-Interim_01_1979_6h.nc4"
+terra::varnames(terra::rast(path1))
+print_line()
+terra::longnames(terra::rast(path1))
+```
+
+## Access a single variable
+```{r}
+mar1  <- terra::rast(path1, subds = "snf")
+```
+
+# MAR Dates
+They are hourly (well, 6-hourly), so that needs adopting into get_terra_dates
+```{r}
+terrapin::get_terra_dates(mar1)  # show dates
+terra::plot(mar1[[1:4]])         # plot shows time in the title
+```
+
+# Thinking about access to different versions
+```{r}
+# This goes in the .Rprofile file
+tEnv <- new.env()  
+
+tEnv$rawDataPath   <- "../../rawData/"
+tEnv$MEaSURES      <- "MEaSURES Boundaries/"
+
+tEnv$racmoM$r2.3p3 <- "RACMO/RACMO2.3p3_CON_ANT27_monthly/"
+tEnv$racmoD$r2.3p3 <- "RACMO/RACMO2.3p3_CON_ANT27_daily/"
+
+tEnv$marD$MAR3.1   <- "MAR/MAR31-ERA-Interim/"
+tEnv$marD$MAR3.2   <- "MAR/MAR32-ERA-Interim/"
+tEnv$marM$MAR3.1   <- NULL
+
+# Set defaults
+tEnv$defaults$marD <- NULL
+tEnv$defaults$marM <- NULL
+
+# This goes in the `configure_racmoR()` function
+if (is.null(tEnv$defaults$marD)) tEnv$defaults$marD <- names(tEnv$marD)[[1]]
+if (is.null(tEnv$defaults$marM)) tEnv$defaults$marM <- names(tEnv$marM)[[1]]
+
+tEnv$datasets <- list("MEaSURES" = names(terra::vect(tEnv$MEaSURES)),
+                      "racmoM"   = names(tEnv$racmoM),
+                      "racmoD"   = names(tEnv$racmoD),
+                      "marD"     = names(tEnv$marD),
+                      "marM"     = names(tEnv$marM))
+```
+
+
+```{r}
+# Read functions can handle different versions, for example:
+read_marD_data <- function(variable, version = NULL) {
+  version <- domR::set_if_null(version, tEnv$defaults$marD)
+  
+  dataVersion <- tEnv$marD[[version]]
+  print(dataVersion) # actually the code in here!
+}
+
+read_marD_data("snf", "MAR3.1")
+read_marD_data("snf", "MAR3.2")
+read_marD_data("snf")           # uses default
+```
+
+```{r}
+yy <- tEnv$rawDataPath
+dirname(yy)
+basename(yy)
+```
+
