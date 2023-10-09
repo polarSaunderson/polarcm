@@ -88,7 +88,7 @@ get_shelf_outline <- function(extent = "",
     }
   } else if ("SpatVector" %in% methods::is(extent)) {
     # print("input is a SpatVector")
-    next       # don't do anything yet
+    # don't do anything yet
   } else if (extent[[1]] == "") {
     # print("input is empty")
     rectangularExtent <- TRUE

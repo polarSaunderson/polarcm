@@ -1,4 +1,4 @@
-# polarcm
+# polarcm v0.1.2
 
 ## Overview
 `polarcm` is a personal package for interacting with and manipulating output 
@@ -59,10 +59,10 @@ devtools::install_github("polarSaunderson/polarcm")
 
 4) Some of the functions in `polarcm` require my `terrapin` package. If that
 was not automatically installed from the previous line of code, it is 
-necessary to also install the `terrapin` package manually. The current version 
-is v0.1.0.
+necessary to also install the `terrapin` package manually. `terrapin` is also
+under development.
 ```R
-devtools::install_github("polarSaunderson/terrapin@v0.1.0")
+devtools::install_github("polarSaunderson/terrapin")
 ```
 
 5) Load the polarcm package

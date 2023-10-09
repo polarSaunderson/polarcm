@@ -2,4 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
-/dev
+dev_testing/
+_quarto.yaml
