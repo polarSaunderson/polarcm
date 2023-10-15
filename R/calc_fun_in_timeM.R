@@ -112,7 +112,8 @@ calc_fun_in_timeM <- function(x,
   xCubud <- terra::rast(unlist(xCubud))
   terra::varnames(xCubud)  <- terra::varnames(xData)
   terra::longnames(xCubud) <- terra::longnames(xData)
-  terra::units(xCubud)     <- paste0(units[1], " ", incMonths, "_", funName)
+  terra::units(xCubud)     <- paste0(units[1],
+                                     " (", incMonths, " ", funName, ")")
 
   return(xCubud)
 }
