@@ -1,4 +1,4 @@
-# polarcm v0.1.2
+# polarcm v0.1.3
 
 ## Overview
 `polarcm` is a personal package for interacting with and manipulating output 

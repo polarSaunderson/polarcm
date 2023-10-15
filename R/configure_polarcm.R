@@ -27,6 +27,9 @@ configure_polarcm <- function(refresh = FALSE) {
   #'   at the start of each R session, and after that first call, we only want
   #'   it to return information that has already stored in the `.polarEnv`.
   #'
+  #' @returns Creates a hidden environment `.polarEnv` that stores information
+  #'   including the file paths, grid / crs information, and data sources.
+  #'
   #' @details # Instructions
   #'
   #'   This function must be called before using any `polarcm` functions. It
@@ -278,11 +281,11 @@ configure_polarcm <- function(refresh = FALSE) {
 
   # Do we need to configure everything?
   if (isTRUE(.polarEnv$configured)) {
-    # message("polarcm already configured!")
+    # message("polarcm is already configured!")
     token <- as.list(.polarEnv)
     return(invisible(token))
   } else {
-    message("Configuring polarcm...\n")
+    message(">>> Configuring polarcm (v", utils::packageVersion("polarcm"), ") ... \n")
   }
 
   # Basic Set-Up ---------------------------------------------------------------
@@ -311,7 +314,7 @@ configure_polarcm <- function(refresh = FALSE) {
                                       "+x_0=0 +y_0=0",
                                       "+datum=WGS84 +units=m +no_defs +type=crs")
 
-  message("  The crs definitions have been successfully configured.")
+  message("     The crs definitions have been successfully configured.")
 
   # MEaSURES Datasets ----------------------------------------------------------
   if (!is.null(.polarEnv$MEaSURES)) {
@@ -320,8 +323,9 @@ configure_polarcm <- function(refresh = FALSE) {
     token$dirPaths$MEaSURES   <- rawDir
     token$dirFolders$MEaSURES <- basename(rawDir)
     token$datasets$MEaSURES$doi  <- "doi.org/10.5067/AXE4121732AD"
-    token$datasets$MEaSURES$name <-
-         "MEaSUREs Antarctic Boundaries for IPY 2007-2009 from Satellite Radar, Version 2"
+    token$datasets$MEaSURES$name <- paste("MEaSUREs Antarctic Boundaries for",
+                                          "IPY 2007-2009 from Satellite Radar,",
+                                          "Version 2")
     token$datasets$MEaSURES$authors <- c("J. Mouginot",
                                          "B. Scheuchl",
                                          "E. Rignot")
@@ -335,9 +339,12 @@ configure_polarcm <- function(refresh = FALSE) {
       token$datasets$MEaSURES$maps <- c(token$datasets$MEaSURES$maps, "coastline")
       token$grids$measures$coastline$crs <- "EPSG:3031"
       token$grids$measures$coastline$ext <- terra::ext(coast)
-      message("  The MEaSURES coastline dataset has been successfully configured.")
-    } else {warning("Cannot access the coastline in the MEaSURES dataset! ",
-                    "   Expected filename:\n  ", coast, "\n\n")}
+      message("     The MEaSURES coastline dataset has been successfully configured.")
+    } else {
+      message(" !!  Cannot access the coastline in the MEaSURES dataset!")
+      warning(" !!  Cannot access the coastline in the MEaSURES dataset!",
+                    "\n     - Looking for filename: ", coast, "\n\n")
+    }
 
     # Antarctic Grounding Line
     GL <- paste0(rawDir,
@@ -348,9 +355,12 @@ configure_polarcm <- function(refresh = FALSE) {
       token$datasets$MEaSURES$maps <- c(token$datasets$MEaSURES$maps, "groundingLine")
       token$grids$measures$groundingLine$crs <- "EPSG:3031"
       token$grids$measures$groundingLine$ext <- terra::ext(GL)
-      message("  The MEaSURES grounding line dataset has been successfully configured.")
-    } else {warning("Cannot access the grounding line in the MEaSURES dataset! ",
-                    "   Expected filename:\n  ", GL, "\n\n")}
+      message("     The MEaSURES grounding line dataset has been successfully configured.")
+    } else {
+      message(" !!  Cannot access the grounding line in the MEaSURES dataset!")
+      warning(" !!  Cannot access the grounding line in the MEaSURES dataset!",
+            "\n     - Looking for filename: ", GL, "\n\n")
+    }
 
     # Antarctic Ice Shelves
     shelves <- paste0(rawDir,
@@ -361,9 +371,12 @@ configure_polarcm <- function(refresh = FALSE) {
       token$datasets$MEaSURES$maps <- c(token$datasets$MEaSURES$maps, "iceShelves")
       token$grids$measures$iceShelves$crs <- "EPSG:3031"
       token$grids$measures$iceShelves$crs <- terra::ext(shelves)
-      message("  The MEaSURES ice shelves dataset has been successfully configured.")
-    } else {warning("Cannot access ice shelves in the MEaSURES dataset! ",
-                    "   Expected filename:\n  ", shelves, "\n\n")}
+      message("     The MEaSURES ice shelves dataset has been successfully configured.")
+    } else {
+      message(" !!  Cannot access the ice shelves in the MEaSURES dataset!")
+      warning(" !!  Cannot access the ice shelves in the MEaSURES dataset!",
+              "\n     - Looking for filename: ", shelves, "\n\n")
+    }
 
     # IMBIE Basins (e.g. A-Ap)
     imbie <- paste0(rawDir,
@@ -374,9 +387,12 @@ configure_polarcm <- function(refresh = FALSE) {
       token$datasets$MEaSURES$maps <- c(token$datasets$MEaSURES$maps, "imbieBasins")
       token$grids$measures$imbieBasins$crs <- "EPSG:3031"
       token$grids$measures$imbieBasins$ext <- terra::ext(imbie)
-      message("  The MEaSURES IMBIE basins dataset has been successfully configured.")
-    } else {warning("Cannot access IMBIE Basins in the MEaSURES dataset! ",
-                    "   Expected filename:\n  ", imbie, "\n\n")}
+      message("     The MEaSURES IMBIE basins dataset has been successfully configured.")
+    } else {
+      message(" !!  Cannot access the IMBIE Basins in the MEaSURES dataset!")
+      warning(" !!  Cannot access the IMBIE Basins in the MEaSURES dataset!",
+              "\n     - Looking for filename: ", imbie, "\n\n")
+    }
 
     # Refined Basins (e.g. Vincennes_Bay)
     basins <- paste0(rawDir,
@@ -387,9 +403,12 @@ configure_polarcm <- function(refresh = FALSE) {
       token$datasets$MEaSURES$maps <- c(token$datasets$MEaSURES$maps, "refinedBasins")
       token$grids$measures$refinedBasins$crs <- "EPSG:3031"
       token$grids$measures$refinedBasins$ext <- terra::ext(basins)
-      message("  The MEaSURES refined basins dataset has been successfully configured.")
-    } else {warning("Cannot access refined basins in the MEaSURES dataset! ",
-                    "   Expected filename:\n  ", basins, "\n\n")}
+      message("     The MEaSURES refined basins dataset has been successfully configured.")
+    } else {
+      message(" !!  Cannot access the refined basins in the MEaSURES dataset!")
+      warning(" !!  Cannot access the refined basins in the MEaSURES dataset!",
+              "\n     - Looking for filename: ", basins, "\n\n")
+    }
   }
 
   # racmoM Datasets ------------------------------------------------------------
@@ -434,10 +453,18 @@ configure_polarcm <- function(refresh = FALSE) {
         token$grids$racmoM[[ii]]$crs <- token$grids$crs$racmoCrs
         token$grids$racmoM[[ii]]$ext <- token$grids$ext$racmoExt
 
-        message("  The racmoM dataset ", ii, " has been successfully configured.")
+        if (length(iiVarNames) == 0) {
+          message(" !!  No data was found for racmoM dataset ", ii, "!")
+          warning(" !!  No data was found for racmoM dataset ", ii, "!")
+        } else {
+          message("     The racmoM dataset ", ii,
+                  " has been successfully configured. (",
+                  length(iiVarNames), " variables available)")
+        }
       } else {
-        warning("  We don't recognise the src of the racmoM '", ii, "' dataset.",
-                "\n  Type ?configure_polarcm and read the instructions.\n")
+        message(" !!  src for racmoM", ii, "dataset not recognised !")
+        warning(" !!  We don't recognise the src of the racmoM '", ii, "' dataset.",
+                "\n    Type ?configure_polarcm and read the instructions.\n")
       }
     }
   }
@@ -478,9 +505,10 @@ configure_polarcm <- function(refresh = FALSE) {
         }
 
         # Keep a record of which dataset this is, regardless of the user's name
-        token$datasets$racmoD[[ii]]$doi    <- paste0("doi.org/", iiSrc)
-        token$datasets$racmoD[[ii]]$name   <-
-             "Daily version of RACMO2.3p3 SMB, SEB and t2m data for Antarctica (1979-2018)"
+        token$datasets$racmoD[[ii]]$doi  <- paste0("doi.org/", iiSrc)
+        token$datasets$racmoD[[ii]]$name <- paste("Daily version of RACMO2.3p3",
+                                                  "SMB, SEB and t2m data for",
+                                                  "Antarctica (1979-2018)")
         token$datasets$racmoM[[ii]]$authors <- c("C. van Dalum",
                                                  "W.J. van de Berg",
                                                  "M. van den Broeke")
@@ -489,10 +517,18 @@ configure_polarcm <- function(refresh = FALSE) {
         token$grids$racmoD[[ii]]$crs <- token$grids$crs$racmoCrs
         token$grids$racmoD[[ii]]$ext <- token$grids$ext$racmoExt
 
-        message("  The racmoD dataset ", ii, " has been successfully configured.")
+        if (length(iiVarNames) == 0) {
+          message(" !!  No data was found for racmoD dataset ", ii, "!")
+          warning(" !!  No data was found for racmoD dataset ", ii, "!")
+        } else {
+          message("     The racmoD dataset ", ii,
+                  " has been successfully configured. (",
+                  length(iiVarNames), " variables available)")
+        }
       } else {
-        warning("  We don't recognise the src of the racmoD '", ii, "' dataset.",
-                "\n  Type ?configure_antarctica and read the instructions.\n")
+        message(" !!  src for racmoD", ii, "dataset not recognised !")
+        warning(" !!  We don't recognise the src of the racmoD '", ii, "' dataset.",
+                "\n   Type ?configure_polarcm and read the instructions.\n")
       }
     }
   }
@@ -509,8 +545,9 @@ configure_polarcm <- function(refresh = FALSE) {
   token$defaults$racmoM  <- names(.polarEnv$rcm$racmoM)[[1]]
   token$defaults$racmoD  <- names(.polarEnv$rcm$racmoD)[[1]]
 
-  message("  The polarcm defaults have been successfully configured.")
-  message("  ", defType, " ", defVer, " will be considered the default RCM data.")
+  message("     The polarcm defaults have been successfully configured.")
+  message("       --> ", defType, " dataset ", defVer, " will be considered the ",
+          "default RCM data.")
 
   # Confirm & Finish Configuration ---------------------------------------------
   token$configured <- TRUE
@@ -524,6 +561,6 @@ configure_polarcm <- function(refresh = FALSE) {
   list2env(x = token, envir = .polarEnv)   # create new environment for the list
 
   # Let us know we succeeded and return a list if we want
-  message("\npolarcm successfully configured!\n")
+  message("\n>>> polarcm configuration complete!\n")
   return(invisible(token))
 }

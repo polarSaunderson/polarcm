@@ -17,6 +17,10 @@ the package at all in a session. Usually we just want to run it once
 at the start of each R session, and after that first call, we only want
 it to return information that has already stored in the \code{.polarEnv}.}
 }
+\value{
+Creates a hidden environment \code{.polarEnv} that stores information
+including the file paths, grid / crs information, and data sources.
+}
 \description{
 Please \strong{read} this \emph{AND} the Instructions section below!
 
